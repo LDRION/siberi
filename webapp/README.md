@@ -5,7 +5,7 @@ Telegram Mini App конструктора ботов: аккаунт/подпи
 
 ## Как устроено
 
-- Отдаётся nginx'ом по `https://siberi.online/tg-app/` из `webapp/dist`
+- Отдаётся nginx'ом по пути `/tg-app/` основного домена из `webapp/dist`
   (локации `^~ /tg-app/` в `/etc/nginx/sites-enabled/siberi`).
 - API — те же `/api/v1/*` (nginx проксирует на Node): сессия и специфичные
   эндпоинты в `server/routes/tgletbot.js` (`/tgletbot/miniapp/*`), данные —
