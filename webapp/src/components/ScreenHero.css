@@ -1,0 +1,113 @@
+.hero {
+  position: relative;
+  /* небольшой отступ сверху — картинка сидит у верхней части экрана */
+  padding-top: 8px;
+}
+
+/* Амбиентное свечение под роботом — он «выходит» из света, а не вставлен на чёрный.
+   Ширину свечения держим ≤100% ширины героя, иначе на iOS оно вылезает вбок и
+   даёт паразитный горизонтальный скролл. */
+.hero__bg {
+  position: absolute;
+  left: 50%;
+  top: -8%;
+  transform: translateX(-50%);
+  width: 118%;
+  max-width: 100%;
+  height: 122%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(46% 42% at 50% 36%, rgb(var(--accent-rgb) / 0.26), transparent 70%),
+    radial-gradient(80% 56% at 50% 4%, rgb(var(--accent-rgb) / 0.16), transparent 72%);
+  filter: blur(2px);
+}
+
+/* Цельный робот с вшитой линией — прозрачный PNG, маска не нужна.
+   Поджимаем ширину, чтобы робот компактно сидел в верхней части экрана и
+   оставлял больше места контенту (просьба «поднять картинку выше»). */
+.hero__robot {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 66%;
+  max-width: 250px;
+  height: auto;
+  margin: 0 auto;
+  pointer-events: none;
+}
+
+/* Статусный вариант (вкладка «Бот»): робот держит плашку статуса,
+   композиция почти квадратная — ограничиваем ширину и центрируем. */
+.hero--status {
+  padding-top: 10px;
+}
+/* Бот-арты почти квадратные и робот в них крупнее по кадру, поэтому ширину
+   поджимаем до ~60%, чтобы сам робот совпал по размеру с общим героем (76%). */
+.hero--status .hero__robot {
+  /* Бот-арт почти квадратный и робот в нём крупнее по кадру (плюс плашка статуса
+     снизу), поэтому ширину поджимаем сильнее, чтобы сам робот совпал по размеру
+     с общим героем (66%), а не выглядел заметно больше. */
+  width: 44%;
+  max-width: 175px;
+  filter: drop-shadow(0 18px 34px rgba(0, 0, 0, 0.5));
+}
+.hero--status .hero__caption {
+  margin-top: 6px;
+}
+
+/* Заголовок раздела — по центру, под линией, между рук робота */
+.hero__caption {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0;
+  margin-top: -2px;
+  padding: 0 20px 16px;
+}
+.hero__eyebrow {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+  margin-bottom: 9px;
+}
+/* Если под линией только eyebrow (без большого заголовка) — без нижнего отступа */
+.hero__eyebrow:last-child {
+  margin-bottom: 0;
+}
+/* Eyebrow + подзаголовок без заголовка между ними — компактный зазор */
+.hero__eyebrow + .hero__subtitle {
+  margin-top: 4px;
+}
+.hero__title {
+  margin: 0;
+  font-size: 33px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.04;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+/* @username в одну строку с именем */
+.hero__handle {
+  margin-left: 10px;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--text-dim);
+}
+.hero__subtitle {
+  margin: 7px 0 0;
+  font-size: 14px;
+  color: var(--text-dim);
+}
+.hero__right {
+  margin-top: 13px;
+}

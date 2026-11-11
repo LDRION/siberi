@@ -1,0 +1,20 @@
+/* Единый фон сайта (порт teleconstructor.ru 1:1). Фиксирован позади контента. */
+html{background:#060911}   /* глобальная тёмная база — без белой вспышки на любой странице */
+/* body прозрачен ВЕЗДЕ, чтобы глобальный фон (aurora + созвездие) проступал на всех
+   страницах. Тёмную базу держит html выше + .site-bg__base. Раньше App.css красил
+   body в var(--panel-2) и перекрывал фон на всех не-лендинг страницах. */
+body{background:transparent !important}
+.site-bg{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.site-bg__base{position:absolute;inset:0;background:#060911}
+.site-bg .fx{position:absolute;inset:0;overflow:hidden}
+.site-bg .aurora{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;mix-blend-mode:screen}
+.site-bg .a1{width:60vw;height:60vw;left:-15vw;top:-20vw;background:radial-gradient(circle,#1e3a8a,transparent 62%);animation:sbgDrift1 22s cubic-bezier(.22,.61,.36,1) infinite alternate}
+.site-bg .a2{width:55vw;height:55vw;right:-18vw;top:6vw;background:radial-gradient(circle,#6d28d9,transparent 62%);animation:sbgDrift2 26s cubic-bezier(.22,.61,.36,1) infinite alternate}
+.site-bg .a3{width:50vw;height:50vw;left:20vw;bottom:-24vw;background:radial-gradient(circle,#0e7490,transparent 62%);animation:sbgDrift3 30s cubic-bezier(.22,.61,.36,1) infinite alternate}
+@keyframes sbgDrift1{to{transform:translate(12vw,10vw) scale(1.15)}}
+@keyframes sbgDrift2{to{transform:translate(-10vw,8vw) scale(1.1)}}
+@keyframes sbgDrift3{to{transform:translate(10vw,-8vw) scale(1.12)}}
+.site-bg #stars{position:absolute;inset:0;width:100%;height:100%}
+.site-bg .vignette{position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 0%,transparent 60%,rgba(3,5,12,.75))}
+.site-bg .grain{position:absolute;inset:0;opacity:.05;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+@media (prefers-reduced-motion: reduce){.site-bg .aurora{animation:none;opacity:.28}}

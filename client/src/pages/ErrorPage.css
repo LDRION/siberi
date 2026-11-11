@@ -1,0 +1,55 @@
+body.sb-error *{box-sizing:border-box;margin:0;padding:0}
+body.sb-error{
+ --bg:#000;--panel:#0b0b0d;--panel-2:#141417;--line:rgba(255,255,255,.08);--line-2:rgba(255,255,255,.14);
+ --text:#f3f3f6;--muted:#74747e;--muted-2:#4a4a52;
+ --brand-grad:linear-gradient(100deg,#b9b9c6 0%,#fff 45%,#fff 55%,#b9b9c6 100%);
+ --brand-glow:rgba(255,255,255,.30);--accent:#b9b9c6;--shadow:0 24px 60px rgba(0,0,0,.55);--star:255,255,255;
+}
+body.sb-error.light{
+ --bg:#c9c9d0;--panel:#dadae1;--panel-2:#d0d0d8;--line:rgba(0,0,0,.10);--line-2:rgba(0,0,0,.18);
+ --text:#1b1b22;--muted:#5d5d68;--muted-2:#9d9da7;
+ --brand-grad:linear-gradient(100deg,#45454f 0%,#0c0c12 45%,#0c0c12 55%,#45454f 100%);
+ --brand-glow:rgba(0,0,0,.14);--accent:#45454f;--shadow:0 24px 60px rgba(0,0,0,.18);--star:36,36,50;
+}
+body.sb-error, body.sb-error{height:100%}
+body.sb-error{background:var(--bg);color:var(--text);font-family:"Sora","Outfit",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased;display:grid;place-items:center;min-height:100svh;position:relative;overflow:hidden;text-align:center;padding:24px;transition:background .35s ease,color .35s ease}
+body.sb-error .bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+body.sb-error .theme-toggle{position:fixed;top:20px;right:20px;z-index:5;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--panel-2);border:1px solid var(--line);color:var(--muted);cursor:pointer;transition:color .2s,border-color .2s,background .2s}
+body.sb-error .theme-toggle:hover{color:var(--text);border-color:var(--line-2)}
+body.sb-error .theme-toggle svg{width:18px;height:18px}
+body.sb-error .theme-toggle .i-sun{display:none}
+body.sb-error.light .theme-toggle .i-sun{display:block}
+body.sb-error.light .theme-toggle .i-moon{display:none}
+body.sb-error .wrap{position:relative;z-index:1;max-width:560px;display:flex;flex-direction:column;align-items:center;gap:14px}
+/* ===== робот-маскот ===== */
+body.sb-error .robot{position:relative;width:150px;height:150px;color:var(--text);animation:robotFloat 5.5s ease-in-out infinite}
+body.sb-error .robot__bot{width:150px;height:150px;display:block}
+body.sb-error .robot__glow{position:absolute;inset:-22%;z-index:-1;border-radius:50%;background:radial-gradient(circle,rgba(var(--star),.12),transparent 62%);filter:blur(12px)}
+body.sb-error .robot__spark{position:absolute;top:10px;right:14px;width:16px;height:16px;color:var(--text);animation:spark 3.2s ease-in-out infinite}
+body.sb-error .robot__spark svg{width:100%;height:100%}
+body.sb-error .bot-eyes{position:absolute;inset:0}
+body.sb-error .bot-eye{position:absolute;top:49%;width:8%;height:14.3%;border-radius:5px;background:currentColor;transform-origin:center}
+body.sb-error .bot-eye--l{left:35%}body.sb-error .bot-eye--r{left:57%}
+/* X_X — крестики (404) */
+body.sb-error .robot--x .bot-eye{background:none;width:13%;height:13%;top:46%}
+body.sb-error .robot--x .bot-eye--l{left:32%}body.sb-error .robot--x .bot-eye--r{left:55%}
+body.sb-error .robot--x .bot-eye::before, body.sb-error .robot--x .bot-eye::after{content:"";position:absolute;top:50%;left:0;width:100%;height:2.6px;border-radius:2px;background:currentColor}
+body.sb-error .robot--x .bot-eye::before{transform:translateY(-50%) rotate(45deg)}
+body.sb-error .robot--x .bot-eye::after{transform:translateY(-50%) rotate(-45deg)}
+/* ===== контент ===== */
+body.sb-error .code{font-family:"Syne","Sora",system-ui,sans-serif;font-weight:800;font-size:clamp(80px,20vw,150px);line-height:1.1;letter-spacing:-3px;background:var(--brand-grad);background-size:220% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;filter:drop-shadow(0 0 32px var(--brand-glow));animation:shine 7s linear infinite}
+body.sb-error .title{font-family:"Space Grotesk","Sora",system-ui,sans-serif;font-weight:700;font-size:clamp(22px,4vw,30px);letter-spacing:-.3px}
+body.sb-error .lead{color:var(--muted);font-size:15.5px;line-height:1.6;font-weight:300;max-width:440px}
+body.sb-error .actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+body.sb-error .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:600;text-decoration:none;border:1px solid transparent;cursor:pointer;transition:transform .2s,border-color .2s}
+body.sb-error .btn svg{width:16px;height:16px}
+body.sb-error .btn--primary{background:var(--text);color:var(--bg)}
+body.sb-error .btn--primary:hover{transform:translateY(-1px)}
+body.sb-error .btn--ghost{background:var(--panel-2);border-color:var(--line);color:var(--text)}
+body.sb-error .btn--ghost:hover{border-color:var(--line-2)}
+body.sb-error .foot{position:fixed;bottom:22px;left:0;right:0;z-index:1;font-size:12.5px;color:var(--muted-2);letter-spacing:.3px}
+body.sb-error .foot b{font-family:"Space Grotesk",sans-serif;font-weight:600;letter-spacing:2px;color:var(--text)}
+@keyframes shine{to{background-position:-220% center}}
+@keyframes robotFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes spark{0%,100%{opacity:.15;transform:scale(.7) rotate(0)}50%{opacity:.8;transform:scale(1) rotate(18deg)}}
+@media (prefers-reduced-motion:reduce){body.sb-error *{animation:none!important}}

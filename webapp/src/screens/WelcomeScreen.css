@@ -1,0 +1,208 @@
+.welcome {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* Фиксированная высота (а не min-height): иначе при нехватке места экран
+     растёт вниз и уходит в скролл вместо того, чтобы ужать баннер. */
+  height: 100svh;
+  overflow-y: auto;   /* страховка: если не влезло даже после сжатия — доскроллим */
+  animation: screen-in 0.4s ease;
+}
+
+/* Робот-баннер В САМОМ ВЕРХУ экрана — отдельным блоком, НЕ фоном под текстом.
+   Высота адаптивная: на больших экранах не раздувается выше 340px, на низких
+   уступает место тексту, сжимаясь до 170px. */
+.welcome__art {
+  position: relative;
+  width: 100%;
+  height: clamp(200px, 42vh, 340px);
+  /* было flex-shrink: 0 — из-за этого текст выдавливало за экран */
+  flex: 0 1 auto;
+  min-height: 170px;
+  z-index: 0;
+}
+.welcome__art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* показываем робота от головы до рук в верхней полосе */
+  object-position: 50% 26%;
+}
+/* Низ баннера мягко растворяется в фон — стык с текстовой зоной не виден */
+.welcome__fade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(2, 6, 23, 0) 50%,
+    rgba(2, 6, 23, 0.5) 76%,
+    var(--bg) 99%
+  );
+}
+
+/* Текст — по центру оставшейся (нижней) части экрана, без наложения на робота */
+.welcome__content {
+  position: relative;
+  z-index: 1;
+  flex: 1 0 auto;   /* растёт с контентом, не сжимая нижние элементы */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8px 26px calc(16px + env(safe-area-inset-bottom));
+}
+
+.welcome__eyebrow {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+  margin-bottom: 10px;
+}
+.welcome__title {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.04;
+  background: linear-gradient(180deg, #ffffff, #b9c6dc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.welcome__subtitle {
+  margin: 12px 0 0;
+  max-width: 320px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+
+/* Кнопка во всю ширину колонки — общая сетка с подзаголовком и согласием */
+.welcome__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 320px;
+  margin-top: 14px;
+  padding: 15px 26px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--accent), var(--accent-bright));
+  box-shadow: 0 16px 38px -12px var(--accent-glow), 0 1px 0 0 rgba(255, 255, 255, 0.2) inset;
+  transition: transform 0.14s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+.welcome__cta svg {
+  transition: transform 0.22s ease;
+}
+.welcome__cta:hover svg {
+  transform: translateX(3px);
+}
+.welcome__cta:active {
+  transform: scale(0.97);
+}
+/* Пока не отмечено согласие — кнопка неактивна */
+.welcome__cta:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.welcome__cta:disabled:active {
+  transform: none;
+}
+
+/* Чек-бокс согласия с офертой/политикой — обязателен для «Продолжить».
+   Стеклянная карточка той же ширины, что и кнопка: два выровненных блока. */
+.welcome__agree {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 320px;
+  margin-top: 18px;
+  padding: 13px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+  text-align: left;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text-mute);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Свой чекбокс: системный не вписывается в тёмную тему */
+.welcome__agree input {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  border: 1.5px solid var(--hairline);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease,
+    box-shadow 0.18s ease, transform 0.12s ease;
+}
+.welcome__agree input:checked {
+  background: linear-gradient(135deg, var(--accent), var(--accent-bright));
+  border-color: transparent;
+  box-shadow: 0 8px 18px -7px var(--accent-glow),
+    0 1px 0 0 rgba(255, 255, 255, 0.2) inset;
+}
+.welcome__agree input:active {
+  transform: scale(0.9);
+}
+.welcome__agree input::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: opacity 0.16s ease, transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1);
+  background: no-repeat center / 11px 9px
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10'%3E%3Cpath d='M1 5l3.4 3.4L11 1.6' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+.welcome__agree input:checked::after {
+  opacity: 1;
+  transform: scale(1);
+}
+.welcome__agree a {
+  color: var(--text-dim);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(139, 152, 173, 0.4);
+}
+.welcome__agree a:active {
+  color: var(--accent-bright);
+}
+
+/* Сообщение про канал обновлений */
+.welcome__news {
+  margin: 12px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+.welcome__news a {
+  font-weight: 600;
+  color: var(--accent-bright);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.welcome__news a:active {
+  opacity: 0.7;
+}
+

@@ -1,0 +1,1658 @@
+/* ============================================================
+   Siberi AI · Total Black редизайн
+   Дизайн-язык: depressia.me (моно, чёрный/светлый, переливы)
+   ============================================================ */
+body.sb-landing {
+  /* Палитра teleconstructor: глубокий СИНИЙ мрак (#060911), а не нейтральный
+     чёрный, и полупрозрачные тёмно-синие панели-стекло вместо плоских серых
+     коробок. Позади страницы живёт аврора (SiteBackground) — карточки её
+     пропускают, поэтому не читаются как чёрные дыры, вырезанные в фоне.
+     Светлая тема (body.light) — без изменений. */
+  --bg:      #060911;
+  --panel:   rgba(10, 15, 28, 0.72);
+  --panel-2: rgba(16, 22, 44, 0.80);
+  --panel-h: rgba(24, 32, 60, 0.90);
+  --line:    rgba(255, 255, 255, 0.09);
+  --line-2:  rgba(255, 255, 255, 0.16);
+  --text:    #f3f3f6;
+  --muted:   #a3aec8;
+  --muted-2: #6b7286;
+  --tag:     #c9c9d2;
+  /* акцент бренда — жжёный кирпич/коралл (как --ds-accent в AFinalDesignLanding) */
+  --accent:      #5a2812;
+  --accent-text: #d4845c;
+  --beam-col:    color-mix(in srgb, var(--accent-text) 72%, #fff);  /* цвет бегущего луча (тёмная тема) */
+  --art-1:   #131c38;
+  --art-2:   #0a1020;
+  --art-glow: rgba(255, 255, 255, 0.07);
+  --star:    255, 255, 255;
+  --brand-grad: linear-gradient(100deg, #b9b9c6 0%, #ffffff 45%, #ffffff 55%, #b9b9c6 100%);
+  --brand-glow: rgba(255, 255, 255, 0.30);
+  --on-accent: #000;
+  --hairline: rgba(255, 255, 255, 0.35);
+  --shadow-card: 0 30px 80px rgba(0, 0, 0, 0.7);
+  /* Карточка = тёмная поверхность С ФОРМОЙ + свечение ИЗ-ПОД неё (как приподнятый
+     объект на свету у Vercel). Тело НЕ серый бокс — едва выше #000, холодный оттенок;
+     форму держит мягкий верхний хайлайт + контактная тень, без «белой обводки».
+     Свет осмысленный, потому что лежит на реальном теле, а не висит туманом. */
+  /* Тело — ЧЁРНОЕ в цвет проекта. ПОЗАДИ него большое мягкое сияние, которое бьёт
+     наружу в темноту и рассеивается (как за треугольником Vercel) — не обводка.
+     Цвет строго нейтральный (белый), без синевы. Сияние медленно «дышит» по кругу. */
+  /* Карточки — тёмно-синее ЖИДКОЕ СТЕКЛО. Плотность низкая: сквозь панель
+     должна проходить аврора, иначе это просто крашеная коробка. Читаемость
+     держит не заливка, а размытие фона под ней (backdrop-filter ниже). */
+  --card-body: rgba(13, 18, 38, 0.34);          /* карточки на странице (фичи, шаги, демо) — сильнее стекло */
+  --card-surface: rgba(13, 18, 38, 0.50);       /* модалки, coverflow, cookie */
+  --card-surface-hover: rgba(30, 40, 74, 0.58);
+  --card-radius: 16px;           /* единый радиус всех карточек/поверхностей */
+  --card-glow: transparent;      /* белый glow убран — карточки плоские */
+  --card-glow-base: transparent;
+  --section-glow: transparent;   /* ambient-свечение секций убрано (flat) */
+  /* Ореол через box-shadow — снаружи карточки, всегда видимый.
+     В покое: яркое плотное ядро у кромки (не «жир», читается как свет, не серость).
+     На hover: широко расходится и ярчает (как у Vercel) — плавно через transition. */
+  /* Плоские карточки как в AFinalDesignLanding: только волосяная рамка, без белого
+     тумана. «Бег» по кромке даёт отдельный конический луч (.beam), а не glow. */
+  --card-halo:        0 0 0 1px rgba(255,255,255,.08);
+  --card-halo-strong: 0 0 0 1px rgba(255,255,255,.14);
+  /* СТЕКЛО (Liquid Glass): полупрозрачная матовая поверхность + backdrop-blur. Ambient
+     за секцией просвечивает → карточка-материал, а не плоская чёрная дыра. Светлая
+     верхняя грань (inset) ловит свет — «дорогое» матовое стекло, строго нейтральное. */
+  --card-glass:       rgba(255,255,255,.055);
+  --card-glass-blur:  blur(17px) saturate(125%);
+  --card-glass-shadow: inset 0 1px 0 rgba(255,255,255,.16), inset 0 0 0 1px rgba(255,255,255,.055), 0 26px 60px -30px rgba(0,0,0,.85);
+  /* Крафтовый SVG-свет: ОДИН гладкий слой, кривая спада в ~7 стопов (как запечённая
+     картинка Vercel) — без «двух текстур», без бэндинга, яркое ядро → мягкий хвост. */
+  --card-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120' preserveAspectRatio='none'%3E%3Cdefs%3E%3CradialGradient id='g' cx='60' cy='54' r='60' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%23ffffff' stop-opacity='.55'/%3E%3Cstop offset='.14' stop-color='%23ffffff' stop-opacity='.34'/%3E%3Cstop offset='.30' stop-color='%23ffffff' stop-opacity='.17'/%3E%3Cstop offset='.47' stop-color='%23ffffff' stop-opacity='.075'/%3E%3Cstop offset='.66' stop-color='%23ffffff' stop-opacity='.025'/%3E%3Cstop offset='.83' stop-color='%23ffffff' stop-opacity='.006'/%3E%3Cstop offset='1' stop-color='%23ffffff' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='120' height='120' fill='url(%23g)'/%3E%3C/svg%3E");
+  --card-shadow: 0 36px 60px -38px rgba(0,0,0,.9);
+  --card-shadow-pop: 0 52px 80px -38px rgba(0,0,0,.95);
+  --transition-theme: background .5s ease, color .5s ease, border-color .5s ease;
+}
+
+/* мягкая светлая тема — приглушённый светло-серый */
+body.sb-landing.light {
+  --bg:      #c9c9d0;
+  --panel:   #dadae1;
+  --panel-2: #d0d0d8;
+  --panel-h: #c2c2cc;
+  --line:    rgba(0, 0, 0, 0.10);
+  --line-2:  rgba(0, 0, 0, 0.18);
+  --text:    #1b1b22;
+  --muted:   #5d5d68;
+  --muted-2: #9d9da7;
+  --tag:     #3a3a44;
+  --art-1:   #eaeaef;
+  --art-2:   #c6c6cf;
+  --art-glow: rgba(255, 255, 255, 0.32);
+  --star:    36, 36, 50;
+  /* акцент и в светлой теме (для луча): коралл поглубже, чтобы читался на светлой карточке */
+  --accent:      #5a2812;
+  --accent-text: #c96a3c;
+  --beam-col:    color-mix(in srgb, #c96a3c 92%, #000);
+  --brand-grad: linear-gradient(100deg, #45454f 0%, #0c0c12 45%, #0c0c12 55%, #45454f 100%);
+  --brand-glow: rgba(0, 0, 0, 0.14);
+  --on-accent: #dadae1;
+  --hairline: rgba(0, 0, 0, 0.28);
+  --shadow-card: 0 24px 60px rgba(0, 0, 0, 0.18);
+  /* светлая тема: светлая поверхность + мягкая тень; сияние погашено (transparent). */
+  --card-body: #e7e7ee;
+  --card-surface: #e7e7ee;
+  --card-surface-hover: #f0f0f6;
+  --card-glow: transparent;
+  --card-glow-base: transparent;
+  --section-glow: rgba(255,255,255,.6);   /* светлый ambient — секции «дышат» светом и в белой теме */
+  /* Светлая тема: ореол не «белым по чёрному», а ЛЮМИНОЗНЫЙ белый на сером фоне —
+     карточка приподнята и ловит свет: чёткая верхняя грань + белое свечение по кромке + мягкая тень. */
+  --card-halo:        inset 0 1px 0 rgba(255,255,255,.9), 0 0 0 1px rgba(0,0,0,.05), 0 0 28px -6px rgba(255,255,255,.9), 0 16px 44px -22px rgba(0,0,0,.16);
+  --card-halo-strong: inset 0 1px 0 rgba(255,255,255,1), 0 0 0 1px rgba(0,0,0,.06), 0 0 48px -4px rgba(255,255,255,1), 0 24px 64px -26px rgba(0,0,0,.20);
+  --card-shadow:
+    0 30px 60px -28px rgba(0,0,0,.20),
+    0 8px 24px -16px rgba(0,0,0,.10);
+  --card-shadow-pop:
+    0 46px 84px -30px rgba(0,0,0,.26),
+    0 12px 32px -18px rgba(0,0,0,.12);
+}
+/* Переключение темы — МГНОВЕННОЕ и одновременное для всего.
+   Плавный фейд здесь невозможен без «рваности»: градиенты (топбар, бренд),
+   растровые обложки и звёздный canvas не интерполируются и щёлкают,
+   пока сплошные цвета фейдятся. Поэтому на один кадр гасим ВСЕ переходы —
+   вся тема меняется синхронно, без промежуточных состояний. */
+body.sb-landing.theme-instant, body.sb-landing.theme-instant *, body.sb-landing.theme-instant *::before, body.sb-landing.theme-instant *::after {
+  transition: none !important;
+}
+
+/* :where() — иначе скоуп весит 0,1,1 и обнуляет padding/margin у любого
+   правила в один класс (см. пояснение в Layout.css). */
+:where(body.sb-landing) * { margin: 0; padding: 0; box-sizing: border-box; }
+body.sb-landing { scroll-behavior: auto; }   /* плавность секций даёт JS-движок (без двойной анимации) */
+
+/* ============ Глобальная полоса прокрутки — в стиле проекта, адаптивно к теме ============ */
+body.sb-landing { scrollbar-width: thin; scrollbar-color: var(--line-2) transparent; }
+body.sb-landing ::-webkit-scrollbar { width: 12px; height: 12px; }
+body.sb-landing ::-webkit-scrollbar-track { background: transparent; }
+body.sb-landing ::-webkit-scrollbar-thumb {
+  background: var(--line-2); border-radius: 999px;
+  border: 3px solid var(--bg); background-clip: padding-box;   /* «плавающий» ползунок с отступом в цвет фона */
+}
+body.sb-landing ::-webkit-scrollbar-thumb:hover { background: var(--muted-2); border: 3px solid var(--bg); background-clip: padding-box; }
+body.sb-landing ::-webkit-scrollbar-corner { background: transparent; }
+body.sb-landing {
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Sora", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+:where(body.sb-landing) a { color: inherit; text-decoration: none; }
+body.sb-landing ::selection { background: var(--text); color: var(--bg); }
+
+/* собственный canvas лендинга убран — фон теперь глобальный (SiteBackground) */
+
+/* ============ Верхняя панель ============ */
+body.sb-landing .topbar {
+  /* fixed, а не sticky: у body стоит overflow-x:hidden, из-за чего он становится
+     скролл-контейнером и sticky к экрану не липнет. Привязываем к вьюпорту жёстко —
+     логотип и «Оставить заявку» остаются на месте при любом скролле. */
+  position: fixed; top: 0; left: 0; right: 0; z-index: 60;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px;
+  padding: 16px clamp(16px, 4vw, 48px);
+  /* Без фона: закреплены только логотип и кнопка, тёмной полосы-подложки нет —
+     контент свободно проходит под ними. pointer-events:none, чтобы прозрачная
+     область шапки не перехватывала клики по контенту под ней… */
+  background: none;
+  pointer-events: none;
+}
+/* …а сами логотип и кнопка клики принимают. */
+body.sb-landing .topbar > * { pointer-events: auto; }
+
+/* Шапка ушла из потока (fixed) — резервируем под неё место, чтобы первый экран не
+   прятался под ней. Высота шапки ≈ 66px (16+16 padding + 34 логотип). */
+body.sb-landing .stage { padding-top: 66px; }
+body.sb-landing .brand {
+  display: inline-flex; align-items: center; gap: 11px;
+  cursor: pointer; text-decoration: none;
+  /* Плавное увеличение при наведении: логотип теперь ведёт обратно в чат, и это
+     подсказывает, что он кликабельный. transform-origin слева — растём «от края». */
+  transform-origin: left center;
+  transition: transform 0.22s cubic-bezier(0.34, 1.4, 0.5, 1);
+}
+body.sb-landing .brand:hover { transform: scale(1.06); }
+body.sb-landing .brand:active { transform: scale(1.02); }
+
+/* Стрелка «назад в чат» — выезжает из-за логотипа при наведении. */
+body.sb-landing .brand__chev {
+  display: inline-flex; align-items: center;
+  width: 0; margin-right: -11px; opacity: 0;
+  color: var(--text);
+  overflow: hidden;
+  transform: translateX(6px);
+  transition: width 0.22s ease, opacity 0.22s ease, margin-right 0.22s ease, transform 0.22s ease;
+}
+body.sb-landing .brand:hover .brand__chev {
+  width: 16px; margin-right: 0; opacity: 0.85; transform: translateX(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  body.sb-landing .brand,
+  body.sb-landing .brand__chev { transition: none; }
+  body.sb-landing .brand:hover { transform: none; }
+}
+body.sb-landing .brand__mark {
+  width: 34px; height: 34px; border-radius: 10px;
+  display: grid; place-items: center;
+  background: var(--panel-2); border: 1px solid var(--line);
+  color: var(--text);
+}
+body.sb-landing .brand__mark svg { width: 19px; height: 19px; }
+body.sb-landing .brand__name {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 600; font-size: 19px; letter-spacing: 3px;
+  background: var(--brand-grad); background-size: 220% auto;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 16px var(--brand-glow));
+  animation: shine 7s linear infinite;
+}
+body.sb-landing .brand__dot { letter-spacing: 1px; }
+@keyframes shine { to { background-position: -220% center; } }
+
+/* кнопки живут прямо в топбаре — без плашки, чтобы не выглядели «налепленными».
+   Группа читается за счёт близости; подсветка вторичных — только на ховере. */
+body.sb-landing .topbar__ctl { display: flex; align-items: center; gap: 6px; }
+body.sb-landing .ghost-btn {
+  height: 42px; display: inline-flex; align-items: center;
+  padding: 0 16px; border-radius: 999px;
+  border: none; background: transparent;
+  color: var(--muted); font-size: 13px; font-weight: 500; cursor: pointer;
+  transition: color .25s, background .25s;
+}
+body.sb-landing .ghost-btn:hover { color: var(--text); background: var(--panel-h); }
+@media (max-width: 640px) { body.sb-landing .ghost-btn { display: none; } }
+
+body.sb-landing .cta-btn {
+  padding: 10px 20px; border-radius: 999px; border: none; cursor: pointer;
+  background: var(--text); color: var(--bg);
+  font-family: "Outfit", sans-serif; font-weight: 600; font-size: 14px;
+  transition: transform .25s, box-shadow .25s, background .25s, color .25s;
+}
+body.sb-landing .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 34px var(--brand-glow); }
+/* большие CTA на странице (hero «…— 30 дней» / финал «Попробовать бесплатно») —
+   тот же стиль, что в топбаре: прозрачная кнопка со светящимся текстом и мягким бликом. */
+body.sb-landing .cta-btn--lg {
+  position: relative; overflow: hidden;
+  padding: 14px 28px; font-size: 15px;
+  background: transparent; color: var(--text);
+  border: 1px solid var(--line-2);
+  text-shadow: 0 0 9px rgba(255,255,255,.18);
+  box-shadow: none;
+  transition: color .25s, border-color .25s, background .25s, text-shadow .25s, transform .25s;
+}
+body.sb-landing .cta-btn--lg:hover {
+  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--text) 7%, transparent);
+  border-color: var(--text);
+  text-shadow: 0 0 10px rgba(255,255,255,.26);
+  box-shadow: none;
+}
+body.sb-landing .cta-btn--lg::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(115deg, transparent 42%, rgba(255,255,255,.16) 50%, transparent 58%);
+  transform: translateX(-120%);
+  animation: ctaShine 5s ease-in-out infinite;
+}
+body.sb-landing.light .cta-btn--lg { text-shadow: none; }
+body.sb-landing.light .cta-btn--lg:hover { text-shadow: none; }
+body.sb-landing.light .cta-btn--lg::after { background: linear-gradient(115deg, transparent 42%, rgba(0,0,0,.07) 50%, transparent 58%); }
+body.sb-landing .cta-btn--block { display: block; width: 100%; margin-top: 22px; padding: 14px; }
+
+/* топбар «Начать бесплатно»: без сплошной заливки — прозрачная кнопка со светящимся текстом.
+   Обводка-намёк + мягкий скользящий блик по кнопке (как было раньше). */
+body.sb-landing .topbar__ctl .cta-btn {
+  position: relative; overflow: hidden;
+  height: 42px; padding: 0 20px; display: inline-flex; align-items: center;
+  background: transparent; color: var(--text);
+  border: 1px solid var(--line-2);
+  text-shadow: 0 0 8px rgba(255,255,255,.18);
+  box-shadow: none;
+  transition: color .25s, border-color .25s, background .25s, text-shadow .25s, transform .25s;
+}
+body.sb-landing .topbar__ctl .cta-btn:hover {
+  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--text) 7%, transparent);
+  border-color: var(--text);
+  text-shadow: 0 0 9px rgba(255,255,255,.26);
+}
+/* мягкий блик, периодически скользящий по кнопке (тоньше, чем на старой белой заливке) */
+body.sb-landing .topbar__ctl .cta-btn::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(115deg, transparent 42%, rgba(255,255,255,.16) 50%, transparent 58%);
+  transform: translateX(-120%);
+  animation: ctaShine 5s ease-in-out infinite;
+}
+@keyframes ctaShine {
+  0%        { transform: translateX(-120%); }
+  22%, 100% { transform: translateX(120%); }
+}
+/* в светлой теме белое свечение вокруг тёмного текста = «нимб» — убираем, оставляем чистую обводку */
+body.sb-landing.light .topbar__ctl .cta-btn { text-shadow: none; font-weight: 600; }
+body.sb-landing.light .topbar__ctl .cta-btn:hover { text-shadow: none; }
+body.sb-landing.light .topbar__ctl .cta-btn::after { background: linear-gradient(115deg, transparent 42%, rgba(0,0,0,.07) 50%, transparent 58%); }
+
+/* ============ HERO ============ */
+body.sb-landing .stage { position: relative; z-index: 1; }
+body.sb-landing .hero {
+  position: relative;
+  min-height: calc(100dvh - 66px);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: clamp(18px, 3.5vh, 38px);
+  padding: clamp(40px, 6vh, 72px) 20px clamp(72px, 11vh, 104px);
+}
+
+/* кнопка «листать вниз» — внизу первого экрана, мягко пульсирует */
+body.sb-landing .scroll-down {
+  position: absolute; bottom: clamp(14px, 3vh, 28px); left: 50%;
+  transform: translateX(-50%);
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--panel-2); border: 1px solid var(--line); color: var(--text);
+  cursor: pointer; display: grid; place-items: center; z-index: 6;
+  animation: scrollBob 2.4s ease-in-out infinite, scrollGlow 2.4s ease-in-out infinite;
+  transition: background .25s, border-color .25s, opacity .3s ease, visibility .3s ease;
+}
+/* прячем, как только уходим с первого экрана — иначе кнопка «зависает» на границе с портфолио */
+body.sb-landing .scroll-down.hide { opacity: 0; visibility: hidden; pointer-events: none; }
+body.sb-landing .scroll-down:hover { background: var(--panel); border-color: var(--line-2); }
+body.sb-landing .scroll-down svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+@keyframes scrollBob { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(5px); } }
+@keyframes scrollGlow { 0%, 100% { box-shadow: 0 0 14px -3px var(--brand-glow); } 50% { box-shadow: 0 0 26px 1px var(--brand-glow); } }
+body.sb-landing .hero__head { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+body.sb-landing .hero__pill {
+  font-size: 12px; color: var(--muted); letter-spacing: .3px;
+  padding: 7px 15px; border-radius: 999px;
+  background: var(--panel-2); border: 1px solid var(--line);
+}
+body.sb-landing .hero__title {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700; letter-spacing: -.5px; line-height: 1.15;
+  white-space: nowrap;                       /* одна строка на десктопе */
+  font-size: clamp(13px, 2.5vw, 31px);       /* масштаб по ширине окна, чтобы строка всегда влезала */
+}
+/* на узких экранах одна строка нечитаема — разрешаем перенос */
+@media (max-width: 720px) {
+  body.sb-landing .hero__title { white-space: normal; text-wrap: balance; font-size: clamp(20px, 6vw, 27px); max-width: 460px; }
+}
+body.sb-landing .hero__brandword {
+  background: var(--brand-grad); background-size: 220% auto;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 16px var(--brand-glow)); animation: shine 7s linear infinite;
+}
+
+/* ============ Right-rail «плюсы»: моно-лейблы, ховер раскрывает описание
+   (как FOR CODING AGENTS на vercel.com), шрифт Geist Mono ============ */
+body.sb-landing .caps {
+  position: absolute; top: clamp(6px, 1.6vh, 18px); left: clamp(16px, 4vw, 48px); right: auto; bottom: auto;
+  z-index: 6; width: min(300px, 40vw); display: flex; flex-direction: column; text-align: left;
+}
+body.sb-landing .caps__row { padding: 11px 0; border-top: 1px solid var(--line); }
+body.sb-landing .caps__row:last-child { border-bottom: 1px solid var(--line); }
+body.sb-landing .caps__label {
+  display: block;
+  font-family: "Geist Mono", ui-monospace, "SFMono-Regular", monospace;
+  font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--muted); transition: color .25s ease;
+}
+body.sb-landing .caps__more {
+  display: grid; grid-template-rows: 0fr; opacity: 0; margin-top: 0;
+  transition: grid-template-rows .32s cubic-bezier(.22,.61,.36,1), opacity .28s ease, margin-top .32s ease;
+  font-family: "Geist Mono", ui-monospace, monospace;
+  font-size: 11px; line-height: 1.5; color: var(--muted);
+}
+body.sb-landing .caps__more > span { overflow: hidden; }
+body.sb-landing .caps__row:hover .caps__label { color: var(--text); }
+body.sb-landing .caps__row:hover .caps__more { grid-template-rows: 1fr; opacity: 1; margin-top: 7px; }
+@media (max-width: 1200px) { body.sb-landing .caps { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  body.sb-landing .caps__more { transition: opacity .2s ease; }
+}
+
+/* ============ Робот ============ */
+body.sb-landing .robot {
+  position: relative; width: 140px; height: 140px; margin: 0 auto 2px;
+  color: var(--text); animation: robotFloat 5.5s ease-in-out infinite;
+}
+body.sb-landing .robot__bot { width: 140px; height: 140px; display: block; }
+/* родные «глаза»-чёрточки иконки прячем — рисуем свои живые */
+body.sb-landing .robot__bot path:nth-child(5), body.sb-landing .robot__bot path:nth-child(6) { display: none; }
+body.sb-landing .robot__glow {
+  position: absolute; inset: -26%; z-index: -1; border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--star), .14), transparent 62%); filter: blur(14px);
+}
+/* в светлой теме — мягкий белый ореол (luminous), а не тёмная дымка */
+body.sb-landing.light .robot__glow { background: radial-gradient(circle, rgba(255,255,255,.7), transparent 64%); }
+body.sb-landing .bot-eyes { position: absolute; inset: 0; transition: transform .14s ease-out; will-change: transform; }
+/* глаза в % от размера робота — масштабируются вместе с ним */
+body.sb-landing .bot-eye {
+  position: absolute; top: 49%; width: 8%; height: 14.3%; border-radius: 5px;
+  background: currentColor; transform-origin: center; animation: botBlink 4.4s infinite;
+}
+body.sb-landing .bot-eye--l { left: 35%; }
+body.sb-landing .bot-eye--r { left: 57%; }
+@keyframes botBlink { 0%, 91%, 100% { transform: scaleY(1); } 95.5% { transform: scaleY(.12); } }
+@keyframes robotFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+body.sb-landing .robot__spark { position: absolute; top: 8px; right: 12px; width: 15px; height: 15px; color: var(--text); }
+body.sb-landing .robot__spark svg { width: 100%; height: 100%; }
+body.sb-landing .robot__spark { animation: spark 3.2s ease-in-out infinite; }
+@keyframes spark { 0%, 100% { opacity: .15; transform: scale(.7) rotate(0deg); } 50% { opacity: .8; transform: scale(1) rotate(18deg); } }
+
+body.sb-landing .robot-bubble {
+  position: absolute; white-space: nowrap; z-index: 6;
+  background: var(--panel); border: 1px solid var(--line-2); border-radius: 14px;
+  padding: 9px 14px; font-size: 12.5px; color: var(--text);
+  box-shadow: 0 12px 32px rgba(0,0,0,.5); pointer-events: none;
+  opacity: 0; transition: opacity .3s ease;
+}
+body.sb-landing .robot-bubble.show { opacity: 1; }
+/* позиции вокруг робота (ставит JS) */
+body.sb-landing .robot-bubble.pos-tr { left: calc(100% + 12px); top: -4px; }
+body.sb-landing .robot-bubble.pos-r  { left: calc(100% + 12px); top: 36%; }
+body.sb-landing .robot-bubble.pos-tl { right: calc(100% + 12px); top: -4px; }
+body.sb-landing .robot-bubble.pos-l  { right: calc(100% + 12px); top: 36%; }
+body.sb-landing .robot-bubble.pos-t  { left: 50%; transform: translateX(-50%); bottom: calc(100% + 12px); }
+/* хвостики — указывают на робота */
+body.sb-landing .robot-bubble.pos-tr::after, body.sb-landing .robot-bubble.pos-r::after { content:""; position:absolute; right:100%; top:16px; border:6px solid transparent; border-right-color: var(--line-2); }
+body.sb-landing .robot-bubble.pos-tl::after, body.sb-landing .robot-bubble.pos-l::after { content:""; position:absolute; left:100%; top:16px; border:6px solid transparent; border-left-color: var(--line-2); }
+body.sb-landing .robot-bubble.pos-t::after { content:""; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:6px solid transparent; border-top-color: var(--line-2); }
+@media (max-width: 720px) { body.sb-landing .robot-bubble { display: none; } }
+body.sb-landing .hero__sub {
+  color: var(--muted); font-weight: 400; font-size: clamp(14px, 2.2vw, 17px);
+  line-height: 1.55; max-width: 520px;
+}
+
+/* ============ Тест AI (демо-чат) ============ */
+/* демо — чёрный блок (тело+сияние даёт рецепт выше), свет обнимает ВЕСЬ чат, не строку */
+body.sb-landing .demo {
+  width: min(94vw, 820px); margin: 0 auto; text-align: left;
+  border-radius: 20px; padding: 16px;
+}
+body.sb-landing .demo__head { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; padding: 2px 4px 10px; }
+body.sb-landing .demo__head svg { width: 16px; height: 16px; flex: none; }
+/* высоту анимируем явно (JS выставляет height = min(scrollHeight, 30vh)) — блок
+   плавно «раскрывается» под ответ, не дёргая остальную вёрстку; дальше 30vh — скролл */
+body.sb-landing .demo__chat { display: none; flex-direction: column; gap: 9px; height: 0; overflow: hidden; margin-bottom: 10px;
+  /* скролл-бар прижат к правому краю всего demo-окна, в отдельный «жёлоб» справа от текста:
+     растягиваем контейнер на внутренний отступ блока (−16px) и тем же padding держим текст на месте */
+  padding: 4px; padding-right: 16px; margin-right: -16px;
+  transition: height .4s cubic-bezier(.22,.61,.36,1); }
+/* скролл появляется ТОЛЬКО когда контент упёрся в потолок (иначе мигал бы из-за лага анимации высоты) */
+/* Открытый блок растёт под контент: колесо мыши крутит страницу, длинный ответ
+   не запирается во вложенном скролле (тот колесо не ловил — см. историю правок). */
+body.sb-landing .demo__chat.on { height: auto !important; max-height: none; overflow: visible; }
+/* во время посимвольной печати анимацию высоты гасим: иначе transition «догоняет» контент
+   и колышет (толкает) ленту вверх-вниз. Плавное раскрытие остаётся для открытия/мгновенной вставки */
+body.sb-landing .demo__chat.typing { transition: none; }
+body.sb-landing .demo__chat.on { display: flex; }
+@media (prefers-reduced-motion: reduce) { body.sb-landing .demo__chat { transition: none; } }
+body.sb-landing .demo__chat::-webkit-scrollbar { width: 6px; }
+body.sb-landing .demo__chat::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 6px; }
+body.sb-landing .demo__msg { padding: 9px 13px; border-radius: 13px; font-size: 13.5px; line-height: 1.5; max-width: 86%; white-space: pre-wrap; word-wrap: break-word; }
+body.sb-landing .demo__msg--user { align-self: flex-end; background: var(--text); color: var(--bg); border-bottom-right-radius: 4px; }
+body.sb-landing .demo__msg--ai { align-self: flex-start; background: rgba(255,255,255,.04); border: 1px solid transparent; color: var(--text); border-bottom-left-radius: 4px; }
+/* поле ввода — простой «утопленный» инсет внутри демо-блока (своего свечения нет:
+   свет несёт весь блок .demo). */
+body.sb-landing .demo__form {
+  display: flex; align-items: flex-end; gap: 9px;
+  border-radius: var(--card-radius); padding: 11px 11px 11px 18px;
+  background: rgba(255,255,255,.045);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.5);
+  transition: box-shadow .25s ease;
+}
+body.sb-landing .demo__form:focus-within { box-shadow: inset 0 1px 2px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.14); }
+body.sb-landing .demo__form textarea {
+  flex: 1; background: transparent; border: none; outline: none; resize: none;
+  color: var(--text); font-family: inherit; font-size: 15px; line-height: 1.45;
+  min-height: 44px; max-height: 130px; padding: 12px 0;
+}
+body.sb-landing .demo__form textarea::placeholder { color: var(--muted-2); }
+body.sb-landing .demo__send {
+  flex: none; width: 42px; height: 42px; border-radius: 12px; border: none; cursor: pointer;
+  background: var(--text); color: var(--bg); display: grid; place-items: center;
+  transition: opacity .2s, transform .2s;
+}
+body.sb-landing .demo__send svg { width: 17px; height: 17px; }
+body.sb-landing .demo__send:disabled { opacity: .35; cursor: default; }
+body.sb-landing .demo__send:not(:disabled):hover { transform: translateY(-1px); }
+body.sb-landing .demo__hint { display: block; text-align: center; color: var(--muted-2); font-size: 11px; margin-top: 9px; }
+
+/* ============ Портфолио (секция с coverflow) ============ */
+body.sb-landing .portfolio { position: relative; z-index: 1; padding: clamp(16px, 3vh, 36px) 0 0; }
+body.sb-landing .portfolio .block__head { max-width: 1080px; margin: 0 auto clamp(18px, 3.5vh, 34px); padding: 0 20px; }
+
+/* ============ Плеер / coverflow ============ */
+body.sb-landing .player {
+  position: relative; width: 100%;
+  height: clamp(420px, 54vh, 520px);
+  display: flex; align-items: center; justify-content: center;
+}
+body.sb-landing .deck { position: relative; width: 100%; height: 100%; perspective: 1600px; touch-action: pan-y; cursor: grab; }
+body.sb-landing .deck.dragging { cursor: grabbing; }
+/* зона свайпа: гасим выделение текста и ghost-drag картинки при перетаскивании */
+body.sb-landing .player, body.sb-landing .player * { user-select: none; -webkit-user-select: none; }
+
+body.sb-landing .track {
+  position: absolute; top: 50%; left: 50%;
+  width: clamp(300px, 92vw, 400px);
+  will-change: transform, opacity;
+  transition: transform .55s cubic-bezier(.22,.61,.36,1), opacity .55s ease;
+}
+body.sb-landing .deck.dragging .track { transition: none; }
+/* первая раскладка без анимации — иначе карточки «выезжают» из стопки в центре */
+body.sb-landing .deck.booting .track { transition: none; }
+body.sb-landing .track__card {
+  background: var(--card-body); border: 1px solid var(--line);   /* чёрный в цвет проекта */
+  border-radius: 24px; padding: 20px; text-align: center;
+  box-shadow: var(--card-shadow);
+  transition: box-shadow .45s cubic-bezier(.22,.61,.36,1), border-color .35s ease;
+}
+/* выделяется только АКТИВНАЯ — широким белым ореолом (как у остальных карточек),
+   тело остаётся чёрным; box-shadow не ломает 3D и не плодит скроллы */
+body.sb-landing .track.active .track__card {
+  background: var(--card-body); border-color: var(--line-2);
+  box-shadow: var(--card-halo-strong), 0 44px 90px -44px rgba(0,0,0,.9);
+}
+/* Бегущий луч по кромке — конический градиент, крутится угол (как в
+   AFinalDesignLanding). На активной карточке коверфлоу и на карточке демо-промта.
+   Заменяет прежний белый glow. */
+body.sb-landing .track.active .track__card::after, body.sb-landing .demo::after {
+  content: ""; position: absolute; inset: 0; z-index: 5; pointer-events: none;
+  border-radius: inherit; padding: 1.5px;
+  background: conic-gradient(from var(--card-angle, 0deg),
+    transparent 0deg 300deg,
+    var(--beam-col) 340deg,
+    transparent 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  animation: card-light-spin 6s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  body.sb-landing .track.active .track__card::after, body.sb-landing .demo::after { animation: none; }
+}
+
+body.sb-landing .track__art {
+  position: relative; width: 100%; aspect-ratio: 16 / 10;
+  border-radius: 16px; overflow: hidden;
+  background: radial-gradient(130% 130% at 30% 18%, var(--art-1), var(--art-2) 74%);
+  border: 1px solid var(--line);
+  display: grid; place-items: center;
+}
+body.sb-landing .track__art::after {
+  content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04), inset 0 -36px 56px rgba(0,0,0,.28);
+  background: radial-gradient(70% 60% at 50% 42%, var(--art-glow), transparent 72%);
+}
+/* скриншот-обложка: невидим, пока не загрузится (чтобы битый img не мигал) */
+body.sb-landing .track__img {
+  position: absolute; inset: 0; z-index: 2;
+  width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; transition: opacity .5s ease, transform .6s cubic-bezier(.2,.7,.3,1);
+  -webkit-user-drag: none; user-select: none; pointer-events: none;
+}
+body.sb-landing .track__img.ok { opacity: 1; }
+body.sb-landing .track.active .track__card:hover .track__img.ok { transform: scale(1.04); }
+/* эмодзи-заглушка скрыта; показывается только если обложка не загрузилась */
+body.sb-landing .track__emoji { position: relative; z-index: 1; font-size: clamp(40px, 9vh, 58px); line-height: 1; filter: drop-shadow(0 6px 18px rgba(0,0,0,.5)); opacity: 0; }
+body.sb-landing .track__art.noimg .track__emoji { opacity: .82; }
+body.sb-landing .track__cat { display: block; margin-top: 16px; font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); }
+body.sb-landing .track__name {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(13px, 3.6vw, 18px); font-weight: 700; letter-spacing: -.4px;
+  margin-top: 6px; line-height: 1.2;
+  white-space: nowrap;            /* заголовок направления — в одну строку */
+}
+body.sb-landing .track__desc { color: var(--muted); font-weight: 400; font-size: 13px; line-height: 1.5; margin-top: 9px; min-height: 38px; }
+/* сплошная акцентная кнопка (как основные кнопки сайта) — явный контраст с тёмной карточкой,
+   без свечений/анимаций: страница и так насыщена эффектами */
+body.sb-landing .track__open {
+  margin-top: 16px; display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 20px; border-radius: 12px;
+  background: var(--text); border: 0;
+  color: var(--bg); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
+  transition: opacity .2s;
+}
+body.sb-landing .track__open:hover { opacity: .85; }
+body.sb-landing .track__open svg { width: 15px; height: 15px; }
+
+/* ============ Навигация / точки ============ */
+/* стрелки в стиле проекта (Total Black): поверхность почти в цвет фона + волосок-линия,
+   приглушённая иконка, спокойный hover — без блюра и анимаций, чтобы не выделялись */
+body.sb-landing .nav-btn {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 20;
+  width: 46px; height: 46px; border-radius: 50%;
+  background: var(--card-surface); border: 1px solid var(--line);
+  color: var(--muted); cursor: pointer;
+  display: grid; place-items: center;
+  transition: background .2s, border-color .2s, color .2s;
+}
+body.sb-landing .nav-btn:hover { background: var(--card-surface-hover); border-color: var(--line-2); color: var(--text); }
+body.sb-landing .nav-btn:disabled { opacity: .25; pointer-events: none; }
+body.sb-landing .nav-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+body.sb-landing .nav-btn--prev { left: clamp(2px, 2vw, 30px); }
+body.sb-landing .nav-btn--next { right: clamp(2px, 2vw, 30px); }
+@media (max-width: 560px) { body.sb-landing .nav-btn { width: 42px; height: 42px; } }
+
+body.sb-landing .dots { display: flex; justify-content: center; gap: 8px; }
+body.sb-landing .dots button { width: 7px; height: 7px; border-radius: 999px; background: var(--muted-2); border: none; padding: 0; cursor: pointer; transition: width .3s, background .3s; }
+body.sb-landing .dots button.on { width: 22px; background: var(--text); }
+
+body.sb-landing .hero__foot { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: clamp(22px, 4vh, 44px); }
+body.sb-landing .counter { font-family: "Outfit", sans-serif; font-weight: 600; font-size: 12px; letter-spacing: 1px; color: var(--muted); }
+body.sb-landing .hero__hint { font-size: 11px; color: var(--muted-2); letter-spacing: .4px; }
+
+/* ============ Контентные блоки ============ */
+body.sb-landing .block { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; padding: clamp(40px, 6vh, 72px) 20px 0; }
+body.sb-landing .block--steps { }
+body.sb-landing .block__head { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: clamp(20px, 3.5vh, 34px); }
+body.sb-landing .block__kicker { font-size: 11.5px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: #8fb4ff; }
+body.sb-landing .block__title { font-family: "Syne", sans-serif; font-weight: 700; font-size: clamp(24px, 4.5vw, 38px); letter-spacing: -.5px; }
+body.sb-landing .block__lead { color: #c6d0e6; font-weight: 400; font-size: 15px; line-height: 1.55; max-width: 460px; }
+
+body.sb-landing .grid { display: grid; gap: 16px; }
+body.sb-landing .grid--features { grid-template-columns: repeat(3, 1fr); }
+body.sb-landing .grid--steps { grid-template-columns: repeat(3, 1fr); }
+body.sb-landing .grid--plans { grid-template-columns: repeat(3, 1fr); align-items: stretch; }
+@media (max-width: 860px) { body.sb-landing .grid--features, body.sb-landing .grid--plans { grid-template-columns: repeat(2, 1fr); } body.sb-landing .grid--steps { grid-template-columns: 1fr; } }
+@media (max-width: 560px) { body.sb-landing .grid--features, body.sb-landing .grid--plans { grid-template-columns: 1fr; } }
+
+/* фича-карточка */
+body.sb-landing .feat {
+  background: var(--card-surface); border: 1px solid var(--line); border-radius: var(--card-radius);
+  padding: 22px; display: flex; flex-direction: column; gap: 12px;
+  box-shadow: var(--card-shadow);
+  transition: border-color .25s, background .25s, box-shadow .25s, transform .25s;
+  cursor: default; user-select: none; -webkit-user-select: none;
+}
+body.sb-landing .feat:hover { border-color: var(--line-2); background: var(--card-surface-hover); transform: translateY(-2px); box-shadow: var(--card-shadow-pop); }
+/* эмодзи + заголовок — в одну строку по центру */
+body.sb-landing .feat__head { display: flex; align-items: center; justify-content: center; gap: 9px; }
+/* иконка в размер заголовка — линейная svg, без коробки, инлайн */
+body.sb-landing .feat__ic { flex: none; display: inline-flex; font-size: 17px; line-height: 1; color: var(--text); }
+body.sb-landing .feat__ic svg { width: 19px; height: 19px; display: block; }
+body.sb-landing .feat__name { font-family: "Space Grotesk", sans-serif; font-weight: 600; font-size: 16px; letter-spacing: -.2px; line-height: 1.2; white-space: nowrap; }
+/* описание — короткая строка по центру под заголовком */
+body.sb-landing .feat__desc { color: var(--muted); font-weight: 400; font-size: 13.5px; line-height: 1.5; text-align: center; white-space: nowrap; }
+
+/* шаг */
+body.sb-landing .step {
+  background: var(--card-surface); border: 1px solid var(--line); border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  padding: 24px; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  text-align: center;
+  cursor: default; user-select: none; -webkit-user-select: none;
+}
+/* номер + заголовок — в одну строку по центру */
+body.sb-landing .step__head { display: flex; align-items: baseline; justify-content: center; gap: 10px; }
+body.sb-landing .step__n { font-family: "Space Grotesk", sans-serif; font-weight: 700; font-size: 22px; color: var(--muted-2); letter-spacing: -.5px; }
+body.sb-landing .step__name { font-family: "Space Grotesk", sans-serif; font-weight: 600; font-size: 17px; }
+body.sb-landing .step__desc { color: var(--muted); font-weight: 400; font-size: 13.5px; line-height: 1.5; }
+
+/* тариф */
+body.sb-landing .plan {
+  background: var(--card-surface); border: 1px solid var(--line); border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  padding: 26px 22px; display: flex; flex-direction: column; gap: 16px; position: relative;
+}
+body.sb-landing .plan--featured { background: var(--card-surface-hover); border-color: var(--line-2); box-shadow: var(--card-shadow-pop); }
+body.sb-landing .plan__badge {
+  position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600;
+  padding: 5px 12px; border-radius: 999px; background: var(--text); color: var(--bg);
+}
+body.sb-landing .plan__name { font-family: "Space Grotesk", sans-serif; font-weight: 600; font-size: 18px; }
+body.sb-landing .plan__price { font-family: "Space Grotesk", sans-serif; font-weight: 700; font-size: 32px; letter-spacing: -1px; }
+body.sb-landing .plan__price small { font-size: 13px; font-weight: 400; color: var(--muted); letter-spacing: 0; }
+body.sb-landing .plan__list { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+body.sb-landing .plan__list li { position: relative; padding-left: 20px; font-size: 13.5px; font-weight: 300; color: var(--text); line-height: 1.4; }
+body.sb-landing .plan__list li::before { content: ""; position: absolute; left: 2px; top: 6px; width: 6px; height: 6px; border-radius: 50%; background: var(--text); opacity: .55; }
+body.sb-landing .plan .cta-btn { margin-top: auto; width: 100%; }
+body.sb-landing .plan--featured .cta-btn { background: var(--text); color: var(--bg); }
+body.sb-landing .plan:not(.plan--featured) .cta-btn { background: var(--panel-2); color: var(--text); border: 1px solid var(--line); }
+
+/* ============ Финальный CTA / футер ============ */
+body.sb-landing .finale { position: relative; z-index: 1; text-align: center; max-width: 1080px; margin: 0 auto; padding: clamp(44px, 7vh, 76px) 20px clamp(20px, 3vh, 32px); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+body.sb-landing .finale__inner { display: flex; flex-direction: column; align-items: center; gap: 14px; max-width: 720px; }
+body.sb-landing .finale .foot { margin-top: auto; }
+body.sb-landing .finale__title { font-family: "Syne", sans-serif; font-weight: 800; font-size: clamp(26px, 5vw, 44px); letter-spacing: -.5px; }
+body.sb-landing .finale__sub { color: var(--muted); font-weight: 400; font-size: 15px; }
+body.sb-landing .finale .cta-btn { margin-top: 8px; }
+
+body.sb-landing .foot {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 1080px; margin: clamp(20px, 3vh, 36px) auto 0;
+  padding: clamp(16px, 2vh, 22px) 20px clamp(20px, 2.5vh, 30px);
+  border-top: 1px solid var(--line);
+  display: flex; flex-direction: column; gap: 12px;
+  color: var(--muted); font-size: 12px;
+}
+body.sb-landing .foot__top, body.sb-landing .foot__bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px 18px; }
+body.sb-landing .foot__brand { font-family: "Space Grotesk", sans-serif; font-weight: 600; letter-spacing: 2px; color: var(--text); }
+body.sb-landing .foot__trust { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); }
+body.sb-landing .foot__trust svg { width: 14px; height: 14px; flex: none; opacity: .85; }
+body.sb-landing .foot__links { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 8px 18px; }
+body.sb-landing .foot__link { background: none; border: none; padding: 0; cursor: pointer; color: var(--muted); font-family: inherit; font-size: 12px; transition: color .2s; }
+body.sb-landing .foot__link:hover { color: var(--text); }
+body.sb-landing .foot__mail:hover { color: var(--text); }
+@media (max-width: 600px) { body.sb-landing .foot__top, body.sb-landing .foot__bottom, body.sb-landing .foot__links { justify-content: center; text-align: center; } }
+
+/* ============ Попап документа (оферта / политика) ============ */
+body.sb-landing .legal { position: fixed; inset: 0; z-index: 140; display: grid; place-items: center; opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility .3s; }
+body.sb-landing .legal.open { opacity: 1; visibility: visible; }
+body.sb-landing .legal__backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.74); backdrop-filter: blur(8px); }
+body.sb-landing .legal__card {
+  position: relative; width: min(94vw, 760px); max-height: 88vh; display: flex; flex-direction: column;
+  background: var(--card-surface); border: 1px solid var(--line-2); border-radius: 24px;
+  box-shadow: var(--card-shadow-pop);
+  transform: scale(.95) translateY(12px); transition: transform .38s cubic-bezier(.22,.61,.36,1);
+}
+body.sb-landing .legal.open .legal__card { transform: none; }
+body.sb-landing .legal__head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 22px clamp(20px, 3vw, 32px); border-bottom: 1px solid var(--line); flex-wrap: wrap;
+}
+body.sb-landing .legal__title { font-family: "Space Grotesk", sans-serif; font-size: clamp(18px, 3vw, 24px); font-weight: 700; letter-spacing: -.4px; }
+body.sb-landing .legal__actions { display: inline-flex; align-items: center; gap: 10px; }
+body.sb-landing .legal__open {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line);
+  background: var(--panel-2); color: var(--text); font-size: 12.5px; font-weight: 500;
+  transition: background .2s, border-color .2s;
+}
+body.sb-landing .legal__open:hover { background: var(--panel-h); border-color: var(--line-2); }
+body.sb-landing .legal__open svg { width: 14px; height: 14px; }
+body.sb-landing .legal__x { width: 36px; height: 36px; border-radius: 50%; background: var(--panel-2); border: 1px solid var(--line); color: var(--muted); cursor: pointer; display: grid; place-items: center; flex: none; transition: background .2s, color .2s, border-color .2s; }
+body.sb-landing .legal__x:hover { background: var(--panel-h); color: var(--text); border-color: var(--line-2); }
+body.sb-landing .legal__x svg { width: 16px; height: 16px; }
+body.sb-landing .legal__body { overflow-y: auto; padding: clamp(18px, 3vw, 30px) clamp(20px, 3vw, 32px) clamp(24px, 3vw, 34px); }
+body.sb-landing .legal__body::-webkit-scrollbar { width: 8px; }
+body.sb-landing .legal__body::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 8px; }
+body.sb-landing .legal__body h3 { font-family: "Space Grotesk", sans-serif; font-size: 16px; font-weight: 600; margin: 22px 0 8px; letter-spacing: -.2px; }
+body.sb-landing .legal__body h3:first-child { margin-top: 0; }
+body.sb-landing .legal__body p { color: var(--muted); font-weight: 400; font-size: 14px; line-height: 1.65; margin-bottom: 9px; }
+body.sb-landing .legal__body li { color: var(--muted); font-weight: 400; font-size: 14px; line-height: 1.6; margin: 0 0 6px 18px; list-style: disc; }
+@media (prefers-reduced-motion: reduce) { body.sb-landing .legal, body.sb-landing .legal__card { transition: opacity .2s ease; } }
+
+/* ============ Модалка направления ============ */
+body.sb-landing .doc, body.sb-landing .modal { position: fixed; inset: 0; z-index: 120; display: grid; place-items: center; opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility .3s; }
+body.sb-landing .doc.open, body.sb-landing .modal.open { opacity: 1; visibility: visible; }
+body.sb-landing .doc__backdrop, body.sb-landing .modal__backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.74); backdrop-filter: blur(8px); }
+body.sb-landing .doc__card {
+  position: relative; z-index: 2; width: min(92vw, 460px); max-height: 88vh; overflow-y: auto;
+  background: var(--card-body); border: 1px solid var(--line); border-radius: 24px;
+  box-shadow: var(--card-shadow-pop);
+  transform: scale(.93) translateY(12px); transition: transform .38s cubic-bezier(.22,.61,.36,1);
+}
+body.sb-landing .doc.open .doc__card { transform: none; }
+body.sb-landing .doc__card::-webkit-scrollbar { width: 8px; }
+body.sb-landing .doc__card::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 8px; }
+body.sb-landing .doc__x, body.sb-landing .modal__x {
+  position: absolute; top: 16px; right: 16px; z-index: 4;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--panel-2); border: 1px solid var(--line); color: var(--muted); cursor: pointer;
+  display: grid; place-items: center;
+  transition: background .2s, color .2s, border-color .2s;
+}
+body.sb-landing .doc__x:hover, body.sb-landing .modal__x:hover { background: var(--panel-h); color: var(--text); border-color: var(--line-2); }
+body.sb-landing .doc__x svg, body.sb-landing .modal__x svg { width: 16px; height: 16px; }
+/* ОБЩАЯ шапка чата — для центра модалки И спутников (единый стиль) */
+body.sb-landing .chat__head { display: flex; align-items: center; gap: 9px; padding-bottom: 12px; margin-bottom: 4px;
+  border-bottom: 1px solid var(--line); }
+body.sb-landing .chat__head .a { width: 30px; height: 30px; border-radius: 9px; flex: none; display: grid; place-items: center;
+  background: linear-gradient(180deg,#1c1c20,#101012); box-shadow: inset 0 1px 0 rgba(255,255,255,.10), 0 0 0 1px rgba(255,255,255,.06); }
+body.sb-landing .chat__head .a svg { width: 18px; height: 18px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+body.sb-landing .chat__head .a svg circle { fill: #fff; }
+body.sb-landing .chat__head b { font-size: 15px; font-weight: 700; letter-spacing: -.2px; }
+body.sb-landing .chat__head i { width: 8px; height: 8px; border-radius: 50%; background: #3ad07a; box-shadow: 0 0 8px #3ad07a; }
+body.sb-landing .chat__head span { font-size: 12.5px; color: var(--muted); }
+body.sb-landing.light .chat__head .a { background: linear-gradient(180deg,#f4f4f8,#e6e6ec); box-shadow: inset 0 1px 0 #fff, 0 0 0 1px rgba(0,0,0,.06); }
+body.sb-landing.light .chat__head .a svg { stroke: #1b1b22; } body.sb-landing.light .chat__head .a svg circle { fill: #1b1b22; }
+
+/* центр модалки — чёткий inline-чат (HTML) */
+body.sb-landing .doc__hero {
+  padding: clamp(18px,2.6vw,24px) clamp(18px,2.8vw,26px) 4px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+body.sb-landing .doc__msg { max-width: 86%; padding: 11px 15px; font-size: 14.5px; line-height: 1.35; border-radius: 15px; font-weight: 500; }
+body.sb-landing .doc__msg--ai { align-self: flex-start; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.06); color: #ececf0; border-bottom-left-radius: 5px; }
+body.sb-landing .doc__msg--me { align-self: flex-end; background: #f1f1f4; color: #0a0a0a; font-weight: 600; border-bottom-right-radius: 5px; }
+body.sb-landing.light .doc__msg--ai { background: rgba(0,0,0,.05); border-color: rgba(0,0,0,.06); color: #22222a; }
+body.sb-landing.light .doc__msg--me { background: #1b1b22; color: #f4f4f6; }
+/* чипсы под чатом (как на обложке), по центру */
+body.sb-landing .doc__chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 6px; }
+body.sb-landing .doc__chip { display: inline-flex; align-items: center; gap: 7px; padding: 9px 14px; border-radius: 12px; font-size: 13px; font-weight: 500;
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.09); color: #d4d4da; }
+body.sb-landing .doc__chip::before { content: ""; width: 9px; height: 9px; border-radius: 50%; border: 2px solid currentColor; opacity: .5; }
+body.sb-landing.light .doc__chip { background: rgba(0,0,0,.05); border-color: rgba(0,0,0,.10); color: #2a2a32; }
+body.sb-landing .doc__body { padding: clamp(20px, 3vw, 28px) clamp(22px, 3.5vw, 34px) clamp(24px, 3.5vw, 32px); }
+body.sb-landing .doc__cat { display: block; font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); }
+body.sb-landing .doc__title { font-family: "Space Grotesk", sans-serif; font-size: clamp(22px, 4.5vw, 28px); font-weight: 700; letter-spacing: -.5px; margin-top: 6px; }
+body.sb-landing .doc__about { color: var(--muted); font-weight: 400; font-size: 14.5px; line-height: 1.6; margin-top: 12px; }
+/* ===== спутники-переписки вокруг карточки ===== */
+body.sb-landing .doc__sats { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+/* спутник — HTML-карточка в ТОМ ЖЕ стиле, что центр (чёрный фон, та же шапка/пузыри).
+   Без поворота → края идеально чистые. */
+body.sb-landing .sat {
+  position: absolute; top: 50%; left: 50%; width: 300px;
+  background: var(--card-body); border: 1px solid var(--line); border-radius: 18px;
+  padding: 16px 18px; box-shadow: 0 30px 64px -26px rgba(0,0,0,.8);
+  display: flex; flex-direction: column; gap: 10px;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(.6);
+  transition: opacity .5s ease, transform .6s cubic-bezier(.22,.61,.36,1);
+  transition-delay: calc(var(--i) * 85ms);
+}
+body.sb-landing .sat .chat__head { padding-bottom: 10px; margin-bottom: 2px; }
+body.sb-landing .sat .chat__head .a { width: 26px; height: 26px; border-radius: 8px; }
+body.sb-landing .sat .chat__head .a svg { width: 15px; height: 15px; }
+body.sb-landing .sat .chat__head b { font-size: 13.5px; }
+body.sb-landing .sat .chat__head span { font-size: 11.5px; }
+body.sb-landing .sat__msg { max-width: 88%; padding: 10px 14px; font-size: 14px; line-height: 1.3; border-radius: 14px; font-weight: 500; }
+body.sb-landing .sat__msg--me { align-self: flex-end; background: #f1f1f4; color: #0a0a0a; font-weight: 600; border-bottom-right-radius: 5px; }
+body.sb-landing .sat__msg--ai { align-self: flex-start; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.06); color: #ececf0; border-bottom-left-radius: 5px; }
+body.sb-landing.light .sat { background: var(--card-surface); }
+body.sb-landing.light .sat__msg--me { background: #1b1b22; color: #f4f4f6; }
+body.sb-landing.light .sat__msg--ai { background: rgba(0,0,0,.05); border-color: rgba(0,0,0,.06); color: #22222a; }
+/* конечные позиции — две слева, две справа от карточки (без поворота) */
+body.sb-landing .doc__sats.show .sat {
+  opacity: 1;
+  transform: translate(-50%, -50%) translate(var(--x), var(--y)) scale(1);
+}
+body.sb-landing .doc__sats .sat:nth-child(1) { --x: -402px; --y: -120px; }
+body.sb-landing .doc__sats .sat:nth-child(2) { --x:  402px; --y: -120px; }
+body.sb-landing .doc__sats .sat:nth-child(3) { --x: -402px; --y:  120px; }
+body.sb-landing .doc__sats .sat:nth-child(4) { --x:  402px; --y:  120px; }
+/* на узких/невысоких экранах эффект отключаем (карточка остаётся самодостаточной) */
+@media (max-width: 1180px), (max-height: 720px) { body.sb-landing .doc__sats { display: none; } }
+
+/* ============ Модалка CTA ============ */
+body.sb-landing .modal__card {
+  position: relative; width: min(90vw, 360px); padding: 38px 30px 30px; text-align: center;
+  background: var(--card-body); border: 0; border-radius: 24px;
+  box-shadow: var(--card-halo), var(--card-shadow-pop); /* фирменный halo-материал лендинга вместо плоской рамки — чтобы не «выбивалось» */
+  transform: scale(.9) translateY(10px); transition: transform .35s cubic-bezier(.22,.61,.36,1);
+}
+body.sb-landing .modal.open .modal__card { transform: none; }
+body.sb-landing .modal__icon { width: 62px; height: 62px; margin: 0 auto 18px; border-radius: 18px; background: var(--panel-2); border: 1px solid var(--line); display: grid; place-items: center; color: var(--text); }
+body.sb-landing .modal__icon svg { width: 28px; height: 28px; }
+body.sb-landing .modal__title { font-family: "Outfit", sans-serif; font-size: 22px; font-weight: 600; letter-spacing: -.3px; }
+body.sb-landing .modal__text { color: var(--muted); font-weight: 400; font-size: 14px; line-height: 1.6; margin-top: 10px; }
+body.sb-landing .modal__btn { display: block; width: 100%; margin-top: 24px; padding: 13px 30px; border-radius: 999px; background: var(--text); color: var(--bg); font-family: "Outfit", sans-serif; font-weight: 600; font-size: 15px; transition: transform .25s, box-shadow .25s; }
+body.sb-landing .modal__btn:hover { transform: translateY(-2px); box-shadow: 0 12px 34px var(--brand-glow); }
+body.sb-landing .modal__alt { display: block; width: 100%; margin-top: 10px; padding: 12px; color: var(--muted); font-family: "Outfit", sans-serif; font-weight: 500; font-size: 13px; transition: color .2s; }
+body.sb-landing .modal__alt:hover { color: var(--text); }
+/* Telegram-попап: кнопки <button> с теми же классами — сброс дефолтной рамки/фона */
+body.sb-landing #tgModal .modal__btn, body.sb-landing #tgModal .modal__alt { border: none; cursor: pointer; }
+body.sb-landing #tgModal .modal__alt { background: none; }
+
+/* ============ Попап тарифов ============ */
+body.sb-landing .plans { position: fixed; inset: 0; z-index: 130; display: grid; place-items: center; visibility: hidden; transition: visibility .35s; }
+body.sb-landing .plans.open { visibility: visible; }
+/* блюр анимируем на самом бэкдропе (не через opacity родителя — иначе backdrop-filter
+   «отрезается» композитным слоем и появляется рывком после fade) */
+body.sb-landing .plans__backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0); backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); transition: background .35s ease, backdrop-filter .35s ease, -webkit-backdrop-filter .35s ease; }
+body.sb-landing .plans.open .plans__backdrop { background: rgba(0,0,0,.74); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+body.sb-landing .plans__card {
+  position: relative; width: min(94vw, 1000px); max-height: 90vh; overflow-y: auto;
+  background: var(--card-body); border: 0; border-radius: 26px;
+  padding: clamp(30px, 4vw, 46px) clamp(20px, 3vw, 40px) clamp(28px, 4vw, 40px);
+  box-shadow: var(--card-halo), var(--card-shadow-pop); /* фирменный halo-материал лендинга вместо плоской рамки */
+  opacity: 0; transform: scale(.95) translateY(12px); transition: transform .38s cubic-bezier(.22,.61,.36,1), opacity .3s ease;
+}
+body.sb-landing .plans.open .plans__card { transform: none; opacity: 1; }
+body.sb-landing .plans__card::-webkit-scrollbar { width: 8px; }
+body.sb-landing .plans__card::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 8px; }
+body.sb-landing .plans__x {
+  position: absolute; top: 16px; right: 16px; z-index: 4;
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--panel-2); border: 1px solid var(--line); color: var(--muted); cursor: pointer;
+  display: grid; place-items: center; transition: background .2s, color .2s, border-color .2s;
+}
+body.sb-landing .plans__x:hover { background: var(--panel-h); color: var(--text); border-color: var(--line-2); }
+body.sb-landing .plans__x svg { width: 16px; height: 16px; }
+body.sb-landing .plans__head { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: clamp(22px, 3vh, 34px); }
+body.sb-landing .plans__title { font-family: "Syne", sans-serif; font-weight: 700; font-size: clamp(22px, 4vw, 32px); letter-spacing: -.5px; }
+@media (prefers-reduced-motion: reduce) { body.sb-landing .plans__backdrop, body.sb-landing .plans__card { transition: background .2s ease, opacity .2s ease; } }
+
+/* ============ Переключатель темы ============ */
+body.sb-landing .theme-toggle { flex: none; width: 42px; height: 42px; border-radius: 999px; display: grid; place-items: center; background: transparent; border: none; color: var(--muted); cursor: pointer; transition: color .2s, background .2s; }
+body.sb-landing .theme-toggle:hover { color: var(--text); background: var(--panel-h); }
+body.sb-landing .theme-toggle svg { width: 18px; height: 18px; }
+body.sb-landing .theme-toggle .i-sun { display: none; }
+body.sb-landing.light .theme-toggle .i-sun { display: block; }
+body.sb-landing.light .theme-toggle .i-moon { display: none; }
+
+/* ============ Объединённая секция: возможности + запуск + CTA ============ */
+body.sb-landing .combo { position: relative; z-index: 1; padding: clamp(26px, 4vh, 60px) 0 0; display: flex; flex-direction: column; }
+/* Общий ambient-свет ЗА всей секцией (фичи+шаги) — карточки лежат в одной атмосфере,
+   а не каждая в своей пустоте. Источник сверху-центра (как свет маскота) → единый. */
+body.sb-landing .combo::before {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  left: 50%; top: -4%; transform: translateX(-50%);
+  width: min(1180px, 100%); height: min(720px, 82%);
+  background: radial-gradient(60% 56% at 50% 26%, var(--section-glow), transparent 70%);
+  filter: blur(60px);
+}
+body.sb-landing .combo__inner { max-width: 1080px; width: 100%; margin: 0 auto; padding: 0 20px; display: flex; flex-direction: column; gap: clamp(22px, 3.6vh, 44px); }
+body.sb-landing .combo__block { display: flex; flex-direction: column; }
+body.sb-landing .combo__block .block__head { margin-bottom: clamp(12px, 2vh, 20px); gap: 7px; }
+body.sb-landing .combo__cta { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+body.sb-landing .combo .feat { padding: 16px; gap: 8px; }
+body.sb-landing .combo .feat__ic { font-size: 16px; }
+body.sb-landing .combo .feat__desc { font-size: 12.5px; line-height: 1.45; }
+body.sb-landing .combo .step { padding: 18px; gap: 6px; }
+body.sb-landing .combo .grid { gap: 13px; }
+body.sb-landing .combo .finale__title { font-size: clamp(23px, 4vw, 34px); }
+
+/* ============ Полноэкранные секции + snap (десктоп) ============ */
+@media (min-width: 760px) and (min-height: 620px) {
+  body.sb-landing .portfolio {
+    min-height: calc(100dvh - 66px);
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  body.sb-landing .portfolio { padding-top: 0; }
+  /* объединённая секция на весь экран: контент распределён, футер прижат вниз */
+  body.sb-landing #more { min-height: calc(100dvh - 66px); }
+  body.sb-landing #more .combo__inner { flex: 1; justify-content: center; }
+}
+
+/* блокировка прокрутки страницы, пока открыт popup */
+html.no-scroll, body.sb-landing.no-scroll { overflow: hidden; }
+
+/* ============ Cookie-баннер / согласие 152-ФЗ ============ */
+body.sb-landing .cookie {
+  position: fixed; z-index: 90; left: 22px; bottom: 22px; width: min(420px, calc(100vw - 44px));
+  display: flex; flex-wrap: wrap; align-items: center; gap: 12px 14px;
+  background: var(--card-surface); border: 1px solid var(--line-2); border-radius: 18px;
+  padding: 16px 18px; box-shadow: var(--card-shadow-pop);
+  opacity: 0; visibility: hidden; transform: translateY(14px);
+  transition: opacity .35s ease, transform .35s ease, visibility .35s;
+}
+
+/* ============ Карточки: чёрное тело + бегущий свет по периметру ============
+   Тело — ЧЁРНОЕ в цвет проекта. Вокруг по периметру МЕДЛЕННО едет мягкий световой
+   ауреол (анимация угла конического градиента), как у Vercel. Один рецепт для всех
+   поверхностей (карточки + поле ввода демо) → единый дизайн. */
+@property --card-angle { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+@keyframes card-light-spin { to { --card-angle: 360deg; } }
+/* синхронное «дыхание» сияния — всё свечение пульсирует как одно целое */
+@keyframes card-light-breathe {
+  0%, 100% { opacity: .6;  transform: scale(1); }
+  50%      { opacity: .95; transform: scale(1.06); }
+}
+
+/* Рецепт ТОЛЬКО для статичных карточек (.feat/.step/.plan) и блока демо-чата (.demo).
+   Coverflow, модалки и cookie — НЕ здесь (у них свет через box-shadow, без слоёв-
+   псевдо, иначе ломается 3D / появляются фантом-скроллы в overflow-контейнерах). */
+/* Тело — чёрное, свечение — box-shadow СНАРУЖИ (видно всегда, не прячется за телом). */
+/* Рецепт со свечением — только для карточек НА странице (фичи/шаги/демо).
+   Тарифы (.plan) живут внутри модалки и сюда НЕ входят — у них спокойный стиль. */
+body.sb-landing .feat, body.sb-landing .step, body.sb-landing .demo {
+  position: relative;
+  background: var(--card-body);
+  border: 0;
+  box-shadow: var(--card-halo);
+  transition: box-shadow .45s cubic-bezier(.22,.61,.36,1);
+}
+/* HOVER на блок → свет ШИРОКО расходится и ярчает (как у Vercel). */
+body.sb-landing .feat:hover, body.sb-landing .step:hover, body.sb-landing .demo:hover, body.sb-landing .demo:focus-within { box-shadow: var(--card-halo-strong); }
+
+/* Светлая тема использует те же переменные --card-halo / --card-halo-strong
+   (переопределены в body.light как люминозный белый ореол) — отдельный override не нужен. */
+
+/* ============ Зерно (film grain) ============
+   Тонкая шумовая плёнка поверх всего: дизерит мягкие свечения/градиенты (убирает
+   «пиксельный» бэндинг на чёрном) и даёт премиальную фактуру. Blend overlay —
+   чистый #000 остаётся чёрным, текстура проявляется только на приподнятых тонах. */
+body.sb-landing::after {
+  content: ""; position: fixed; inset: 0; z-index: 120; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  mix-blend-mode: overlay; opacity: .55;
+}
+body.sb-landing .cookie.show { opacity: 1; visibility: visible; transform: none; }
+body.sb-landing .cookie__ic { width: 38px; height: 38px; border-radius: 11px; flex: none; display: grid; place-items: center;
+  background: var(--panel-2); border: 1px solid var(--line); color: var(--text); }
+body.sb-landing .cookie__ic svg { width: 20px; height: 20px; }
+body.sb-landing .cookie__text { flex: 1; min-width: 200px; font-size: 13px; line-height: 1.5; color: var(--muted); font-weight: 300; }
+body.sb-landing .cookie__link { background: none; border: none; padding: 0; font: inherit; color: var(--text);
+  text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+body.sb-landing .cookie__link:hover { opacity: .8; }
+body.sb-landing .cookie__btns { display: flex; gap: 8px; width: 100%; }
+body.sb-landing .cookie__btn { flex: 1; padding: 10px 14px; border-radius: 11px; font-family: inherit; font-size: 13px;
+  font-weight: 600; cursor: pointer; transition: var(--transition-theme), transform .2s ease; border: 1px solid transparent; }
+body.sb-landing .cookie__btn--ghost { background: var(--panel-2); border-color: var(--line); color: var(--text); }
+body.sb-landing .cookie__btn--ghost:hover { border-color: var(--line-2); }
+body.sb-landing .cookie__btn--primary { background: var(--text); color: var(--bg); }
+body.sb-landing .cookie__btn--primary:hover { transform: translateY(-1px); }
+@media (max-width: 520px) { body.sb-landing .cookie { left: 12px; right: 12px; bottom: 12px; width: auto; } }
+
+/* плавный кроссфейд при смене темы (View Transitions API) */
+body.sb-landing ::view-transition-old(root), body.sb-landing ::view-transition-new(root) { animation-duration: .5s; animation-timing-function: ease; }
+
+@media (prefers-reduced-motion: reduce) {
+  body.sb-landing * { animation: none !important; }
+  body.sb-landing { scroll-behavior: auto; }
+  body.sb-landing .track { transition: transform .25s ease, opacity .25s ease; }
+  body.sb-landing .modal, body.sb-landing .modal__card, body.sb-landing .doc, body.sb-landing .doc__card { transition: opacity .2s ease; }
+  body.sb-landing ::view-transition-old(root), body.sb-landing ::view-transition-new(root) { animation: none !important; }
+}
+
+/* CTA-модалка: кнопки рендерятся как <button> (в эталоне были <a>) — гасим
+   дефолтный UA-стиль кнопки (серый фон/рамка), чтобы .modal__alt была ссылкой. */
+body.sb-landing .modal__btn,
+body.sb-landing .modal__alt {
+  border: none; cursor: pointer; -webkit-appearance: none; appearance: none; text-align: center; font-family: "Outfit", sans-serif;
+}
+body.sb-landing .modal__alt { background: none; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TELECONSTRUCTOR SKIN (2026-08-05) — премиум-палитра + aurora + Unbounded.
+   Перенос дизайн-языка teleconstructor.ru на лендинг Siberi. Идёт ПОСЛЕДНИМ →
+   переопределяет токены тёмной темы и шрифты дисплея (та же специфичность, ниже
+   в файле = выигрывает). Механика/вёрстка не трогаются — меняется только «шкура».
+   ═══════════════════════════════════════════════════════════════════════════ */
+@font-face{font-family:'Unbounded';font-style:normal;font-weight:500 800;font-display:swap;src:url('/fonts/unbounded-cyrillic.woff2') format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:'Unbounded';font-style:normal;font-weight:500 800;font-display:swap;src:url('/fonts/unbounded-latin.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+2000-206F,U+2122,U+2212}
+
+/* Палитра — родная Siberi (тёплый Total Black). Aurora убрана (была лапша);
+   фон = чистое созвездие Siberi. Из teleconstructor берём только Unbounded + логотип. */
+body.sb-landing{font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
+
+/* дисплейный шрифт teleconstructor — Unbounded */
+body.sb-landing .brand__name,
+body.sb-landing .hero__title,
+body.sb-landing .hero__brandword,
+body.sb-landing .block__title,
+body.sb-landing .finale__title,
+body.sb-landing .plan__name,
+body.sb-landing .plan__price,
+body.sb-landing .step__name,
+body.sb-landing .feat__name,
+body.sb-landing .track__name,
+body.sb-landing .doc__title,
+body.sb-landing .legal__title,
+body.sb-landing .foot__brand{font-family:'Unbounded','Inter',sans-serif}
+
+/* ── Ambient aurora background (сигнатурный «вкусный» фон teleconstructor) ── */
+body.sb-landing .fx{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+body.sb-landing .aurora{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;mix-blend-mode:screen}
+body.sb-landing .aurora.a1{width:60vw;height:60vw;left:-15vw;top:-20vw;background:radial-gradient(circle,#1e3a8a,transparent 62%);animation:sbAur1 22s cubic-bezier(.22,.61,.36,1) infinite alternate}
+body.sb-landing .aurora.a2{width:55vw;height:55vw;right:-18vw;top:6vw;background:radial-gradient(circle,#6d28d9,transparent 62%);animation:sbAur2 26s cubic-bezier(.22,.61,.36,1) infinite alternate}
+body.sb-landing .aurora.a3{width:50vw;height:50vw;left:20vw;bottom:-24vw;background:radial-gradient(circle,#0e7490,transparent 62%);animation:sbAur3 30s cubic-bezier(.22,.61,.36,1) infinite alternate}
+@keyframes sbAur1{to{transform:translate(12vw,10vw) scale(1.15)}}
+@keyframes sbAur2{to{transform:translate(-10vw,8vw) scale(1.1)}}
+@keyframes sbAur3{to{transform:translate(10vw,-8vw) scale(1.12)}}
+body.sb-landing .vignette{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(120% 90% at 50% 0%,transparent 58%,rgba(2,4,10,.7))}
+body.sb-landing.light .fx{opacity:.32}
+body.sb-landing.light .vignette{background:radial-gradient(120% 90% at 50% 0%,transparent 62%,rgba(120,120,140,.16))}
+@media (prefers-reduced-motion: reduce){ body.sb-landing .aurora{animation:none} }
+
+/* Unbounded заметно шире прежнего шрифта — hero-заголовок в одну строку больше
+   не помещается и вылезал за края. Разрешаем перенос: крупный стековый заголовок. */
+body.sb-landing .hero__title{
+  white-space:normal; text-wrap:balance; overflow-wrap:break-word;
+  max-width:15ch; margin-inline:auto;
+  font-size:clamp(24px,5.2vw,52px); line-height:1.06; letter-spacing:-.02em;
+}
+
+/* ── Логотип-самолётик (из teleconstructor → лого Siberi) ── */
+body.sb-landing .brand__logo{width:34px;height:34px;object-fit:contain;display:block;filter:drop-shadow(0 4px 14px rgba(0,0,0,.5))}
+body.sb-landing .modal__icon img{width:30px;height:30px;object-fit:contain}
+
+/* ── Лид-форма «Сделаем за вас» ── */
+body.sb-landing .lead-form{display:flex;flex-direction:column;gap:10px;margin-top:16px;text-align:left}
+body.sb-landing .lead-input{width:100%;padding:13px 15px;border-radius:12px;border:1px solid var(--line-2);background:var(--card-surface);color:var(--text);font-family:inherit;font-size:14.5px;outline:none;transition:border-color .2s,background .2s}
+body.sb-landing .lead-input::placeholder{color:var(--muted)}
+body.sb-landing .lead-input:focus{border-color:var(--accent-text);background:var(--card-surface-hover)}
+body.sb-landing .lead-textarea{resize:vertical;min-height:52px;line-height:1.45}
+body.sb-landing .lead-error{color:#ff6b6b;font-size:13px;margin-top:-2px}
+body.sb-landing .lead-form .modal__btn{margin-top:4px}
+
+/* Фон лендинга теперь глобальный (SiteBackground). Свой непрозрачный фон body
+   его перекрывал — делаем прозрачным, чтобы проступал aurora + созвездие teleconstructor. */
+body.sb-landing{background:transparent !important}
+
+/* ═══ teleconstructor-стекло для карточек + читаемый подзаголовок (2026-08-05) ═══ */
+@property --sbang { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+
+/* Подзаголовок hero был почти не виден на новом фоне — делаем контрастным */
+body.sb-landing .hero__sub{ color: #c3d0ee !important; opacity: 1 !important; text-shadow: 0 1px 12px rgba(0,0,0,.5); }
+
+/* Все инфо-карточки: плоско-чёрные → матовое стекло (как .glass в teleconstructor) */
+/* Плотный фон — ТОЛЬКО у карточек Портфолио. Остальные блоки (возможности,
+   шаги, тарифы, демо, модалки) оставлены в исходном виде. */
+body.sb-landing .track__card{
+  background: rgba(13, 18, 38, .93) !important;
+  border: 1px solid rgba(255,255,255,.13) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(125%);
+  backdrop-filter: blur(16px) saturate(125%);
+}
+
+/* Активная карточка портфолио — анимированная градиентная рамка (как .gborder) */
+body.sb-landing .track.active .track__card{ position: relative; border-color: transparent !important; }
+body.sb-landing .track.active .track__card::before{
+  content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1.4px;
+  background: conic-gradient(from var(--sbang), #5b8cff, #a06bff, #22d3ee, #5b8cff);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude;
+  animation: sbSpin 6s linear infinite; pointer-events: none; z-index: 4;
+}
+@keyframes sbSpin{ to{ --sbang: 360deg; } }
+@media (prefers-reduced-motion: reduce){ body.sb-landing .track.active .track__card::before{ animation: none; } }
+
+/* Бегущий блик (демо-бокс + активная карточка) был коралловым — под новый
+   сине-фиолетовый фон делаем синим. Заодно фокус-акценты. */
+body.sb-landing{ --accent-text: #6ea8ff; --beam-col: #8fb8ff; }
+
+/* ═══ Моно-строчки «для кого» — прибиты к экрану (2026-08-07) ════════════════
+   Раньше они жили внутри первого экрана и уезжали вместе с ним. Делаем их
+   fixed, чтобы держались на месте всю прокрутку.
+   Порог 1460px не случайный: контент лендинга — 1080px по центру, и на более
+   узких экранах закреплённая колонка наезжала бы на карточки. Там она остаётся
+   прежней, внутри героя (а ниже 1200px её и так нет). */
+@media (min-width: 1460px){
+  body.sb-landing .caps{
+    position: fixed;
+    top: 104px;                          /* под верхней панелью */
+    left: clamp(16px, 2.6vw, 44px);
+    width: min(238px, 15vw);
+    z-index: 6;
+  }
+  /* На тёмных секциях строки не должны спорить с контентом — держим их тихими,
+     пока к ним не подвели курсор. */
+  body.sb-landing .caps__row{ transition: border-color .3s ease; }
+}
+
+/* ═══ Заявка на роботозамещение (2026-08-07) ═════════════════════════════════
+   Форма была узкой карточкой 360px с крохотным логотипом в коробочке — читалась
+   как системный алерт, а это главный экран продажи. Расширяем до 560px, логотип
+   ставим голым и крупным, поля делаем длинными и высокими. Скоуп — только эта
+   модалка (.modal--lead), popup Telegram остаётся компактным. */
+body.sb-landing .modal--lead .modal__card{
+  width: min(94vw, 520px);
+  /* компактно, чтобы всё окно помещалось на экране без прокрутки; overflow — только
+     страховка на совсем низких экранах */
+  max-height: 94vh; overflow-y: auto;
+  padding: clamp(20px, 2.8vw, 30px) clamp(20px, 3.2vw, 36px) clamp(20px, 2.8vw, 28px);
+  border-radius: 24px;
+}
+body.sb-landing .modal--lead .modal__card::-webkit-scrollbar{ width: 8px; }
+body.sb-landing .modal--lead .modal__card::-webkit-scrollbar-thumb{ background: rgba(255,255,255,.14); border-radius: 8px; }
+/* Логотип без подложки: сам знак и есть акцент, коробка вокруг его только мельчит */
+body.sb-landing .modal--lead .lead-logo{
+  display: block; width: clamp(58px, 8vw, 78px); height: auto;
+  margin: 0 auto clamp(8px, 1.2vw, 12px); object-fit: contain;
+  filter: drop-shadow(0 10px 30px rgba(91,140,255,.45));
+}
+body.sb-landing .lead-kicker{
+  display: block; margin-bottom: 7px;
+  font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: #8fb4ff;
+}
+body.sb-landing .modal--lead .modal__title{ font-size: clamp(20px, 2.8vw, 26px); line-height: 1.12; }
+body.sb-landing .modal--lead .modal__text{ font-size: 13.5px; line-height: 1.5; margin-top: 8px; max-width: 46ch; margin-inline: auto; }
+/* второй абзац — «продающий»: связаться, разобрать бизнес-модель, предложить решение */
+body.sb-landing .modal--lead .modal__text--sub{ font-size: 13px; margin-top: 9px; color: var(--muted-2); }
+
+/* Три «цифры» — самый сильный аргумент замены штата, поэтому крупно и первым делом */
+body.sb-landing .lead-facts{
+  list-style: none; margin: clamp(12px, 1.6vw, 16px) 0 0; padding: 0;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px;
+}
+body.sb-landing .lead-facts li{
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 10px 8px; border-radius: 12px;
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.10);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
+}
+body.sb-landing .lead-facts b{
+  font-family: "Space Grotesk", sans-serif; font-weight: 700; font-size: clamp(17px, 2.4vw, 21px);
+  color: #dbe8ff; letter-spacing: -.4px;
+}
+body.sb-landing .lead-facts span{ font-size: 11.5px; color: var(--muted); line-height: 1.3; text-align: center; }
+
+/* Длинные поля: во всю ширину карточки и выше по росту — в них удобно попадать
+   пальцем, и форма перестаёт выглядеть анкетой из трёх окошек. */
+body.sb-landing .modal--lead .lead-form{ gap: 9px; margin-top: clamp(12px, 1.8vw, 18px); }
+body.sb-landing .modal--lead .lead-input{
+  padding: 12px 16px; border-radius: 12px; font-size: 14.5px;
+}
+body.sb-landing .modal--lead .lead-textarea{ min-height: 58px; }
+body.sb-landing .modal--lead .modal__btn{ margin-top: 4px; padding: 13px 28px; font-size: 15.5px; }
+body.sb-landing .lead-note{
+  margin-top: 12px; font-size: 12.5px; line-height: 1.5; color: var(--muted-2); text-align: center;
+}
+@media (max-width: 520px){
+  body.sb-landing .lead-facts{ grid-template-columns: 1fr; }
+  body.sb-landing .lead-facts li{ flex-direction: row; justify-content: center; gap: 8px; padding: 10px; }
+}
+
+/* ═══ Кнопка «листать вниз»: клик мимо (2026-08-07) ═══════════════════════════
+   Кнопка качалась целиком (scrollBob двигал сам элемент на 5px). Курсор стоит,
+   кнопка уезжает из-под него — mousedown попадает, mouseup уже мимо, и события
+   click браузер не порождает. Отсюда «иногда не кликается с первого раза».
+   Теперь качается только стрелка внутри, а сама кнопка стоит на месте; заодно
+   даём ей чуть больший невидимый радиус попадания. */
+body.sb-landing .scroll-down{
+  animation: scrollGlow 2.4s ease-in-out infinite;   /* только свечение, без движения */
+}
+body.sb-landing .scroll-down::before{
+  content: ''; position: absolute; inset: -10px; border-radius: 50%;
+}
+body.sb-landing .scroll-down svg{
+  animation: sbArrowBob 2.4s ease-in-out infinite;
+}
+@keyframes sbArrowBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+@media (prefers-reduced-motion: reduce){ body.sb-landing .scroll-down svg{ animation: none; } }
+
+/* ═══ Стекло вместо чёрных коробок (2026-08-07) ═══
+   Цвет поверхностей задан токенами выше — здесь только матовость: без
+   backdrop-filter полупрозрачная карточка выглядит просто выцветшей, а с ним
+   аврора за ней размывается и панель читается как материал (приём .glass
+   из teleconstructor). Тёмной темы касается только — в светлой фон другой.
+
+   Размытие вешаем ТОЛЬКО на карточки, лежащие на странице. Внутри модалок его
+   быть не должно: там под карточкой уже размытый бэкдроп, и вложенный
+   backdrop-filter заставляет браузер растрировать всю страницу второй раз —
+   именно из-за этого попапы открывались рывком (кадр по ~280мс). Визуально
+   ничего не теряем: за карточкой и так матовая темнота. */
+/* У карточки маршрута своя рамка, поэтому волосяное кольцо --card-halo ей не
+   добавляем — иначе край получается двойным. */
+body.sb-landing:not(.light) .rm__card{
+  -webkit-backdrop-filter: blur(26px) saturate(155%);
+  backdrop-filter: blur(26px) saturate(155%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.13), var(--card-shadow);
+}
+body.sb-landing:not(.light) .feat,
+body.sb-landing:not(.light) .step,
+body.sb-landing:not(.light) .demo,
+body.sb-landing:not(.light) .cookie{
+  -webkit-backdrop-filter: blur(26px) saturate(155%);
+  backdrop-filter: blur(26px) saturate(155%);
+  /* Светлая верхняя грань — кромка стекла, ловящая свет. Без неё полупрозрачная
+     панель читается как выцветшее пятно, а не как материал. Волосяную рамку
+     (--card-halo) сохраняем: у .feat/.step border: 0, её держит именно тень. */
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.13), var(--card-halo), var(--card-shadow);
+}
+body.sb-landing:not(.light) .feat:hover,
+body.sb-landing:not(.light) .step:hover,
+body.sb-landing:not(.light) .demo:hover,
+body.sb-landing:not(.light) .demo:focus-within{
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.18), var(--card-halo-strong),
+              0 30px 70px -34px rgba(91,140,255,.5);
+}
+
+/* Поверхности ВНУТРИ модалок. Своего backdrop-filter им не даём — вложенное
+   размытие заставляло браузер растрировать страницу дважды и роняло анимацию
+   открытия. Стекло получается даром: под ними уже лежит размытый бэкдроп,
+   и достаточно сделать сами поверхности полупрозрачными — сквозь них видно
+   ту же матовую глубину. */
+body.sb-landing:not(.light) .plans__card,
+body.sb-landing:not(.light) .doc__card,
+body.sb-landing:not(.light) .modal__card{
+  background: rgba(15, 21, 44, .62);
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.14), var(--card-shadow-pop);
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+}
+/* Тарифная карточка лежит НА стекле модалки — значит, она светлая плёнка
+   поверх, как .glass в teleconstructor, а не ещё один тёмный прямоугольник. */
+body.sb-landing:not(.light) .plan{
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.11);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+}
+body.sb-landing:not(.light) .plan:hover{
+  background: rgba(91,140,255,.10);
+  border-color: rgba(91,140,255,.42);
+}
+/* Поля лид-формы и иконка — тоже светлая плёнка поверх стекла модалки, иначе
+   на прозрачной карточке они выглядят вырезанными тёмными дырами. */
+body.sb-landing:not(.light) .lead-input,
+body.sb-landing:not(.light) .modal__icon{
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+}
+body.sb-landing:not(.light) .lead-input:focus{
+  background: rgba(91,140,255,.12);
+  border-color: rgba(140,170,255,.55);
+}
+
+/* Ховер — синяя кромка вместо нейтрально-белой (как у карточек teleconstructor). */
+body.sb-landing:not(.light) .feat:hover,
+body.sb-landing:not(.light) .step:hover,
+body.sb-landing:not(.light) .plan:hover{
+  border-color: rgba(91, 140, 255, .42);
+  box-shadow: var(--card-halo-strong), 0 30px 70px -34px rgba(91, 140, 255, .45);
+}
+
+/* ═══ Открытие/закрытие модалок (2026-08-07) ═══════════════════════════════
+   Было две болячки:
+     • у тарифов анимировался сам РАДИУС размытия (blur 0 → 8px). Это заставляет
+       браузер пересчитывать размытие всей страницы на каждом кадре — вместе с
+       авророй и канвасом созвездия. Отсюда «открывается с задержкой и без
+       анимации»: первые кадры съедаются, окно появляется уже на месте.
+     • у остальных модалок гас/зажигался КОНТЕЙНЕР через opacity, а backdrop-filter
+       внутри такого слоя браузер вырезает в отдельный композитный слой и включает
+       скачком — фон размывался рывком и с опозданием.
+
+   Лечим одинаково для всех четырёх оверлеев: размытие держим ПОСТОЯННЫМ, а
+   проявляем фон через opacity (дешёвый композитный кадр). Контейнер прозрачностью
+   больше не трогаем — он только показывает/прячет. Фон ведёт, карточка идёт следом
+   с крошечной задержкой: сначала «стекло», потом окно — так читается мягче. */
+body.sb-landing .doc,
+body.sb-landing .modal,
+body.sb-landing .plans,
+body.sb-landing .legal{
+  opacity: 1;
+  visibility: hidden;
+  /* прячем контейнер только после того, как всё внутри погасло */
+  transition: visibility 0s linear .34s;
+}
+body.sb-landing .doc.open,
+body.sb-landing .modal.open,
+body.sb-landing .plans.open,
+body.sb-landing .legal.open{
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+body.sb-landing .doc__backdrop,
+body.sb-landing .modal__backdrop,
+body.sb-landing .plans__backdrop,
+body.sb-landing .legal__backdrop{
+  position: absolute; inset: 0;
+  background: rgba(4, 7, 16, .74);
+  /* без saturate(): это второй проход фильтра по всей странице, а на глаз под
+     плотной затемнённой подложкой его всё равно не видно */
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  opacity: 0;
+  transition: opacity .24s cubic-bezier(.22, .61, .36, 1);
+}
+/* Пока открыт попап, разгружаем то, что лежит ПОД ним. Бэкдроп с backdrop-filter
+   заставляет браузер заново растрировать всю страницу целиком — вместе с
+   авророй (три пятна по 60vw с blur(90px) и режимом screen) и десятком карточек,
+   у каждой своё размытие. Под плотной затемнённой подложкой всего этого всё
+   равно не разглядеть, поэтому на время модалки гасим лишнюю работу — и кадр
+   открытия перестаёт быть тяжёлым. Класс no-scroll body получает на время
+   любой модалки. */
+body.sb-landing.no-scroll .aurora{ animation-play-state: paused; filter: blur(60px); }
+body.sb-landing.no-scroll .feat,
+body.sb-landing.no-scroll .step,
+body.sb-landing.no-scroll .demo,
+body.sb-landing.no-scroll .cookie,
+body.sb-landing.no-scroll .track__card{
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+}
+body.sb-landing .doc.open .doc__backdrop,
+body.sb-landing .modal.open .modal__backdrop,
+body.sb-landing .plans.open .plans__backdrop,
+body.sb-landing .legal.open .legal__backdrop{ opacity: 1; }
+
+body.sb-landing .doc__card,
+body.sb-landing .modal__card,
+body.sb-landing .plans__card,
+body.sb-landing .legal__card{
+  opacity: 0;
+  transform: scale(.965) translateY(12px);
+  transition: opacity .26s ease .06s, transform .34s cubic-bezier(.22, .61, .36, 1) .06s;
+}
+body.sb-landing .doc.open .doc__card,
+body.sb-landing .modal.open .modal__card,
+body.sb-landing .plans.open .plans__card,
+body.sb-landing .legal.open .legal__card{ opacity: 1; transform: none; }
+
+/* Закрытие: карточка уходит первой, фон растворяется следом — обратный порядок
+   открытия, поэтому закрывается так же плавно, а не «схлопывается». */
+body.sb-landing .doc:not(.open) .doc__card,
+body.sb-landing .modal:not(.open) .modal__card,
+body.sb-landing .plans:not(.open) .plans__card,
+body.sb-landing .legal:not(.open) .legal__card{
+  transition: opacity .18s ease, transform .26s cubic-bezier(.22, .61, .36, 1);
+}
+body.sb-landing .doc:not(.open) .doc__backdrop,
+body.sb-landing .modal:not(.open) .modal__backdrop,
+body.sb-landing .plans:not(.open) .plans__backdrop,
+body.sb-landing .legal:not(.open) .legal__backdrop{
+  transition: opacity .3s ease .04s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.sb-landing .doc__card, body.sb-landing .modal__card,
+  body.sb-landing .plans__card, body.sb-landing .legal__card{ transform: none; transition: opacity .15s ease; }
+}
+
+/* ═══ «Возможности» — бенто вместо шести одинаковых клеток (2026-08-07) ═══════
+   Раньше секция вместе с шагами и футером силой влезала в один экран, поэтому всё
+   было ужато до 12px шрифта и 16px паддингов — читалось как таблица, а не как
+   витрина. Теперь у неё свой экран: карточки крупнее, иконка вынесена в цветной
+   квадрат, первая и последняя плитки шире — сетка перестаёт быть монотонной. */
+/* Три колонки, а не четыре: в 250px заголовки ломались на три строки и плитки
+   выглядели рвано. 337px — заголовок в одну-две строки, подпись целиком.
+   minmax(0,1fr), а не 1fr: у 1fr минимум — auto, и длинный текст распирает
+   колонку, выталкивая сетку за пределы контейнера. */
+body.sb-landing .grid--features{
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 1.4vw, 18px);
+}
+body.sb-landing .feat{
+  grid-column: span 1;
+  /* min-width:0 — иначе у grid-элемента минимум auto: длинный заголовок не даёт
+     плитке сжаться, она вылезает из своей колонки и наезжает на соседнюю */
+  min-width: 0;
+  padding: clamp(18px, 2vw, 26px);
+  gap: 14px;
+  flex-direction: row;
+  align-items: flex-start;
+  text-align: left;
+}
+/* В прежней сетке заголовок держали в одну строку (white-space: nowrap) — в
+   бенто колонки уже, и от этого текст вылезал из плитки на соседнюю. Разрешаем перенос. */
+body.sb-landing .feat__name{ white-space: normal; overflow-wrap: break-word; text-wrap: balance; }
+/* Широкие плитки оставлены только для узких экранов «в два ряда» — на трёх
+   колонках все шесть возможностей равны по весу, и сетка читается спокойнее. */
+body.sb-landing .feat--wide{ grid-column: span 1; }
+body.sb-landing .combo .feat{ padding: clamp(18px, 2vw, 26px); gap: 14px; }
+body.sb-landing .feat__body{ display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+/* Иконка — в квадрате-чипе с синим свечением (язык teleconstructor), а не голая. */
+body.sb-landing .feat__ic,
+body.sb-landing .combo .feat__ic{
+  flex: none; width: 42px; height: 42px; border-radius: 13px;
+  display: grid; place-items: center; font-size: 0;
+  background: linear-gradient(145deg, rgba(91,140,255,.22), rgba(160,107,255,.16));
+  border: 1px solid rgba(140,170,255,.22);
+  color: #bcd0ff;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.14);
+  transition: border-color .25s, box-shadow .25s, transform .25s;
+}
+body.sb-landing .feat__ic svg{ width: 20px; height: 20px; }
+body.sb-landing .feat:hover .feat__ic{
+  transform: translateY(-1px);
+  border-color: rgba(140,170,255,.5);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 8px 22px -10px rgba(91,140,255,.8);
+}
+body.sb-landing .feat__head{ display: contents; }
+body.sb-landing .feat__name{ font-size: clamp(14.5px, 1.3vw, 16.5px); line-height: 1.25; }
+body.sb-landing .feat__desc,
+body.sb-landing .combo .feat__desc{
+  font-size: 13.5px; line-height: 1.5;
+  text-align: left; white-space: normal;   /* было nowrap — подпись вылезала из плитки */
+}
+@media (max-width: 900px){
+  body.sb-landing .grid--features{ grid-template-columns: repeat(2, 1fr); }
+  body.sb-landing .feat--wide{ grid-column: span 1; }
+}
+@media (max-width: 560px){ body.sb-landing .grid--features{ grid-template-columns: 1fr; } }
+
+/* ═══ «Запуск» — роудмап (2026-08-07) ════════════════════════════════════════
+   Три карточки в ряд читались как обычный список. Здесь это маршрут: по мере
+   прокрутки линия заполняется, станции зажигаются одна за другой и отмечаются
+   галочкой, а «готовность» доходит до 100% и включает финишный флаг.
+   Прогресс приходит из JSX в переменной --rm (0…1) — CSS только рисует. */
+body.sb-landing .launch{
+  position: relative; z-index: 1;
+  padding: clamp(40px, 7vh, 96px) 0 clamp(30px, 5vh, 60px);
+  display: flex; flex-direction: column;
+}
+body.sb-landing .launch__inner{
+  max-width: 1080px; width: 100%; margin: 0 auto; padding: 0 20px;
+  display: flex; flex-direction: column; gap: clamp(28px, 4.5vh, 52px);
+}
+body.sb-landing .launch .block__lead{ max-width: 620px; margin: 0 auto; }
+/* «под ключ» уезжало на отдельную строку — балансируем перенос */
+body.sb-landing .launch .finale__title{ max-width: 20ch; margin-inline: auto; text-wrap: balance; }
+
+body.sb-landing .rm{ position: relative; }
+
+/* Полоса готовности — игровой счётчик над маршрутом */
+body.sb-landing .rm__meter{
+  display: flex; align-items: center; gap: 14px;
+  max-width: 560px; margin: 0 auto clamp(26px, 4vh, 46px);
+}
+body.sb-landing .rm__meter-cap{
+  font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--muted); white-space: nowrap; font-weight: 500;
+}
+body.sb-landing .rm__meter-bar{
+  flex: 1; height: 8px; border-radius: 99px; overflow: hidden;
+  background: rgba(255,255,255,.07); box-shadow: inset 0 1px 2px rgba(0,0,0,.5);
+}
+body.sb-landing .rm__meter-bar i{
+  display: block; height: 100%; border-radius: 99px;
+  width: calc(var(--rm, 0) * 100%);
+  background: linear-gradient(90deg, #5b8cff, #a06bff);
+  box-shadow: 0 0 16px rgba(122,140,255,.6);
+}
+body.sb-landing .rm__meter-val{
+  font-family: "Space Grotesk", sans-serif; font-weight: 700; font-size: 20px;
+  min-width: 58px; text-align: right; color: #cfe0ff; font-variant-numeric: tabular-nums;
+}
+body.sb-landing .rm__meter-val i{ font-style: normal; font-size: 13px; color: var(--muted); margin-left: 1px; }
+
+/* Рельса маршрута: серая подложка + светящаяся заливка + бегунок на её конце */
+body.sb-landing .rm__flow{ position: relative; }
+body.sb-landing .rm__rail{
+  position: absolute; top: 27px; left: 16.66%; right: 16.66%; height: 2px;
+  background: rgba(255,255,255,.09); border-radius: 2px;
+}
+body.sb-landing .rm__rail-fill{
+  position: absolute; left: 0; top: 0; bottom: 0; border-radius: 2px;
+  width: calc(var(--rm, 0) * 100%);
+  background: linear-gradient(90deg, #5b8cff, #a06bff 60%, #22d3ee);
+  box-shadow: 0 0 18px rgba(91,140,255,.65);
+}
+body.sb-landing .rm__rail-pulse{
+  position: absolute; top: 50%; left: calc(var(--rm, 0) * 100%);
+  width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%;
+  background: #dbe8ff; opacity: calc(var(--rm, 0) * 3);
+  box-shadow: 0 0 0 4px rgba(91,140,255,.22), 0 0 20px 5px rgba(91,140,255,.75);
+}
+
+body.sb-landing .rm__track{
+  position: relative; list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 2vw, 26px);
+}
+body.sb-landing .rm__stop{ display: flex; flex-direction: column; align-items: center; gap: 16px; min-width: 0; }
+
+/* Узел: номер → галочка, когда линия дошла до станции */
+body.sb-landing .rm__node{
+  position: relative; width: 56px; height: 56px; border-radius: 18px;
+  display: grid; place-items: center;
+  background: rgba(13,18,38,.92); border: 1px solid rgba(255,255,255,.12);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  transition: border-color .45s ease, box-shadow .45s ease, transform .45s cubic-bezier(.22,.61,.36,1);
+}
+body.sb-landing .rm__num,
+body.sb-landing .rm__tick{
+  grid-area: 1 / 1; transition: opacity .3s ease, transform .3s ease;
+}
+body.sb-landing .rm__num{
+  font-family: "Space Grotesk", sans-serif; font-weight: 700; font-size: 18px;
+  color: var(--muted-2); letter-spacing: -.5px;
+}
+body.sb-landing .rm__tick{ width: 22px; height: 22px; color: #7cf3c0; opacity: 0; transform: scale(.6); }
+body.sb-landing .rm__stop.is-on .rm__node{
+  border-color: rgba(120,160,255,.55);
+  box-shadow: 0 0 0 4px rgba(91,140,255,.10), 0 14px 34px -14px rgba(91,140,255,.85);
+  transform: translateY(-2px);
+}
+body.sb-landing .rm__stop.is-on .rm__num{ color: #dbe8ff; }
+body.sb-landing .rm__stop.is-done .rm__num{ opacity: 0; transform: scale(.6); }
+body.sb-landing .rm__stop.is-done .rm__tick{ opacity: 1; transform: scale(1); }
+body.sb-landing .rm__stop.is-done .rm__node{ border-color: rgba(124,243,192,.45); }
+
+/* Карточка станции — то же стекло, что у остальных блоков */
+/* Содержимое карточки — по левому краю: центрированный текст со списком читается
+   рвано, а срок и состав работ должны стоять на одной оси. Карточки тянутся на
+   одну высоту (display:flex + margin-top:auto у срока), поэтому нижняя линия у
+   всех трёх совпадает, даже когда пунктов разное количество. */
+body.sb-landing .rm__card{
+  width: 100%; flex: 1; text-align: left;
+  display: flex; flex-direction: column;
+  padding: clamp(20px, 2.2vw, 26px);
+  border-radius: var(--card-radius);
+  background: var(--card-body); border: 1px solid var(--line);
+  -webkit-backdrop-filter: blur(16px) saturate(125%); backdrop-filter: blur(16px) saturate(125%);
+  box-shadow: var(--card-shadow);
+  opacity: .55; transform: translateY(10px);
+  transition: opacity .5s ease, transform .5s cubic-bezier(.22,.61,.36,1), border-color .3s, box-shadow .3s;
+}
+body.sb-landing .rm__stop.is-on .rm__card{ opacity: 1; transform: none; }
+body.sb-landing .rm__stop.is-on:hover .rm__card{
+  border-color: rgba(91,140,255,.42);
+  box-shadow: var(--card-shadow-pop), 0 30px 70px -34px rgba(91,140,255,.5);
+}
+body.sb-landing .rm__name{
+  font-family: "Space Grotesk", sans-serif; font-weight: 600;
+  font-size: clamp(15px, 1.5vw, 17.5px); line-height: 1.28; margin-bottom: 8px;
+}
+body.sb-landing .rm__desc{ color: var(--muted); font-size: 13.5px; line-height: 1.55; font-weight: 400; }
+
+/* Состав шага — РОВНЫЙ список, а не облако тегов. Пилюли разной ширины по
+   центру рвали ритм: три карточки выглядели как три разных вёрстки. Здесь у
+   каждой строки одна левая ось, одинаковый шаг и волосяная линия между
+   пунктами — читается как спецификация работ. */
+body.sb-landing .rm__list{
+  list-style: none; margin: 16px 0 0; padding: 0;
+  display: flex; flex-direction: column;
+}
+body.sb-landing .rm__list li{
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 9px 0; font-size: 13px; line-height: 1.4; color: #c7d3ee;
+  border-top: 1px solid rgba(255,255,255,.07);
+}
+body.sb-landing .rm__list li:first-child{ border-top: 0; padding-top: 0; }
+body.sb-landing .rm__list svg{
+  width: 15px; height: 15px; flex: none; margin-top: 1px;
+  padding: 2px; border-radius: 50%;
+  color: #7cf3c0; background: rgba(124,243,192,.12);
+}
+
+/* Метка этапа и срок — рамка вокруг сути: чем занимаемся и сколько это займёт */
+body.sb-landing .rm__tag{
+  align-self: flex-start;
+  padding: 4px 10px; border-radius: 999px; margin-bottom: 10px;
+  font-size: 10.5px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+  color: #8fb4ff; background: rgba(91,140,255,.12); border: 1px solid rgba(140,170,255,.20);
+}
+body.sb-landing .rm__meta{
+  margin-top: auto; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.07);
+  font-size: 12px; color: var(--muted-2);
+}
+body.sb-landing .rm__list{ margin-bottom: 14px; }
+
+/* Финиш — зажигается, когда маршрут пройден целиком */
+body.sb-landing .rm__finish{
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  margin-top: clamp(22px, 3.5vh, 36px);
+  opacity: .35; transform: translateY(6px);
+  transition: opacity .5s ease, transform .5s cubic-bezier(.22,.61,.36,1);
+}
+body.sb-landing .rm--done .rm__finish{ opacity: 1; transform: none; }
+body.sb-landing .rm__finish-badge{
+  width: 40px; height: 40px; border-radius: 13px; display: grid; place-items: center;
+  background: linear-gradient(145deg, rgba(91,140,255,.25), rgba(34,211,238,.18));
+  border: 1px solid rgba(140,170,255,.28); color: #dbe8ff;
+}
+body.sb-landing .rm__finish-badge svg{ width: 19px; height: 19px; }
+body.sb-landing .rm--done .rm__finish-badge{
+  box-shadow: 0 0 0 5px rgba(91,140,255,.10), 0 14px 34px -14px rgba(91,140,255,.9);
+}
+body.sb-landing .rm__finish-text{
+  font-family: "Space Grotesk", sans-serif; font-weight: 600; font-size: 15px; color: #dbe8ff;
+}
+
+/* Мобильный маршрут — вертикальный: рельса слева, станции столбиком */
+@media (max-width: 860px){
+  body.sb-landing .rm__track{ grid-template-columns: 1fr; gap: 18px; }
+  body.sb-landing .rm__stop{ flex-direction: row; align-items: flex-start; gap: 14px; text-align: left; }
+  body.sb-landing .rm__card{ text-align: left; }
+  body.sb-landing .rm__node{ width: 46px; height: 46px; border-radius: 15px; flex: none; }
+  body.sb-landing .rm__rail{
+    top: 23px; bottom: 23px; left: 23px; right: auto; width: 2px; height: auto;
+  }
+  body.sb-landing .rm__rail-fill{ width: 100%; height: calc(var(--rm, 0) * 100%); bottom: auto; }
+  body.sb-landing .rm__rail-pulse{ top: calc(var(--rm, 0) * 100%); left: 50%; }
+  body.sb-landing .rm__meter{ gap: 10px; }
+  body.sb-landing .rm__meter-cap{ font-size: 11px; }
+}
+
+/* Секции больше не втиснуты в один экран — у возможностей свой, у маршрута свой. */
+@media (min-width: 760px) and (min-height: 620px){
+  body.sb-landing #more{ min-height: auto; padding-bottom: clamp(30px, 6vh, 70px); }
+  body.sb-landing #more .combo__inner{ flex: none; }
+  body.sb-landing #launch{ min-height: calc(100dvh - 66px); justify-content: center; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  body.sb-landing .rm__card{ opacity: 1; transform: none; }
+  body.sb-landing .rm__finish{ opacity: 1; transform: none; }
+}

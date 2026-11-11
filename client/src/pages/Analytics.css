@@ -1,0 +1,16 @@
+/* Заглушка «Скоро» раздела Аналитика — Total Black */
+body.sb-panel .an-stub { max-width: 760px; margin: 0 auto; }
+body.sb-panel .an-soon { text-align: center; padding: 40px 28px; }
+body.sb-panel .an-soon__ic {
+  width: 64px; height: 64px; margin: 0 auto 16px; border-radius: 18px;
+  display: grid; place-items: center; color: var(--accent-text);
+  background: color-mix(in srgb, var(--accent-text) 12%, transparent);
+  border: 1px solid var(--line-2);
+}
+body.sb-panel .an-soon__t { font-family: Inter, "Inter Fallback", system-ui, sans-serif; font-weight: 700; font-size: 24px; color: var(--text); margin-bottom: 8px; }
+body.sb-panel .an-soon__d { color: var(--muted); font-size: 15px; line-height: 1.55; max-width: 460px; margin: 0 auto 26px; }
+body.sb-panel .an-soon__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; text-align: left; }
+@media (max-width: 640px){ body.sb-panel .an-soon__grid { grid-template-columns: 1fr; } }
+body.sb-panel .an-soon__item { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+body.sb-panel .an-soon__item-t { font-weight: 600; color: var(--text); font-size: 14.5px; margin-bottom: 4px; }
+body.sb-panel .an-soon__item-d { color: var(--muted); font-size: 13px; line-height: 1.5; }

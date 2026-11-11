@@ -1,0 +1,14 @@
+{
+  "name": "siberi",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Siberi AI — платформа ИИ-ассистентов: LLM-шлюз, данные пользователя, конструктор ботов, веб, мобильное приложение и Telegram Mini App",
+  "scripts": {
+    "start:all": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && node index.js",
+    "client": "cd client && npm run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

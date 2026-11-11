@@ -1,0 +1,1130 @@
+/* max-width у корня не задаём — в эталоне разделы заполняют колонку .main.
+   Вертикальный ритм между карточками — как у эталонного .set (gap 16). */
+.ai-settings-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Переключатель профилей (контейнер — эталонный .card) ─────── */
+.profiles-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.profile-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--panel-2);
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  padding: 6px 10px;
+  transition: border-color 0.15s;
+}
+
+.profile-chip.active {
+  border-color: var(--profile-color, var(--line-2));
+  background: color-mix(in srgb, var(--profile-color, var(--muted)) 8%, var(--panel));
+}
+
+.profile-chip__name {
+  background: none;
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  padding: 0 4px 0 0;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-chip.active .profile-chip__name { color: var(--profile-color, var(--text)); }
+
+.profile-color-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 4px;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.profile-chip__actions {
+  display: flex;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.profile-chip:hover .profile-chip__actions { opacity: 1; }
+
+.profile-chip__actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 3px;
+  color: var(--muted);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.profile-chip__actions button:hover { color: var(--text); background: var(--panel-h); }
+.profile-chip__actions .delete-profile-btn:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 12%, transparent); }
+
+.profile-rename-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 4px 0;
+}
+
+.profile-rename-input {
+  border: 1.5px solid var(--line-2);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 13px;
+  outline: none;
+  width: 160px;
+}
+
+.profile-color-palette {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  max-width: 180px;
+}
+
+.profile-color-swatch {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.1s, border-color 0.1s;
+}
+
+.profile-color-swatch:hover { transform: scale(1.2); }
+.profile-color-swatch.selected { border-color: var(--line-2); transform: scale(1.15); }
+
+.profile-rename-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.profile-rename-save,
+.profile-rename-cancel {
+  background: none;
+  border: 1.5px solid var(--line);
+  border-radius: 6px;
+  padding: 3px 7px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: var(--text);
+  font-size: 12px;
+}
+.profile-rename-save:hover { border-color: var(--line-2); color: var(--text); }
+.profile-rename-cancel:hover { border-color: color-mix(in srgb, var(--danger) 35%, transparent); color: var(--danger); }
+
+.profile-new-input-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.profile-create-btn,
+.profile-cancel-btn {
+  background: none;
+  border: 1.5px solid var(--line);
+  border-radius: 6px;
+  padding: 4px 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: var(--text);
+}
+
+.profile-create-btn:hover { border-color: color-mix(in srgb, var(--ok) 35%, transparent); color: var(--ok); }
+.profile-cancel-btn:hover { border-color: color-mix(in srgb, var(--danger) 35%, transparent); color: var(--danger); }
+
+.profile-add-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: 1.5px dashed var(--line);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.profile-add-btn:hover { border-color: var(--line-2); color: var(--text); background: var(--panel-2); }
+.profile-add-btn--locked { border-style: solid; }
+.profile-add-btn--locked:hover { border-color: color-mix(in srgb, var(--warn) 35%, transparent); color: var(--warn); background: color-mix(in srgb, var(--warn) 12%, transparent); }
+.profile-add-btn--highlight {
+  border-color: var(--line-2);
+  color: var(--text);
+  background: var(--panel-2);
+  animation: profile-btn-pulse 0.7s ease-in-out infinite alternate;
+}
+@keyframes profile-btn-pulse {
+  from { box-shadow: none; background: var(--panel-2); }
+  to   { box-shadow: none; background: var(--panel-2); }
+}
+
+/* Форма — не карточка, а колонка эталонных .card (секции внутри неё). */
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Футер формы ─────────────────────────────────────────────────────────
+   Сохранение на проде явное (в эталоне — автосейв), поэтому кнопке нужен
+   свой контейнер: без него она висела прямым ребёнком .settings-form,
+   вне карточек. Делаем её последней карточкой колонки — слева пояснение,
+   справа действие. Ритм .set (gap 16) не ломается, клиренс под FAB тоже. */
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.form-actions__l {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.form-actions .autosave-status { margin-top: 6px; }
+.form-actions .save-btn { flex: none; }
+
+/* Вид кнопки задаёт атом .btn--primary; локально — только состояние disabled. */
+.save-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ── Требуется авторизация ───────────────────────────────────────────── */
+.auth-required {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 48px 22px;
+  text-align: center;
+}
+
+.auth-required svg { color: var(--muted); }
+.auth-required h2 { font-size: 17px; font-weight: 600; }
+
+/* ── Управление доступом ─────────────────────────────────────────────── */
+/* Контейнер = эталонный .card, секции = .acc / .acc--bordered,
+   тумблеры прав = .opt + .sw (всё уже описано в Layout.css). */
+
+/* Список уже добавленных создателей/администраторов */
+.admins-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+  background: var(--panel-2);
+  border-radius: 8px;
+  padding: 8px;
+  border: 1px solid var(--line);
+}
+
+.admin-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: var(--panel);
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  font-size: 13px;
+}
+
+.admin-row .chip { flex-shrink: 0; min-width: 72px; justify-content: center; }
+
+.admin-id {
+  font-family: monospace;
+  color: var(--text);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-name {
+  color: var(--muted);
+  flex-shrink: 0;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-remove {
+  background: none;
+  border: none;
+  color: var(--muted-2);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  transition: color 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+
+.admin-remove:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 12%, transparent); }
+
+/* Строка добавления = эталонный .acc__row (.pseg + .inp--id + .btn--ghost).
+   Тумблеры прав = .opt / .sw. Локальных правил не требуется. */
+.opt__main { flex: 1; min-width: 0; }
+
+/* ── Dev panel ───────────────────────────────────────────────────────────── */
+.dev-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: var(--panel-2);
+  border: 1.5px dashed var(--line);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.dev-panel--active {
+  background: color-mix(in srgb, var(--warn) 12%, transparent);
+  border-color: color-mix(in srgb, var(--warn) 35%, transparent);
+}
+
+.dev-panel-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text);
+}
+
+.dev-panel--active .dev-panel-left { color: var(--warn); }
+
+.dev-panel-title {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.dev-panel-desc {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.dev-panel-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--panel);
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.dev-panel--active .dev-panel-btn {
+  border-color: color-mix(in srgb, var(--warn) 35%, transparent);
+  color: var(--warn);
+}
+
+.dev-panel-btn:hover:not(:disabled) { background: var(--panel-h); }
+.dev-panel--active .dev-panel-btn:hover:not(:disabled) { background: color-mix(in srgb, var(--warn) 12%, transparent); }
+.dev-panel-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+@media (max-width: 768px) {
+  .form-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .form-actions .save-btn { width: 100%; }
+
+  .sdk-examples__grid { grid-template-columns: 1fr; }
+}
+
+/* ══════════════════════════════════════════════════════
+   SDK / Интеграция
+══════════════════════════════════════════════════════ */
+.sdk-section {
+  background: var(--panel);
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: none;
+  margin-top: 24px;
+  border: 1.5px solid var(--line);
+}
+
+.sdk-section__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.sdk-section__header svg {
+  color: var(--text);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.sdk-section__header h2 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 4px;
+}
+
+.sdk-section__header p {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* Code blocks */
+.sdk-block {
+  margin-bottom: 20px;
+}
+
+.sdk-block__label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.sdk-tag {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 5px;
+  letter-spacing: 0.03em;
+}
+
+.sdk-tag--browser {
+  background: var(--panel-h);
+  color: var(--text);
+}
+
+.sdk-tag--node {
+  background: color-mix(in srgb, var(--ok) 12%, transparent);
+  color: var(--ok);
+}
+
+.sdk-snippet {
+  position: relative;
+  background: var(--bg);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.sdk-snippet pre {
+  margin: 0;
+  padding: 14px 48px 14px 16px;
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--ok);
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.sdk-copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--glass-soft);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--muted);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.sdk-copy-btn:hover { background: var(--glass-soft); color: var(--muted-2); }
+
+.sdk-download-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.sdk-download-link:hover { text-decoration: underline; }
+
+/* Examples */
+.sdk-examples {
+  margin-top: 8px;
+  margin-bottom: 20px;
+}
+
+.sdk-examples__title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+}
+
+.sdk-examples__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.sdk-example {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.sdk-example__label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  padding: 8px 12px 4px;
+  letter-spacing: 0.02em;
+}
+
+.sdk-example pre {
+  margin: 0;
+  padding: 4px 12px 10px;
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--text);
+  white-space: pre;
+  overflow-x: auto;
+}
+
+/* Security note */
+.sdk-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: color-mix(in srgb, var(--warn) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--warn) 35%, transparent);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 12.5px;
+  color: var(--warn);
+  line-height: 1.5;
+}
+
+.sdk-note svg { flex-shrink: 0; margin-top: 1px; color: var(--warn); }
+
+/* ── Integration hint (after platform selection) ─────────────────────────── */
+.integration-hint {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.integration-hint svg {
+  flex-shrink: 0;
+}
+
+/* ── Autosave indicator ──────────────────────────────────────────────────── */
+.autosave-status {
+  display: flex;
+  align-items: center;
+  min-height: 24px;
+}
+
+.autosave-indicator {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.autosave-indicator--saving {
+  color: var(--muted);
+}
+
+.autosave-indicator--saved {
+  color: var(--ok);
+}
+
+/* ── «Где будете использовать?» ──────────────────────────────────────────
+   Сетка и карточки платформ — эталонные .chgrid / .chbox из Layout.css.
+   Класс .platform-grid оставлен только как якорь для туториала. */
+
+/* ── Видимость данных ───────────────────────────────────────────────────
+   Контейнер = .card, строки = .vis-row, кнопка уровня = .vis-sel + .dot.
+   Локально остаётся только выпадающий список (в эталоне он не раскрыт). */
+.schema-vis-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.schema-vis-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* Popover */
+.schema-vis-popover {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 200;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: none;
+  min-width: 260px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: vis-pop-in 0.15s cubic-bezier(0.34,1.3,0.64,1);
+}
+@keyframes vis-pop-in {
+  from { opacity: 0; transform: translateY(4px) scale(0.97); }
+  to   { opacity: 1; transform: none; }
+}
+
+.schema-vis-opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 11px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.12s;
+  font-family: inherit;
+  width: 100%;
+}
+.schema-vis-opt:hover {
+  background: var(--panel-2);
+}
+.schema-vis-opt--active {
+  background: var(--panel-h);
+}
+
+/* .dot рисует кружок через ::before; текста внутри нет — гасим gap */
+.schema-vis-opt-dot {
+  gap: 0;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+
+.schema-vis-opt-check {
+  color: var(--text);
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.schema-vis-opt-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.schema-vis-opt-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.schema-vis-opt-desc {
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+/* ═══ Автоматические уведомления ═══════════════════════════
+   Контейнер = .card, пустое состояние = .empty--inline,
+   список правил = .rules / .rule + .sw + .cmd__x (Layout.css).
+   Класс .notif-section оставлен якорем для туториала. */
+.rule--off { opacity: 0.5; }
+
+/* Правило выключено — тумблер должен оставаться читаемым */
+.rule--off .sw { opacity: 1; }
+
+/* ── Form overlay ── */
+.notif-form-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  backdrop-filter: blur(4px);
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.notif-form-card {
+  background: var(--panel);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.notif-form-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.notif-form-head button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--muted);
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  transition: color 0.12s;
+}
+
+.notif-form-head button:hover { color: var(--text); }
+
+.notif-form-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.notif-field-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: -4px;
+}
+
+.notif-input {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1.5px solid var(--line);
+  font-size: 14px;
+  color: var(--text);
+  background: var(--panel-2);
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+
+.notif-input:focus {
+  outline: none;
+  border-color: var(--line-2);
+  background: var(--panel);
+}
+
+.notif-input--sm { width: 100px; }
+
+.notif-select {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1.5px solid var(--line);
+  font-size: 14px;
+  color: var(--text);
+  background: var(--panel-2);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.notif-select:focus {
+  outline: none;
+  border-color: var(--line-2);
+  background: var(--panel);
+}
+
+.notif-textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1.5px solid var(--line);
+  font-size: 14px;
+  color: var(--text);
+  background: var(--panel-2);
+  resize: vertical;
+  font-family: inherit;
+  line-height: 1.6;
+  box-sizing: border-box;
+}
+
+.notif-textarea:focus {
+  outline: none;
+  border-color: var(--line-2);
+  background: var(--panel);
+}
+
+.notif-trigger-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.notif-trigger-tab {
+  padding: 6px 12px;
+  border-radius: 7px;
+  border: 1.5px solid var(--line);
+  background: var(--panel-2);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.notif-trigger-tab:hover {
+  border-color: var(--line-2);
+  color: var(--text);
+}
+
+.notif-trigger-tab.active {
+  border-color: var(--line-2);
+  background: color-mix(in srgb, var(--text) 10%, transparent);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.notif-hint {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: -4px 0 0;
+}
+
+.notif-recipient-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.notif-recipient-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1.5px solid var(--line);
+  background: var(--panel-2);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+  width: 100%;
+}
+
+.notif-recipient-card:hover {
+  border-color: var(--line-2);
+}
+
+.notif-recipient-card.active {
+  border-color: var(--line-2);
+  background: color-mix(in srgb, var(--text) 7%, transparent);
+}
+
+.notif-recipient-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.notif-recipient-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.notif-recipient-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.notif-recipient-desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.notif-recipient-check {
+  color: var(--text);
+  flex-shrink: 0;
+}
+
+.notif-auto-info {
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--ok) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ok) 45%, transparent);
+  color: var(--ok);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.notif-contacts-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.notif-contact-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1.5px solid var(--line);
+  background: var(--panel-2);
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.notif-contact-chip:hover {
+  border-color: var(--line-2);
+  color: var(--text);
+}
+
+.notif-contact-chip.active {
+  border-color: var(--line-2);
+  background: color-mix(in srgb, var(--text) 10%, transparent);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.notif-contact-name {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.notif-contact-chip.active .notif-contact-name {
+  color: var(--text);
+  opacity: 0.7;
+}
+
+.notif-recipients-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.notif-recipient-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.notif-recipient-input-wrap {
+  position: relative;
+  flex: 1;
+}
+
+.notif-recipient-input-wrap .notif-input {
+  padding-right: 32px;
+  width: 100%;
+}
+
+.notif-recipient-status {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  color: var(--muted);
+}
+
+.notif-resolve-warn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--warn) 12%, transparent);
+  color: var(--warn);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: default;
+}
+
+.notif-recipient-remove {
+  flex-shrink: 0;
+  background: none;
+  border: 1.5px solid var(--line);
+  border-radius: 6px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.notif-recipient-remove:hover {
+  border-color: color-mix(in srgb, var(--danger) 35%, transparent);
+  color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+}
+
+.notif-add-recipient-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 6px;
+  background: none;
+  border: 1.5px dashed var(--line);
+  border-radius: 8px;
+  padding: 5px 12px;
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.notif-add-recipient-btn:hover {
+  border-color: var(--line-2);
+  color: var(--text);
+}
+
+.notif-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.notif-form-foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--line);
+}
+
+.notif-cancel-btn {
+  background: none;
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 13.5px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.notif-cancel-btn:hover { border-color: var(--line-2); }
+
+.notif-save-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--text);
+  color: var(--bg);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.notif-save-btn:hover:not(:disabled) { background: var(--text); color: var(--bg); }
+.notif-save-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ═══ Mobile ≤ 480px ═══════════════════════════════════════ */
+@media (max-width: 480px) {
+  .profiles-list { gap: 6px; }
+  .profile-chip { padding: 5px 10px; font-size: 12px; }
+  .profile-chip__name { font-size: 12px; }
+
+  .profile-new-input-row { flex-direction: column; gap: 8px; }
+  .profile-create-btn, .profile-cancel-btn { width: 100%; justify-content: center; }
+}

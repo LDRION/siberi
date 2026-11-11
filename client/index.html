@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- Primary SEO -->
+    <!-- Длинный SEO-заголовок для первого ответа сервера / краулеров без JS / превью
+         ссылок. После загрузки React (PageTitle) заменит его на короткий бренд. -->
+    <title>Siberi — ИИ-ассистент для бизнеса: отвечает клиентам, записывает и продаёт 24/7</title>
+    <meta name="description" content="Нейросеть для бизнеса: AI-ассистент отвечает клиентам в Telegram, VK и на сайте 24/7 — консультирует, записывает, продаёт. Запуск за 5 минут без программиста. 7 дней бесплатно." />
+    <meta name="keywords" content="ИИ для бизнеса, AI для бизнеса, нейросеть для бизнеса, AI в телеграм, нейросеть в телеграм, ИИ ассистент, AI ассистент, телеграм бот с ИИ, чат-бот для сайта, чат-бот с нейросетью, автоматизация общения с клиентами, искусственный интеллект для бизнеса, AI без программирования, ИИ бот для записи клиентов" />
+    <meta name="author" content="Siberi AI" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <link rel="canonical" href="https://siberi.online/" />
+
+    <!-- Open Graph / Facebook / Telegram / VK -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://siberi.online/" />
+    <meta property="og:title" content="ИИ для бизнеса — нейросеть-ассистент в Telegram и на сайте | Siberi AI" />
+    <meta property="og:description" content="AI-ассистент отвечает клиентам 24/7 в Telegram, VK и на сайте: консультирует, записывает, продаёт. Работает на ваших данных. Запуск за 5 минут без программиста. 7 дней бесплатно." />
+    <meta property="og:image" content="https://siberi.online/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:site_name" content="Siberi AI" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://siberi.online/" />
+    <meta name="twitter:title" content="ИИ для бизнеса — нейросеть-ассистент в Telegram и на сайте | Siberi AI" />
+    <meta name="twitter:description" content="AI-ассистент отвечает клиентам 24/7 в Telegram, VK и на сайте. Запуск за 5 минут без программиста. 7 дней бесплатно." />
+    <meta name="twitter:image" content="https://siberi.online/og-image.png" />
+
+    <!-- PWA / Mobile -->
+    <meta name="theme-color" content="#08090a" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Siberi AI" />
+
+    <!-- Шрифты самохостятся (src/fonts.css) — без Google Fonts CDN: быстрее LCP,
+         без стороннего рендер-блока, дружелюбно к 152-ФЗ. -->
+    <link rel="preload" href="/fonts/SpaceGrotesk-700-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Sora-400-latin.woff2" as="font" type="font/woff2" crossorigin />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=plane" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/siberai/logo/png/48x48/transparent.png?v=plane" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/siberai/logo/png/32x32/transparent.png?v=plane" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/siberai/logo/png/16x16/transparent.png?v=plane" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/siberai/logo/png/160x160/transparent.png?v=plane" />
+    <link rel="manifest" href="/manifest.json" />
+    <!-- Плавный инерционный скролл всего сайта (как на teleconstructor) -->
+    <script src="/lenis.min.js"></script>
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://siberi.online/#organization",
+          "name": "Siberi AI",
+          "url": "https://siberi.online/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://siberi.online/siberai/logo/png/160x160/transparent.png"
+          },
+          "email": "hello@siberi.online",
+          "description": "Российская платформа для создания ИИ-ассистентов для бизнеса: Telegram, VK, виджет на сайт, REST API."
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://siberi.online/#website",
+          "url": "https://siberi.online/",
+          "name": "Siberi AI — ИИ для бизнеса",
+          "inLanguage": "ru-RU",
+          "publisher": { "@id": "https://siberi.online/#organization" }
+        },
+        {
+          "@type": "SoftwareApplication",
+          "@id": "https://siberi.online/#software",
+          "name": "Siberi AI",
+          "applicationCategory": "BusinessApplication",
+          "operatingSystem": "Web, Android, iOS",
+          "inLanguage": "ru-RU",
+          "description": "ИИ для бизнеса: нейросеть-ассистент отвечает клиентам в Telegram, VK и на сайте 24/7, работает на ваших данных, запускается за 5 минут без программиста.",
+          "url": "https://siberi.online/",
+          "publisher": { "@id": "https://siberi.online/#organization" },
+          "offers": [
+            {
+              "@type": "Offer",
+              "name": "Пробный период",
+              "priceCurrency": "RUB",
+              "price": "0",
+              "description": "7 дней бесплатного Premium-доступа без банковской карты"
+            },
+            {
+              "@type": "Offer",
+              "name": "Standard",
+              "priceCurrency": "RUB",
+              "price": "2500",
+              "description": "1 AI-профиль, 1 интеграция, API-ключ, без ограничений по токенам"
+            },
+            {
+              "@type": "Offer",
+              "name": "Pro",
+              "priceCurrency": "RUB",
+              "price": "5000",
+              "description": "2 AI-профиля, 2 интеграции, Bot Studio, Google Sheets"
+            },
+            {
+              "@type": "Offer",
+              "name": "Premium",
+              "priceCurrency": "RUB",
+              "price": "10000",
+              "description": "3 AI-профиля, безлимитные интеграции, приоритетная поддержка"
+            }
+          ],
+          "featureList": [
+            "ИИ-ассистент для бизнеса",
+            "Нейросеть в Telegram",
+            "AI-бот для VK",
+            "Виджет с ИИ для сайта",
+            "База знаний и схемы данных",
+            "Импорт Google Sheets, Excel, CSV",
+            "Голосовой ввод",
+            "REST API",
+            "Bot Studio — визуальный конструктор бота"
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://siberi.online/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Что такое ИИ для бизнеса и что он делает?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Это нейросеть-ассистент, который отвечает вашим клиентам в Telegram, VK и на сайте 24/7: консультирует по ценам и услугам, записывает на приём, принимает заказы и заявки. Siberi AI работает на ваших данных — прайс-листах, каталогах, расписании — поэтому отвечает так, как ответил бы ваш лучший менеджер."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Как подключить нейросеть к Telegram?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Зарегистрируйтесь на siberi.online, создайте AI-профиль, загрузите свои данные и вставьте токен бота в разделе «Интеграции». Telegram-бот с ИИ начнёт отвечать клиентам уже через 5 минут — без программиста и без единой строки кода."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Сколько стоит AI для бизнеса?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Первые 7 дней — бесплатно, с полным Premium-доступом и без банковской карты. Далее тарифы от 2 500 ₽ в месяц — в десятки раз дешевле зарплаты оператора первой линии поддержки."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Нужен ли программист, чтобы запустить ИИ-ассистента?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Нет. Вся настройка происходит в визуальном интерфейсе: опишите бизнес, загрузите прайс-лист или каталог из Excel, Google Sheets или CSV — и ассистент готов. Для разработчиков есть REST API и готовые коды интеграции."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Работает ли нейросеть для бизнеса в России?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Да. Siberi AI — российская платформа: оплата картами РФ, СБП и SberPay, соответствие 152-ФЗ, работа без VPN. API западных ИИ закрыты для России — мы работаем."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Чем Siberi AI отличается от обычного чат-бота?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Обычный чат-бот работает по жёсткому скрипту и не знает ваш бизнес. Siberi AI — это нейросеть, которая понимает свободные вопросы, опирается на ваши данные и выполняет действия: запись, заказ, заявка, напоминание."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <!-- Yandex.Metrica stub — полная инициализация только после согласия пользователя (152-ФЗ) -->
+    <script type="text/javascript">
+      window.ym = window.ym || function(){(window.ym.a = window.ym.a || []).push(arguments)};
+      window.ym.l = 1 * new Date();
+      window.dataLayer = window.dataLayer || [];
+    </script>
+    <!-- Telegram Mini App SDK — inert outside Telegram's WebView, safe to load unconditionally -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <!-- Анти-FOUC. SPA отдаёт этот index.html на ВСЕХ маршрутах. Скрипт
+         парсер-блокирующий и стоит до <body> — отрабатывает ДО первой
+         отрисовки и красит подложку <html> под цель маршрута, чтобы не было
+         белой вспышки. Тёмные — главная (app) и кабинет; светлые — лендинг
+         (/about) и юр-страницы (красят себя сами). SEO-фолбэк живёт в
+         <noscript> (виден краулерам без JS, невидим пользователю — без FOUC). -->
+    <script>
+      (function () {
+        try {
+          var p = location.pathname;
+          var LIGHT = { '/about': 1, '/welcome': 1, '/oferta': 1, '/privacy': 1 };
+          if (LIGHT[p]) return; // светлые страницы красят фон сами
+          var r = document.documentElement;
+          r.className += ' sb-boot-app';
+          // Кабинет уважает выбранную тему; главная «/» и app — всегда тёмные.
+          if (p !== '/' && p !== '/index.html' && p !== '/app' &&
+              localStorage.getItem('siberi-theme') === 'light') {
+            r.className += ' sb-boot-light';
+          }
+        } catch (e) { /* приватный режим — переживём мелькание */ }
+      })();
+    </script>
+    <style>
+      /* Анти-FOUC красит ТОЛЬКО <html> (подложку до рендера). Значения — токены
+         --bg тёмной и светлой темы (см. Layout.css / finarch.css). */
+      html.sb-boot-app { background: #08090a; }
+      html.sb-boot-app.sb-boot-light { background: #c9c9d0; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- Статический SEO-фолбэк для краулеров без JS. В <noscript> — значит
+         пользователи с JS его НЕ видят (никакого FOUC), а поисковики без
+         рендера JS по-прежнему читают текст и ссылки. Для рендерящих JS
+         (Googlebot) SEO дают head-мета + JSON-LD + сам отрендеренный сайт. -->
+    <noscript>
+      <div style="max-width:720px;margin:0 auto;padding:48px 24px;font-family:system-ui,sans-serif;color:#1e293b;">
+        <p style="font-weight:800;font-size:18px;color:#667eea;margin:0 0 16px;">Siberi AI</p>
+        <h1 style="font-size:32px;line-height:1.2;margin:0 0 16px;">ИИ для бизнеса, который отвечает клиентам за вас</h1>
+        <p style="font-size:16px;line-height:1.6;margin:0 0 12px;">Siberi AI — нейросеть для бизнеса: AI-ассистент консультирует клиентов в Telegram, VK и на вашем сайте 24/7, записывает на приём, принимает заказы и заявки. Работает на ваших данных — прайс-листах, каталогах, расписании. Запуск за 5 минут, без программиста и без единой строки кода.</p>
+        <p style="font-size:16px;line-height:1.6;margin:0 0 20px;"><strong>7 дней бесплатно</strong> — полный Premium-доступ, без банковской карты. Тарифы от 2 500 ₽/мес.</p>
+        <p style="margin:0 0 24px;"><a href="/login" style="color:#667eea;font-weight:700;">Начать бесплатно →</a></p>
+        <nav aria-label="Отраслевые решения">
+          <p style="font-weight:700;margin:0 0 8px;">ИИ-ассистент для вашей ниши:</p>
+          <ul style="line-height:1.9;padding-left:20px;margin:0;">
+            <li><a href="/for/barbershop" style="color:#475569;">ИИ для барбершопа</a></li>
+            <li><a href="/for/cafe" style="color:#475569;">ИИ для кафе и ресторана</a></li>
+            <li><a href="/for/medical" style="color:#475569;">ИИ для клиники</a></li>
+            <li><a href="/for/shop" style="color:#475569;">ИИ для интернет-магазина</a></li>
+            <li><a href="/for/realty" style="color:#475569;">ИИ для недвижимости</a></li>
+            <li><a href="/for/education" style="color:#475569;">ИИ для онлайн-школы</a></li>
+            <li><a href="/for/beauty" style="color:#475569;">ИИ для салона красоты</a></li>
+            <li><a href="/for/delivery" style="color:#475569;">ИИ для доставки еды</a></li>
+            <li><a href="/for/travel" style="color:#475569;">ИИ для турагентства</a></li>
+            <li><a href="/for/auto" style="color:#475569;">ИИ для автосалона</a></li>
+            <li><a href="/for/blogger" style="color:#475569;">ИИ для блогера</a></li>
+            <li><a href="/for/office" style="color:#475569;">ИИ для B2B-компании</a></li>
+          </ul>
+        </nav>
+      </div>
+    </noscript>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

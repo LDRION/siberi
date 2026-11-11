@@ -1,0 +1,326 @@
+.records-page {
+  max-width: 1200px;
+  padding-bottom: 40px;
+}
+
+
+/* КОНТРОЛЫ РАЗДЕЛЕНЫ НА ДВА РЯДА */
+.records-controls-top {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.schema-selector select {
+  padding: 8px 15px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+}
+
+/* 🔥 НОВАЯ ПРИКОЛЬНАЯ КНОПКА С ПЕРЕЛИВОМ */
+.btn-glow-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(118, 75, 162, 0.2);
+}
+
+/* Эффект перелива при наведении */
+.btn-glow-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 14px rgba(118, 75, 162, 0.3);
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+.btn-glow-primary:active {
+  transform: translateY(0);
+}
+
+.btn-glow-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter: grayscale(1);
+}
+
+.search-bar-container {
+  margin-bottom: 20px;
+}
+
+.search-box.full-width {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: white;
+  width: 100%;
+  box-sizing: border-box; /* Чтобы padding не ломал ширину */
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+}
+
+/* Таблица осталась почти без изменений */
+.records-table {
+  overflow-x: auto;
+}
+
+.records-table table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.records-table th,
+.records-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #f7fafc;
+  font-size: 14px;
+}
+
+.records-table th {
+  background: #f8fafc;
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.records-table tr:hover {
+  background: #f8fafc;
+}
+
+.record-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.record-actions button {
+  padding: 6px 10px;
+  background: none;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #4a5568;
+  transition: all 0.2s;
+}
+
+.record-actions button:hover {
+  background: #edf2f7;
+  border-color: #cbd5e1;
+  color: #2d3748;
+}
+
+.data-transfer-btns {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+
+.btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px); /* Красивый фон модалки */
+}
+
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4a5568;
+  margin-bottom: 6px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border 0.2s;
+}
+.form-group input:focus {
+  border-color: #667eea;
+  outline: none;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 0;
+  color: #a0aec0;
+}
+.empty-state p {
+  margin-top: 15px;
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .records-controls-top {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .records-controls-top .btn-glow-primary {
+    justify-content: center;
+  }
+
+  .data-transfer-btns {
+    margin-left: 0;
+    justify-content: stretch;
+  }
+
+  .data-transfer-btns .btn-secondary {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .schema-selector select {
+    width: 100%;
+  }
+
+  .records-table {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .records-table table {
+    min-width: 480px;
+  }
+
+  .records-table th,
+  .records-table td {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .modal-content {
+    padding: 20px 16px;
+    margin: 16px;
+    max-width: calc(100vw - 32px);
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-actions {
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+
+  .modal-actions button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .records-controls-top { flex-direction: column; gap: 8px; }
+  .records-controls-top button { width: 100%; justify-content: center; }
+  .schema-selector select { width: 100%; font-size: 14px; }
+
+  .records-table th, .records-table td { font-size: 12px; padding: 8px 10px; }
+  .records-table { font-size: 12px; }
+
+  .pagination { flex-wrap: wrap; gap: 6px; justify-content: center; }
+  .page-btn { padding: 6px 10px; font-size: 12px; min-width: 34px; }
+}

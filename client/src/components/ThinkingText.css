@@ -1,0 +1,26 @@
+.thinking-text {
+  font-size: 14px;
+  color: #94a3b8;
+  font-style: italic;
+  letter-spacing: 0.01em;
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  gap: 1px;
+}
+
+.thinking-cursor {
+  display: inline-block;
+  width: 1.5px;
+  height: 14px;
+  background: #94a3b8;
+  margin-left: 2px;
+  border-radius: 1px;
+  flex-shrink: 0;
+  animation: thinking-blink 0.85s ease-in-out infinite;
+}
+
+@keyframes thinking-blink {
+  0%, 45%  { opacity: 1; }
+  55%, 100% { opacity: 0; }
+}

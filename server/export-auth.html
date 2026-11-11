@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Экспорт авторизации Mistral</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        text-align: center;
+      }
+      h1 {
+        color: #333;
+        margin-bottom: 10px;
+      }
+      p {
+        color: #666;
+        margin-bottom: 30px;
+      }
+      button {
+        background: #667eea;
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        font-size: 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      button:hover {
+        background: #5568d3;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+      }
+      button:active {
+        transform: translateY(0);
+      }
+      #result {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 6px;
+        display: none;
+      }
+      .success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+      .error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔐 Экспорт авторизации Mistral</h1>
+      <p>Нажми кнопку, чтобы сохранить авторизацию для API</p>
+      <button onclick="exportAuth()">🚀 Экспортировать авторизацию</button>
+      <div id="result"></div>
+    </div>
+
+    <script>
+      async function exportAuth() {
+        const resultDiv = document.getElementById('result');
+        const button = document.querySelector('button');
+
+        button.disabled = true;
+        button.textContent = '⏳ Обработка...';
+
+        try {
+          const response = await fetch('http://localhost:3000/api/v1/admin/export-auth', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            resultDiv.className = 'success';
+            resultDiv.innerHTML = `
+                        <strong>✅ Успешно!</strong><br>
+                        ${data.message}<br>
+                        <small>Файл сохранён: server/mistral-auth-state.json</small>
+                    `;
+          } else {
+            resultDiv.className = 'error';
+            resultDiv.innerHTML = `
+                        <strong>❌ Ошибка!</strong><br>
+                        ${data.error || 'Не удалось экспортировать авторизацию'}
+                    `;
+          }
+        } catch (error) {
+          resultDiv.className = 'error';
+          resultDiv.innerHTML = `
+                    <strong>❌ Ошибка подключения!</strong><br>
+                    ${error.message}<br>
+                    <small>Убедись, что сервер запущен на http://localhost:3000</small>
+                `;
+        } finally {
+          button.disabled = false;
+          button.textContent = '🚀 Экспортировать авторизацию';
+          resultDiv.style.display = 'block';
+        }
+      }
+    </script>
+  </body>
+</html>

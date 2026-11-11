@@ -1,0 +1,41 @@
+{
+  "name": "Siberi AI",
+  "short_name": "Siberi AI",
+  "description": "ИИ для бизнеса: нейросеть-ассистент в Telegram, VK и на вашем сайте. Запуск за 5 минут без программиста.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#6645c4",
+  "theme_color": "#6645c4",
+  "icons": [
+    {
+      "src": "/siberai/logo/png/48x48/white.png",
+      "sizes": "48x48",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/siberai/logo/png/160x160/white.png",
+      "sizes": "160x160",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/siberai/logo/png/320x320/white.png",
+      "sizes": "320x320",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/splash-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/splash-1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

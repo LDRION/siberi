@@ -1,0 +1,1374 @@
+/* ── Root layout ─────────────────────────────────────────────────────────────── */
+
+.studio-root {
+  display: flex;
+  flex-direction: column;
+  /* высоту даёт оболочка (.main:has(.studio-root) → .view): раньше страница
+     рендерилась вообще без Layout, отсюда и 100vh, и отсутствие токенов */
+  height: 100%;
+  background: var(--panel-2);
+  overflow: hidden;
+  animation: studio-page-in 0.28s cubic-bezier(.22,1,.36,1);
+}
+
+@keyframes studio-page-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ── Top bar ─────────────────────────────────────────────────────────────────── */
+
+.studio-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  height: 56px;
+  /* была инверсия (белая плашка в Total Black) — в эталоне топбар
+     Конструктора не инверсный; это панель инструментов, а не кнопка */
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+  flex-shrink: 0;
+  gap: 12px;
+}
+
+.studio-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.studio-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.studio-topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+/* Profile picker (topbar center) */
+.studio-profile-picker {
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+.studio-profile-picker-inner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--glass-soft);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 6px 14px;
+  transition: background 0.15s;
+}
+.studio-profile-picker:hover .studio-profile-picker-inner { background: var(--glass-soft); }
+.studio-profile-picker-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.studio-profile-picker-chevron {
+  color: var(--text);
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+.studio-profile-picker-chevron.open { transform: rotate(180deg); }
+
+.studio-profile-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  left: auto;
+  transform: none;
+  background: var(--panel);
+  border-radius: 12px;
+  box-shadow: none;
+  min-width: 220px;
+  overflow: hidden;
+  z-index: 100;
+  border: 1px solid var(--line);
+}
+.studio-profile-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 16px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font-size: 14px;
+  color: var(--text);
+  transition: background 0.1s;
+}
+.studio-profile-option:hover { background: var(--panel-2); }
+.studio-profile-option.active { background: var(--panel-2); font-weight: 600; }
+.studio-profile-option-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.studio-profile-option-name { flex: 1; }
+.studio-profile-option-check { color: var(--text); font-weight: 700; font-size: 13px; }
+
+.studio-restart-btn {
+  background: transparent;
+  border: 1.5px solid var(--line);
+  color: var(--muted);
+  border-radius: 7px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.studio-restart-btn:hover { border-color: color-mix(in srgb, var(--danger) 35%, transparent); color: var(--danger); background: color-mix(in srgb, var(--danger) 12%, transparent); }
+
+/* Reset confirmation overlay */
+.studio-reset-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.studio-reset-dialog {
+  background: var(--panel);
+  border-radius: 16px;
+  padding: 28px 32px;
+  max-width: 380px;
+  width: 90%;
+  box-shadow: none;
+}
+.studio-reset-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.studio-reset-body {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+.studio-reset-actions {
+  display: flex;
+  gap: 10px;
+}
+.studio-reset-confirm {
+  background: var(--danger);
+  color: var(--bg);
+  border: none;
+  border-radius: 9px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  flex: 1;
+}
+.studio-reset-confirm:hover { background: var(--danger); color: var(--bg); }
+.studio-reset-cancel {
+  background: var(--panel-2);
+  color: var(--text);
+  border: none;
+  border-radius: 9px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  flex: 1;
+}
+.studio-reset-cancel:hover { background: var(--panel-h); }
+
+.studio-back {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.15s;
+  white-space: nowrap;
+}
+.studio-back:hover { color: var(--text); }
+
+.studio-topbar-center {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.studio-profile-name {
+  font-weight: 400;
+  opacity: 0.8;
+  font-size: 13px;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.studio-save-btn {
+  background: var(--glass-soft);
+  border: 1px solid var(--line);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+.studio-save-btn:hover:not(:disabled) { background: var(--glass-soft); }
+.studio-save-btn.saved { background: rgba(76,175,80,0.4); border-color: rgba(76,175,80,0.6); }
+.studio-save-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ── Main content: config + preview ─────────────────────────────────────────── */
+
+/* Двухколоночная сетка эталона (.studio__grid): секции слева (1fr),
+   узкий sticky-симулятор справа (380px). Сама сетка = скролл-контейнер,
+   снизу запас под плавающую панель правки словами. */
+.studio-content {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 16px;
+  align-items: start;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 16px 20px 148px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-2) transparent;
+}
+.studio-content::-webkit-scrollbar { width: 8px; }
+.studio-content::-webkit-scrollbar-track { background: transparent; }
+.studio-content::-webkit-scrollbar-thumb { background: var(--panel-h); border-radius: 4px; }
+.studio-content::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+/* ── Config column (left) ────────────────────────────────────────────────────── */
+
+.studio-config {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  background: transparent;
+}
+
+/* ── View mode toggle (в топбаре слева) ───────────────────────────────────────── */
+
+/* Сегмент-переключатель Интерфейс/Код (эталон .seg / .seg__b) */
+.studio-view-toggle {
+  display: inline-flex;
+  align-items: center;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 4px;
+  gap: 4px;
+}
+
+.studio-view-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 15px;
+  border-radius: 9px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s;
+  background: transparent;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.studio-view-toggle-btn.active {
+  background: var(--panel-h);
+  color: var(--text);
+  box-shadow: none;
+}
+.studio-view-toggle-btn:not(.active):hover { color: var(--text); }
+
+/* ── Code editor view ─────────────────────────────────────────────────────────── */
+
+/* Секции текут в колонке (скроллит вся .studio-content, а не панель) */
+.studio-config-inner {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+/* Pulse scrollbar when tutorial step highlights this panel */
+@keyframes studio-scroll-pulse {
+  0%, 100% { background: color-mix(in srgb, var(--text) 45%, transparent); }
+  50%       { background: var(--text); }
+}
+.studio-config.tut-target-pulse .studio-config-inner {
+  scrollbar-color: var(--line-2) transparent;
+}
+.studio-config.tut-target-pulse .studio-config-inner::-webkit-scrollbar { width: 8px; }
+.studio-config.tut-target-pulse .studio-config-inner::-webkit-scrollbar-thumb {
+  animation: studio-scroll-pulse 1.2s ease-in-out infinite;
+  border-radius: 4px;
+}
+
+.studio-code-view {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  gap: 8px;
+  min-width: 0;
+}
+
+.studio-code-hint {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+  flex-shrink: 0;
+}
+
+.studio-code-editor {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 14px;
+  resize: none;
+  background: var(--panel-2);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s;
+  max-height: calc(100vh - 260px);
+  overflow-y: auto;
+}
+.studio-code-editor:focus { border-color: var(--line-2); }
+.studio-code-editor.has-error { border-color: color-mix(in srgb, var(--danger) 35%, transparent); }
+
+.studio-code-error {
+  font-size: 12px;
+  color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--danger) 35%, transparent);
+  border-radius: 6px;
+  padding: 6px 10px;
+  flex-shrink: 0;
+}
+
+.studio-code-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.studio-code-apply-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--text);
+  color: var(--bg);
+  border: none;
+  border-radius: 8px;
+  padding: 9px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.studio-code-apply-btn:hover:not(:disabled) { background: var(--text); color: var(--bg); }
+.studio-code-apply-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.studio-code-reset-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  padding: 9px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--muted);
+  transition: border-color 0.15s, color 0.15s;
+}
+.studio-code-reset-btn:hover { border-color: var(--line-2); color: var(--text); }
+
+/* ── Code export: file tabs + read-only preview ── */
+.studio-code-tabs {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+.studio-code-tab {
+  background: var(--panel-2);
+  border: 1.5px solid transparent;
+  border-radius: 7px;
+  padding: 6px 11px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'Courier New', Courier, monospace;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.studio-code-tab:hover { background: var(--panel-h); }
+.studio-code-tab.active { background: var(--text); color: var(--bg); }
+
+.studio-code-readonly {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  cursor: text;
+  user-select: text;
+}
+
+/* ── Code export: locked upsell (Trial/Standard) ── */
+.studio-code-locked {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 12px;
+  padding: 40px 28px;
+  color: var(--muted);
+}
+.studio-code-locked svg { color: var(--muted); }
+.studio-code-locked h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+.studio-code-locked p {
+  font-size: 13px;
+  line-height: 1.6;
+  max-width: 360px;
+  margin: 0;
+}
+.studio-code-upgrade-btn {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 8px;
+  background: var(--text);
+  color: var(--bg);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.studio-code-upgrade-btn:hover { background: var(--text); color: var(--bg); }
+
+.studio-section {
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  background: var(--panel);
+  flex-shrink: 0;
+}
+
+.studio-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  /* по эталону (.stsec__h): прозрачная шапка секции с линией снизу.
+     Была инверсия — в Total Black это читалось как белые плашки. */
+  background: transparent;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text);
+  border-bottom: 1px solid var(--line);
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+}
+.studio-section-header.clickable { cursor: pointer; user-select: none; }
+.studio-section-header.clickable:hover { filter: brightness(1.1); }
+.studio-section-icon { color: var(--text); display: flex; }
+
+.studio-section-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.studio-toggle-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.studio-toggle-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1.5px solid var(--line);
+  background: var(--panel-2);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.studio-toggle-btn.active {
+  background: var(--text);
+  border-color: var(--line-2);
+  color: var(--bg);
+}
+.studio-toggle-btn:not(.active):hover { border-color: var(--line-2); color: var(--text); }
+
+.studio-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.studio-field label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.studio-field input {
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.studio-field input:focus { border-color: var(--line-2); }
+
+.studio-hint {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Commands builder */
+
+.studio-commands {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.studio-cmd-card {
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--panel-2);
+  transition: border-color 0.15s;
+}
+.studio-cmd-card:focus-within { border-color: var(--line-2); }
+
+.studio-cmd-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.studio-cmd-name {
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 7px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  min-width: 90px;
+  max-width: 200px;
+  flex: 1;
+  outline: none;
+  background: var(--panel);
+  font-family: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.studio-cmd-name:focus { border-color: var(--line-2); }
+
+.studio-cmd-desc {
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 7px 10px;
+  font-size: 13px;
+  color: var(--text);
+  flex: 1.5;
+  min-width: 0;
+  outline: none;
+  background: var(--panel);
+}
+.studio-cmd-desc:focus { border-color: var(--line-2); }
+
+.studio-cmd-del {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  flex-shrink: 0;
+  padding: 4px;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+}
+.studio-cmd-del:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 12%, transparent); }
+
+.studio-cmd-response {
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 8px 10px;
+  font-size: 13px;
+  color: var(--text);
+  resize: vertical;
+  outline: none;
+  font-family: inherit;
+  line-height: 1.5;
+  background: var(--panel);
+  min-height: 60px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.studio-cmd-response:focus { border-color: var(--line-2); }
+
+.studio-cmd-keyboard {
+  font-size: 11px;
+  color: var(--muted);
+  padding: 4px 6px;
+  background: var(--panel-2);
+  border-radius: 5px;
+  border: 1px solid var(--line);
+  font-family: monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.studio-cmd-keyboard-label {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 2px;
+}
+
+.studio-add-cmd {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 14px;
+  border: 1.5px dashed var(--line);
+  border-radius: 9px;
+  background: none;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  justify-content: center;
+}
+.studio-add-cmd:hover { background: var(--panel-2); }
+
+.studio-sys-prompt {
+  border: 1.5px solid var(--line);
+  border-radius: 9px;
+  padding: 12px;
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--text);
+  line-height: 1.6;
+  resize: vertical;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 120px;
+}
+.studio-sys-prompt:focus { border-color: var(--line-2); }
+.studio-welcome-msg {
+  border: 1.5px solid var(--line);
+  border-radius: 9px;
+  padding: 12px;
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--text);
+  line-height: 1.6;
+  resize: vertical;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 70px;
+}
+.studio-welcome-msg:focus { border-color: var(--line-2); }
+
+/* ── Preview panel (right) — Telegram-style ─────────────────────────────────── */
+
+/* Узкий sticky-симулятор в правой колонке сетки (эталон .studio__preview + .prev).
+   Ширину даёт grid (380px); фирменные сине-белые цвета Telegram сохранены. */
+.studio-preview {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: calc(100vh - 250px);
+  min-height: 400px;
+  max-height: 620px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background-color: #c8d5e3;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ccircle cx='1' cy='1' r='1' fill='var(--glass-soft)'/%3E%3C/svg%3E");
+}
+
+.studio-preview-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: #2b5278;
+  color: var(--text);
+  flex-shrink: 0;
+  box-shadow: none;
+}
+
+/* Back arrow (Telegram-like) */
+.studio-preview-header::before {
+  content: '←';
+  font-size: 20px;
+  color: var(--text);
+  margin-right: 2px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.studio-tg-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #54a0ff, #2e86de);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--text);
+  flex-shrink: 0;
+}
+
+.studio-tg-name {
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.1px;
+}
+.studio-tg-status {
+  font-size: 12px;
+  opacity: 0.75;
+  margin-top: 1px;
+}
+
+/* Badge showing which screen the preview is on = the one an unaddressed
+   "change the text to …" prompt will edit. */
+.studio-sim-screen-badge {
+  margin-left: auto;
+  max-width: 46%;
+  padding: 3px 9px;
+  background: var(--glass-soft);
+  border-radius: 11px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: default;
+}
+
+/* Three-dot menu icon (Telegram-like) */
+.studio-sim-reset {
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  color: var(--text);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+.studio-sim-reset:hover { background: var(--glass-soft); }
+
+.studio-tg-chat {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.2) transparent;
+}
+
+.studio-tg-msg {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+.studio-tg-msg--user { justify-content: flex-end; }
+.studio-tg-msg--bot  { justify-content: flex-start; }
+
+.studio-tg-bot-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #54a0ff, #2e86de);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 11px;
+  color: var(--text);
+  flex-shrink: 0;
+  margin-bottom: 2px;
+}
+
+.studio-tg-bubble {
+  max-width: 78%;
+  padding: 7px 12px 18px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  word-break: break-word;
+  box-shadow: none;
+  position: relative;
+}
+.studio-tg-msg--user .studio-tg-bubble {
+  background: #effdde;
+  border-radius: 12px 12px 2px 12px;
+  color: var(--text);
+}
+.studio-tg-msg--bot .studio-tg-bubble {
+  background: var(--panel);
+  border-radius: 2px 12px 12px 12px;
+  color: var(--text);
+  white-space: normal;
+  counter-reset: md-ol-counter;
+}
+.studio-tg-msg--bot .studio-tg-bubble .md-ol + .md-p {
+  margin-left: 2em;
+  margin-top: 2px;
+  margin-bottom: 10px;
+  font-size: 0.93em;
+  opacity: 0.82;
+}
+
+/* Message timestamp */
+.studio-tg-time {
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+  font-size: 10.5px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.studio-tg-msg--user .studio-tg-time { color: rgba(0,100,0,0.45); }
+.studio-tg-check {
+  color: #4fc3f7;
+  font-size: 10px;
+  letter-spacing: -1px;
+}
+
+.studio-preview-label {
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+  padding: 4px 0;
+}
+
+/* Telegram-style command menu popup (floats above input bar) */
+.studio-tg-menu-popup {
+  background: var(--panel);
+  border-top: 1px solid var(--line);
+  flex-shrink: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.studio-tg-menu-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 8px 14px 4px;
+}
+.studio-tg-menu-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 14px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.1s;
+}
+.studio-tg-menu-row:hover { background: var(--panel-2); }
+.studio-tg-menu-cmd {
+  font-family: monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  flex-shrink: 0;
+}
+.studio-tg-menu-desc {
+  font-size: 12.5px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Telegram ReplyKeyboard simulation */
+.studio-tg-keyboard {
+  background: #c2c5c8;
+  padding: 6px 8px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.studio-tg-keyboard-row {
+  display: flex;
+  gap: 6px;
+}
+.studio-tg-keyboard-btn {
+  flex: 1;
+  background: var(--panel);
+  border: none;
+  border-radius: 5px;
+  padding: 11px 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  box-shadow: none;
+  transition: background 0.1s;
+  text-align: center;
+  line-height: 1.2;
+  min-height: 40px;
+}
+.studio-tg-keyboard-btn:hover { background: var(--panel-2); }
+.studio-tg-keyboard-btn:active { background: #e0e0e0; transform: scale(0.98); }
+
+/* Slash button in input bar */
+.studio-sim-menu-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--panel-2);
+  border: none;
+  color: var(--text);
+  font-size: 17px;
+  font-weight: 700;
+  font-family: monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+.studio-sim-menu-btn:hover { background: var(--panel-2); }
+.studio-sim-menu-btn.active { background: var(--text); color: var(--bg); }
+
+.studio-sim-input-row {
+  display: flex;
+  gap: 8px;
+  padding: 8px 10px;
+  background: #f0f2f5;
+  flex-shrink: 0;
+  align-items: center;
+}
+.studio-sim-input {
+  flex: 1;
+  border: none;
+  border-radius: 22px;
+  padding: 9px 16px;
+  font-size: 14px;
+  outline: none;
+  background: var(--panel);
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  min-height: 38px;
+  box-shadow: none;
+  cursor: default;
+  user-select: none;
+}
+.studio-sim-input--readonly {
+  pointer-events: none;
+}
+.studio-sim-input-placeholder {
+  color: var(--muted);
+  font-size: 14px;
+  pointer-events: none;
+}
+.studio-sim-send {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #2ca5e0;
+  border: none;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.studio-sim-send:hover { background: #1a96d1; }
+.studio-sim-send--disabled {
+  background: #b0c4d8;
+  cursor: not-allowed;
+}
+.studio-sim-send--disabled:hover { background: #b0c4d8; }
+
+/* ── Плавающая стеклянная панель «Правка словами» (эталон .aibar) ─────────────── */
+/* Заменяет прежнюю тёмную полосу на всю ширину: фиксирована по центру снизу,
+   Liquid Glass, растёт вверх лентой диалога. Логика чата/стриминга — без изменений. */
+
+/* Панель живёт над ЛЕВОЙ колонкой (.studio-config), не наезжая на симулятор
+   справа и не заходя под сайдбар слева. Границы выражены формулой от реальных
+   величин макета: сайдбар = var(--side-w) (сворачивается 268→76→0),
+   боковой padding .main = clamp(20px,3vw,40px), padding .studio-content = 20px,
+   правая колонка = 380px + gap 16px. Замер прода: left 327 / right 455 при
+   vw 1309 → ровно ширина .studio-config. */
+.studio-chat-panel {
+  position: fixed;
+  z-index: 70;
+  left: calc(var(--side-w, 268px) + clamp(20px, 3vw, 40px) + 20px);
+  right: calc(416px + clamp(20px, 3vw, 40px));
+  bottom: 24px;
+  transform: none;
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  max-height: min(60vh, 520px);
+  overflow: hidden;
+  border: none;
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--panel) 72%, transparent);
+  -webkit-backdrop-filter: blur(18px) saturate(1.25);
+  backdrop-filter: blur(18px) saturate(1.25);
+  box-shadow:
+    0 18px 44px -20px rgba(0,0,0,.7),
+    inset 0 1px 0 rgba(255,255,255,.10),
+    inset 0 0 0 1px rgba(255,255,255,.06);
+}
+
+/* Компактно по умолчанию (тонкий композер как эталонный .aibar): дефолтная
+   приветственная реплика скрыта. Лента разворачивается вверх, только когда
+   появляется реальный диалог (сообщение пользователя / применённая правка).
+   Правится ТОЛЬКО высота/overflow/видимость — DOM и логику истории не трогаю. */
+.studio-chat-messages {
+  flex: 1;
+  min-height: 0;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  opacity: 0;
+  transition: max-height 0.25s ease, opacity 0.2s ease, padding 0.25s ease;
+}
+.studio-chat-panel:has(.studio-chat-msg--user) .studio-chat-messages,
+.studio-chat-panel:has(.studio-chat-msg--change) .studio-chat-messages,
+.studio-chat-panel:has(.studio-typing) .studio-chat-messages,
+.studio-chat-panel:has(.streaming-bubble) .studio-chat-messages {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 14px 18px;
+  opacity: 1;
+}
+
+.studio-chat-msg {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-width: 80%;
+}
+.studio-chat-msg--user { align-self: flex-end; align-items: flex-end; }
+.studio-chat-msg--ai   { align-self: flex-start; }
+
+.studio-chat-text {
+  display: inline-block;
+  padding: 9px 14px;
+  border-radius: 14px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.studio-chat-msg--user .studio-chat-text {
+  background: var(--text);
+  color: var(--bg);
+  border-bottom-right-radius: 4px;
+}
+.studio-chat-msg--ai .studio-chat-text {
+  background: var(--panel-2);
+  color: var(--text);
+  border-bottom-left-radius: 4px;
+  white-space: normal;
+  counter-reset: md-ol-counter;
+}
+.studio-chat-msg--ai .studio-chat-text .md-ol + .md-p {
+  margin-left: 2em;
+  margin-top: 2px;
+  margin-bottom: 10px;
+  font-size: 0.93em;
+  opacity: 0.82;
+}
+.studio-chat-msg--change .studio-chat-text {
+  background: color-mix(in srgb, var(--ok) 12%, transparent);
+  color: var(--ok);
+  border: 1px solid color-mix(in srgb, var(--ok) 35%, transparent);
+}
+
+.studio-change-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ok);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0 2px;
+}
+
+.studio-typing {
+  display: flex;
+  gap: 4px;
+  padding: 12px 14px;
+  background: var(--panel-2);
+  border-radius: 14px;
+  border-bottom-left-radius: 4px;
+}
+.studio-typing span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--muted);
+  animation: studio-bounce 1.2s infinite;
+}
+.studio-typing span:nth-child(2) { animation-delay: 0.2s; }
+.studio-typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes studio-bounce {
+  0%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-6px); }
+}
+
+.studio-chat-input-row {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 16px 14px;
+  border-top: 1px solid var(--line);
+  gap: 6px;
+}
+
+.studio-chat-input-inner {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.studio-chat-input {
+  flex: 1;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 9px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: none;
+  outline: none;
+  line-height: 1.5;
+  color: var(--text);
+  transition: border-color 0.15s;
+  max-height: 100px;
+  overflow-y: auto;
+}
+.studio-chat-input:focus { border-color: var(--line-2); }
+
+.studio-chat-send {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--text);
+  border: none;
+  color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 0.15s, opacity 0.15s;
+}
+.studio-chat-send:hover:not(:disabled) { transform: scale(1.08); }
+.studio-chat-send:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.studio-attach-btn,
+.studio-voice-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line);
+  background: var(--panel);
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.15s, color 0.15s;
+  position: relative;
+}
+.studio-attach-btn:hover:not(:disabled),
+.studio-voice-btn:hover:not(:disabled) { border-color: var(--line-2); color: var(--text); }
+.studio-attach-btn:disabled,
+.studio-voice-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.studio-voice-btn--active { border-color: color-mix(in srgb, var(--danger) 35%, transparent); color: var(--danger); }
+.studio-voice-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid color-mix(in srgb, var(--danger) 35%, transparent);
+  animation: studio-ring-pulse 1s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes studio-ring-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.2); }
+}
+
+.studio-img-preview-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--panel-2);
+  border-radius: 8px;
+  padding: 4px 8px;
+}
+.studio-img-preview-thumb {
+  width: 48px;
+  height: 36px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+}
+.studio-img-preview-remove {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+}
+.studio-img-preview-remove:hover { color: var(--danger); }
+
+.studio-msg-image {
+  display: block;
+  max-width: 220px;
+  max-height: 160px;
+  border-radius: 10px;
+  margin-bottom: 4px;
+  object-fit: cover;
+  border: 1px solid var(--line);
+}
+
+/* ── Loading ─────────────────────────────────────────────────────────────────── */
+
+.studio-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 15px;
+}
+.studio-loading-icon {
+  color: var(--text);
+  animation: studio-spin 2s linear infinite;
+}
+@keyframes studio-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Сетка сворачивается в одну колонку — как в эталоне (@980).
+   Симулятора справа больше нет → панель правки во всю ширину контента
+   (правый офсет теряет колонку 380px + gap 16px, остаётся только padding). */
+@media (max-width: 980px) {
+  .studio-content { grid-template-columns: 1fr; }
+  .studio-preview {
+    position: static;
+    height: auto;
+    min-height: 380px;
+    max-height: 60vh;
+  }
+  .studio-chat-panel { right: calc(clamp(20px, 3vw, 40px) + 20px); }
+}
+
+/* ── Mobile: hide config on small screens ───────────────────────────────────── */
+/* Позиция панели дальше держится формулой: на ≤720 сайдбар уходит off-canvas
+   (var(--side-w) → 0), поэтому left/right сами дают отступы от краёв контента. */
+@media (max-width: 768px) {
+  .studio-config { display: none; }
+}

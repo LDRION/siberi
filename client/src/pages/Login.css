@@ -1,0 +1,175 @@
+/* ============================================================
+   Siberi AI · Вход и регистрация — Total Black
+   ============================================================ */
+body.sb-login {
+  /* тёмная тема унифицирована с лендингом (AFinalDesignLanding): тёплый Total Black,
+     плоские карточки #161719, волосяная рамка, коралловый акцент */
+  --bg:#08090a; --panel:#0e0f12; --panel-2:#161719; --panel-h:#1c1d21;
+  --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.14);
+  --text:#f3f3f6; --muted:#74747e; --muted-2:#4a4a52; --tag:#c9c9d2;
+  --star:255,255,255;
+  --accent:#5a2812; --accent-text:#d4845c;
+  --brand-grad:linear-gradient(100deg,#b9b9c6 0%,#fff 45%,#fff 55%,#b9b9c6 100%);
+  --brand-glow:rgba(255,255,255,.30);
+  --vk:#07f; --vk-h:#3393ff; --ya:#fc3f1d;
+  --ok:#46d39a; --danger:#e06464;
+  --shadow:0 30px 80px rgba(0,0,0,.7);
+  --tr:background .2s ease,color .2s ease,border-color .2s ease;
+  /* плоская карточка + волосяная рамка (glow убран) */
+  --card-body:#161719; --card-surface:#161719; --card-radius:16px;
+  --card-halo:0 0 0 1px rgba(255,255,255,.08);
+  --card-halo-strong:0 0 0 1px rgba(255,255,255,.14);
+}
+body.sb-login.light {
+  --bg:#c9c9d0; --panel:#dadae1; --panel-2:#d0d0d8; --panel-h:#c2c2cc;
+  --line:rgba(0,0,0,.10); --line-2:rgba(0,0,0,.18);
+  --text:#1b1b22; --muted:#5d5d68; --muted-2:#9d9da7; --tag:#3a3a44;
+  --star:36,36,50;
+  --brand-grad:linear-gradient(100deg,#45454f 0%,#0c0c12 45%,#0c0c12 55%,#45454f 100%);
+  --brand-glow:rgba(0,0,0,.14);
+  --vk:#2787f5; --vk-h:#1b6fd6;
+  --shadow:0 30px 80px rgba(0,0,0,.18);
+  --card-body:#e7e7ee; --card-surface:#e7e7ee;
+  /* светлая тема: люминозный белый ореол (как на лендинге), а не плоская тень */
+  --card-halo:inset 0 1px 0 rgba(255,255,255,.9), 0 0 0 1px rgba(0,0,0,.05), 0 0 28px -6px rgba(255,255,255,.9), 0 16px 44px -22px rgba(0,0,0,.16);
+  --card-halo-strong:inset 0 1px 0 rgba(255,255,255,1), 0 0 0 1px rgba(0,0,0,.06), 0 0 48px -4px rgba(255,255,255,1), 0 24px 64px -26px rgba(0,0,0,.20);
+}
+/* :where() — иначе скоуп весит 0,1,1 и обнуляет padding/margin у любого
+   правила в один класс (см. пояснение в Layout.css). */
+:where(body.sb-login) *{box-sizing:border-box;margin:0;padding:0}
+/* смена темы — мгновенно и синхронно для всего: на 1 кадр гасим все переходы,
+   иначе часть свойств плавно едет, а canvas-звёзды и градиент бренда щёлкают → «криво» */
+body.sb-login.theme-instant, body.sb-login.theme-instant *, body.sb-login.theme-instant *::before, body.sb-login.theme-instant *::after{transition:none!important}
+body.sb-login, body.sb-login{height:100%}
+body.sb-login{
+  background:var(--bg); color:var(--text);
+  font-family:"Sora","Outfit",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased; min-height:100svh;
+  display:grid; place-items:center; position:relative; overflow:hidden; padding:24px;
+  transition:background .4s ease,color .4s ease;
+}
+/* фон — единый с лендингом/error-страницами: чистый чёрный + анимированное
+   звёздное поле (canvas прозрачен, чёрный body просвечивает) + грейн.
+   Никакого фонового свечения — глубокий чёрный как на главной; свечение даёт сам маскот. */
+body.sb-login .bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+/* зернистый грейн-оверлей — как body::after на лендинге (styles.css) */
+body.sb-login::after{content:"";position:fixed;inset:0;z-index:120;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:180px 180px;mix-blend-mode:overlay;opacity:.55}
+
+/* верхняя панель */
+body.sb-login .top{position:fixed;top:0;left:0;right:0;z-index:3;display:flex;align-items:center;justify-content:space-between;padding:18px 22px}
+body.sb-login .brand{display:inline-flex;align-items:center;gap:11px;text-decoration:none;color:var(--text)}
+body.sb-login .brand__mark{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--panel-2);border:1px solid var(--line);color:var(--text)}
+body.sb-login .brand__mark svg{width:19px;height:19px}
+body.sb-login .brand__name{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:19px;letter-spacing:3px;background:var(--brand-grad);background-size:220% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 16px var(--brand-glow));animation:shine 7s linear infinite}
+body.sb-login .brand__dot{letter-spacing:1px}
+body.sb-login .theme{position:relative;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--panel-2);border:1px solid var(--line);color:var(--muted);cursor:pointer;transition:var(--tr)}
+body.sb-login .theme:hover{color:var(--text);border-color:var(--line-2)}
+body.sb-login .theme svg{width:18px;height:18px}
+body.sb-login .theme .i-sun{display:none}
+body.sb-login.light .theme .i-sun{display:block}
+body.sb-login.light .theme .i-moon{display:none}
+
+/* карточка входа — единый рецепт с лендингом: чёрное тело + светящийся ореол, без рамки */
+body.sb-login .card{position:relative;z-index:1;width:100%;max-width:430px;background:var(--card-body);border:0;border-radius:var(--card-radius);box-shadow:var(--card-halo);transition:box-shadow .45s cubic-bezier(.22,.61,.36,1);padding:32px 30px;text-align:center}
+body.sb-login .card:focus-within{box-shadow:var(--card-halo-strong)}
+body.sb-login .robot{position:relative;width:72px;height:72px;margin:0 auto 14px;color:var(--text);animation:float 5.5s ease-in-out infinite}
+body.sb-login .robot__glow{position:absolute;inset:-26%;z-index:-1;border-radius:50%;background:radial-gradient(circle,rgba(var(--star),.14),transparent 62%);filter:blur(14px)}
+body.sb-login.light .robot__glow{background:radial-gradient(circle,rgba(255,255,255,.7),transparent 64%)}
+body.sb-login .robot__bot{width:72px;height:72px;display:block}
+body.sb-login .bot-eyes{position:absolute;inset:0}
+body.sb-login .bot-eye{position:absolute;top:49%;width:8%;height:14.3%;border-radius:5px;background:currentColor;animation:blink 4.4s infinite}
+body.sb-login .bot-eye--l{left:35%}body.sb-login .bot-eye--r{left:57%}
+/* крупный робот на экране загрузки + кольцо-спиннер вокруг */
+body.sb-login .robot--xl{width:100px;height:100px;margin:0 auto 6px}
+body.sb-login .robot--xl .robot__bot{width:100px;height:100px}
+body.sb-login .robot__ring{position:absolute;inset:-20px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--text);animation:spin 1.1s linear infinite}
+body.sb-login .card__title{font-family:"Space Grotesk","Sora",system-ui,sans-serif;font-weight:700;font-size:23px;letter-spacing:-.3px}
+body.sb-login .card__sub{color:var(--muted);font-size:13.5px;line-height:1.55;font-weight:300;margin-top:7px;max-width:330px;margin-inline:auto}
+body.sb-login .card__sub-sec{display:inline-block;margin-top:3px;color:var(--muted-2)}
+
+/* вкладки Вход / Регистрация */
+body.sb-login .tabs{display:flex;gap:4px;margin-top:22px;padding:4px;background:var(--panel-2);border:1px solid var(--line);border-radius:13px}
+body.sb-login .tab{flex:1;padding:10px;border:none;border-radius:9px;background:transparent;color:var(--muted);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:var(--tr)}
+body.sb-login .tab:hover{color:var(--text)}
+body.sb-login .tab--on{background:var(--panel-h);color:var(--text)}
+
+/* OAuth-кнопки */
+body.sb-login .oauth{display:flex;gap:10px;margin-top:18px}
+body.sb-login .oauth-btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:12px;border-radius:13px;background:var(--panel-2);border:1px solid var(--line);color:var(--text);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:var(--tr),transform .2s}
+body.sb-login .oauth-btn:hover{border-color:var(--line-2);transform:translateY(-1px)}
+body.sb-login .oauth-ic{width:24px;height:24px;border-radius:7px;flex:none;display:grid;place-items:center;line-height:1}
+body.sb-login .oauth-ic--ya{background:var(--ya);color:#fff;font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:15px}
+body.sb-login .oauth-ic--vk{background:var(--vk);color:#fff}
+body.sb-login .oauth-ic--vk svg{width:16px;height:16px;display:block}
+
+/* разделитель */
+body.sb-login .divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:var(--muted-2);font-size:12px}
+body.sb-login .divider::before, body.sb-login .divider::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* форма */
+body.sb-login .form{display:flex;flex-direction:column;gap:13px;text-align:left}
+body.sb-login .field{display:flex;flex-direction:column;gap:6px}
+body.sb-login .field--reg[hidden]{display:none}
+body.sb-login .field__l{font-size:12.5px;color:var(--muted);font-weight:500;padding-left:2px}
+body.sb-login .inp{width:100%;padding:13px 15px;border-radius:12px;background:var(--panel-2);border:1px solid var(--line);color:var(--text);font-family:inherit;font-size:14px;transition:var(--tr)}
+body.sb-login .inp::placeholder{color:var(--muted-2)}
+body.sb-login .inp:focus{outline:none;border-color:var(--line-2);background:var(--panel-h)}
+body.sb-login .field__pw{position:relative;display:flex}
+body.sb-login .field__pw .inp{padding-right:44px}
+body.sb-login .eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:8px;background:transparent;border:none;color:var(--muted);display:grid;place-items:center;cursor:pointer;transition:var(--tr)}
+body.sb-login .eye:hover{color:var(--text);background:var(--panel-h)}
+body.sb-login .eye svg{width:18px;height:18px}
+body.sb-login .eye .i-off{display:none}
+body.sb-login .eye--on .i-on{display:none}
+body.sb-login .eye--on .i-off{display:block}
+body.sb-login .form__err{margin:-2px 0 0;font-size:12.5px;color:var(--danger);text-align:center}
+body.sb-login .form__err[hidden]{display:none}
+body.sb-login .forgot{align-self:flex-end;font-size:12.5px;color:var(--muted);text-decoration:none;margin-top:-3px;transition:color .2s}
+body.sb-login .forgot:hover{color:var(--text)}
+body.sb-login .forgot[hidden]{display:none}
+
+body.sb-login .submit{width:100%;margin-top:5px;padding:14px;border:none;border-radius:13px;background:var(--text);color:var(--bg);font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:transform .2s,opacity .2s}
+body.sb-login .submit:hover{transform:translateY(-1px)}
+
+body.sb-login .legal{margin-top:20px;font-size:11.5px;line-height:1.6;color:var(--muted-2)}
+body.sb-login .legal a{color:var(--muted);text-decoration:underline;text-underline-offset:2px}
+body.sb-login .legal a:hover{color:var(--text)}
+body.sb-login .legal__nowrap{white-space:nowrap}
+
+body.sb-login .back{position:relative;z-index:1;margin-top:18px;display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--muted);text-decoration:none;transition:color .2s}
+body.sb-login .back:hover{color:var(--text)}
+body.sb-login .back svg{width:15px;height:15px}
+
+/* экран-редирект (загрузка при входе) */
+body.sb-login .redirect{position:fixed;inset:0;z-index:10;background:var(--bg);display:none;place-items:center;text-align:center;padding:24px}
+body.sb-login .redirect.show{display:grid}
+body.sb-login .redirect__in{display:flex;flex-direction:column;align-items:center;gap:18px;max-width:340px}
+body.sb-login .spinner{width:54px;height:54px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--text);animation:spin 1s linear infinite}
+body.sb-login .redirect__t{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:18px}
+body.sb-login .redirect__d{color:var(--muted);font-size:13.5px;line-height:1.55;font-weight:300}
+
+@keyframes shine{to{background-position:-220% center}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes blink{0%,91%,100%{transform:scaleY(1)}95.5%{transform:scaleY(.12)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){body.sb-login *{animation:none!important}}
+@media (max-width:480px){body.sb-login .card{padding:26px 20px}}
+
+/* ── доп. классы для React-логики (ошибки/инфо/вторичная кнопка) ── */
+body.sb-login .auth-error {
+  margin-top: 4px; padding: 10px 14px; border-radius: 12px;
+  background: color-mix(in srgb, var(--danger) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--danger) 40%, transparent);
+  color: var(--danger); font-size: 13px; text-align: center;
+}
+body.sb-login .auth-info {
+  margin-top: 10px; color: var(--muted); font-size: 13px; text-align: center;
+}
+body.sb-login .submit--ghost {
+  margin-top: 10px; background: transparent; color: var(--muted);
+  border: 1px solid var(--line-2);
+}
+body.sb-login .submit--ghost:hover { color: var(--text); border-color: var(--text); }
+body.sb-login button.forgot { background: none; border: none; cursor: pointer; }

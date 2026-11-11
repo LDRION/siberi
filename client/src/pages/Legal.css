@@ -1,0 +1,76 @@
+/* ============================================================
+   Siberi AI · Юридические страницы (оферта / политика) — Total Black
+   Контент берётся из legal.js (window.LEGAL) — единый источник.
+   ============================================================ */
+body.sb-legal {
+  /* тёмная тема унифицирована с лендингом: тёплый Total Black */
+  --bg:#08090a; --panel:#0e0f12; --panel-2:#161719;
+  --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.14);
+  --text:#f3f3f6; --muted:#74747e; --muted-2:#4a4a52; --doc-ink:#c7c7d2;
+  --star:255,255,255;
+  --accent:#5a2812; --accent-text:#d4845c;
+  --brand-grad:linear-gradient(100deg,#b9b9c6 0%,#fff 45%,#fff 55%,#b9b9c6 100%);
+  --brand-glow:rgba(255,255,255,.30);
+  --shadow:0 24px 60px rgba(0,0,0,.55); --tr:background .2s ease,color .2s ease,border-color .2s ease;
+}
+body.sb-legal.light {
+  --bg:#c9c9d0; --panel:#dadae1; --panel-2:#d0d0d8;
+  --line:rgba(0,0,0,.10); --line-2:rgba(0,0,0,.18);
+  --text:#1b1b22; --muted:#5d5d68; --muted-2:#9d9da7; --doc-ink:#2b2b33;
+  --star:36,36,50;
+  --brand-grad:linear-gradient(100deg,#45454f 0%,#0c0c12 45%,#0c0c12 55%,#45454f 100%);
+  --brand-glow:rgba(0,0,0,.14); --shadow:0 24px 60px rgba(0,0,0,.18);
+}
+body.sb-legal *{box-sizing:border-box;margin:0;padding:0}
+body.sb-legal{scroll-behavior:smooth}
+body.sb-legal{background:var(--bg);color:var(--text);font-family:"Sora","Outfit",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased;min-height:100svh;position:relative;transition:background .4s ease,color .4s ease}
+/* фон — единый с лендингом/login: чистый чёрный + звёздное поле + грейн, без фонового свечения */
+body.sb-legal .bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+body.sb-legal .doc, body.sb-legal .foot{position:relative;z-index:1}
+body.sb-legal::after{content:"";position:fixed;inset:0;z-index:120;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:180px 180px;mix-blend-mode:overlay;opacity:.55}
+
+/* шапка */
+body.sb-legal .top{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 22px;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+body.sb-legal .brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
+body.sb-legal .brand__mark{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:var(--panel-2);border:1px solid var(--line)}
+body.sb-legal .brand__mark svg{width:19px;height:19px}
+body.sb-legal .brand__name{font-family:"Syne",sans-serif;font-weight:800;font-size:17px;letter-spacing:.5px}
+body.sb-legal .brand__dot{background:var(--brand-grad);background-size:220% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shine 7s linear infinite}
+body.sb-legal .top__r{display:flex;align-items:center;gap:9px}
+body.sb-legal .theme{position:relative;width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:var(--panel-2);border:1px solid var(--line);color:var(--muted);cursor:pointer;transition:var(--tr)}
+body.sb-legal .theme:hover{color:var(--text);border-color:var(--line-2)}
+body.sb-legal .theme svg{width:17px;height:17px}body.sb-legal .theme .i-sun{display:none}
+body.sb-legal.light .theme .i-sun{display:block}body.sb-legal.light .theme .i-moon{display:none}
+body.sb-legal .back{display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border-radius:11px;background:var(--panel-2);border:1px solid var(--line);color:var(--text);font-size:13px;font-weight:500;text-decoration:none;transition:var(--tr)}
+body.sb-legal .back:hover{border-color:var(--line-2)}
+body.sb-legal .back svg{width:15px;height:15px}
+@media (max-width:560px){body.sb-legal .back span{display:none}body.sb-legal .back{padding:9px}}
+
+/* документ */
+body.sb-legal .doc{max-width:760px;margin:0 auto;padding:48px 22px 90px}
+body.sb-legal .doc__kicker{font-family:"Space Grotesk",sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted-2)}
+body.sb-legal .doc__title{font-family:"Syne","Sora",system-ui,sans-serif;font-weight:800;font-size:clamp(28px,5vw,42px);letter-spacing:-.5px;margin:10px 0 6px}
+body.sb-legal .doc__meta{color:var(--muted);font-size:13.5px}
+body.sb-legal .doc__body{margin-top:34px}
+body.sb-legal .doc__body h3{font-family:"Space Grotesk","Sora",system-ui,sans-serif;font-weight:700;font-size:19px;letter-spacing:-.2px;margin:34px 0 12px;padding-top:22px;border-top:1px solid var(--line)}
+body.sb-legal .doc__body h3:first-child{margin-top:0;padding-top:0;border-top:none}
+body.sb-legal .doc__body p{color:var(--doc-ink);font-size:15.5px;line-height:1.75;font-weight:400;margin:12px 0;white-space:pre-line}
+body.sb-legal .doc__body li{color:var(--doc-ink);font-size:15.5px;line-height:1.75;font-weight:400;margin:8px 0 8px 22px}
+body.sb-legal .doc__body a{color:var(--text);text-decoration:underline;text-underline-offset:2px}
+
+/* подвал */
+body.sb-legal .foot{border-top:1px solid var(--line);margin-top:40px;padding:26px 22px;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;color:var(--muted-2);font-size:12.5px}
+body.sb-legal .foot a{display:inline-flex;align-items:center;gap:7px;padding:10px 16px;border-radius:11px;background:var(--panel-2);border:1px solid var(--line);color:var(--text);font-size:13px;font-weight:500;text-decoration:none;transition:var(--tr)}
+body.sb-legal .foot a:hover{border-color:var(--line-2)}
+body.sb-legal .foot .sep{color:var(--muted-2)}
+body.sb-legal .foot b{font-family:"Syne",sans-serif;font-weight:800;background:var(--brand-grad);background-size:220% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shine 7s linear infinite}
+
+/* кнопка наверх */
+body.sb-legal .toTop{position:fixed;right:22px;bottom:22px;z-index:6;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--panel);border:1px solid var(--line-2);color:var(--text);box-shadow:var(--shadow);cursor:pointer;opacity:0;visibility:hidden;transform:translateY(10px);transition:opacity .25s,transform .25s,visibility .25s}
+body.sb-legal .toTop.show{opacity:1;visibility:visible;transform:none}
+body.sb-legal .toTop svg{width:18px;height:18px}
+
+@keyframes shine{to{background-position:-220% center}}
+@media (prefers-reduced-motion:reduce){body.sb-legal *{animation:none!important}body.sb-legal{scroll-behavior:auto}}

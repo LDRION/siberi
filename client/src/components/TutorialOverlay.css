@@ -1,0 +1,330 @@
+/* ── Root ──────────────────────────────────────────────────────────── */
+.tut-root {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  pointer-events: none;
+}
+
+/* ── Dim panels (4 rectangles forming a spotlight hole) ─────────────── */
+.tut-panel {
+  position: fixed;
+  background: rgba(10, 14, 30, 0.72);
+  pointer-events: all;
+}
+
+/* ── Glowing border around highlighted element ───────────────────────── */
+.tut-spotlight-ring {
+  position: fixed;
+  border-radius: 14px;
+  border: 2px solid rgba(102, 126, 234, 0.85);
+  box-shadow:
+    0 0 0 4px rgba(102, 126, 234, 0.18),
+    0 0 32px rgba(102, 126, 234, 0.35);
+  pointer-events: none;
+  animation: tut-ring-pulse 2s ease-in-out infinite;
+}
+
+@keyframes tut-ring-pulse {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(102,126,234,0.18), 0 0 32px rgba(102,126,234,0.35); }
+  50%       { box-shadow: 0 0 0 10px rgba(102,126,234,0.10), 0 0 56px rgba(102,126,234,0.55); }
+}
+
+/* ── Pulse on the actual DOM element ─────────────────────────────────── */
+.tut-target-pulse {
+  animation: tut-elem-glow 1.7s ease-in-out infinite !important;
+  z-index: 9001;
+}
+
+@keyframes tut-elem-glow {
+  0%, 100% { box-shadow: inset 0 0 0 0px rgba(102, 126, 234, 0); }
+  50%       { box-shadow: inset 0 0 0 2px rgba(102, 126, 234, 0.75), inset 0 0 14px rgba(102, 126, 234, 0.18); }
+}
+
+/* ── Tooltip card ───────────────────────────────────────────────────── */
+.tut-tooltip {
+  position: fixed;
+  width: 400px;
+  max-width: calc(100vw - 32px);
+  background: white;
+  border-radius: 20px;
+  border: 1.5px solid rgba(102, 126, 234, 0.22);
+  box-shadow:
+    0 0 0 4px rgba(102, 126, 234, 0.06),
+    0 8px 32px rgba(102, 126, 234, 0.18),
+    0 24px 64px rgba(0, 0, 0, 0.16);
+  padding: 20px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  pointer-events: all;
+  z-index: 9001;
+  animation: tut-tooltip-in 0.32s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  transition: top 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+              left 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes tut-tooltip-in {
+  from { opacity: 0; transform: scale(0.88) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ── Mascot (Bot logo + floating eyes) ──────────────────────────────── */
+.tut-mascot {
+  position: relative;
+  flex-shrink: 0;
+  color: #667eea;
+  filter: drop-shadow(0 4px 14px rgba(102, 126, 234, 0.45));
+  animation: tut-mascot-bob 2.4s ease-in-out infinite;
+  width: 42px;
+  height: 42px;
+}
+
+@keyframes tut-mascot-bob {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-5px); }
+}
+
+/* Hide original SVG eye paths */
+.tut-mascot__bot > path:nth-child(5),
+.tut-mascot__bot > path:nth-child(6) {
+  display: none;
+}
+
+.tut-mascot__eye-l,
+.tut-mascot__eye-r {
+  position: absolute;
+  width: 4px;
+  height: 7px;
+  background: #667eea;
+  border-radius: 2px;
+  pointer-events: none;
+  will-change: transform;
+  transition: transform 0.08s ease-out;
+}
+
+.tut-mascot__eye-l {
+  left: 14px;
+  top: 24px;
+}
+
+.tut-mascot__eye-r {
+  left: 25px;
+  top: 24px;
+}
+
+/* ── Email widget ───────────────────────────────────────────────────── */
+.tut-email-widget {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 2px 0 12px;
+}
+
+.tut-email-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #667eea;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.18s ease;
+}
+
+.tut-email-link:hover {
+  transform: scale(1.06);
+  color: #764ba2;
+}
+
+.tut-email-link:active {
+  transform: scale(0.97);
+}
+
+.tut-email-copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid #e2e8f0;
+  border-radius: 5px;
+  background: none;
+  color: #a0aec0;
+  cursor: pointer;
+  transition: all 0.15s;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.tut-email-copy:hover {
+  background: rgba(102, 126, 234, 0.08);
+  border-color: #667eea;
+  color: #667eea;
+}
+
+.tut-email-copy.copied {
+  background: rgba(34, 197, 94, 0.08);
+  border-color: #22c55e;
+  color: #22c55e;
+}
+
+/* ── Tooltip body (animates in on each step change) ─────────────────── */
+.tut-body {
+  flex: 1;
+  min-width: 0;
+  animation: tut-body-in 0.26s ease both;
+}
+
+@keyframes tut-body-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.tut-counter {
+  font-size: 11px;
+  font-weight: 700;
+  color: #a0aec0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+
+.tut-text {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: #2d3748;
+  margin: 0 0 14px;
+  white-space: pre-wrap;
+}
+
+.tut-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.tut-skip {
+  background: none;
+  border: none;
+  color: #a0aec0;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: color 0.15s;
+}
+
+.tut-skip:hover {
+  color: #718096;
+}
+
+.tut-next {
+  padding: 8px 20px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.35);
+}
+
+.tut-next:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(102, 126, 234, 0.45);
+}
+
+/* ── Sidebar above tutorial overlay ────────────────────────────────── */
+.app-layout.tut-active .sidebar {
+  z-index: 9010;
+}
+
+.app-layout.tut-active .sidebar-hints-toggle {
+  position: relative;
+  z-index: 9020;
+}
+
+/* ── Sidebar toggle button ──────────────────────────────────────────── */
+.sidebar-hints-toggle {
+  padding: 10px 20px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.hints-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 9px 12px;
+  background: none;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #64748b;
+  font-size: 13px;
+  font-family: inherit;
+}
+
+.hints-toggle-btn:hover {
+  background: #f8fafc;
+  border-color: #cbd5e0;
+}
+
+.hints-toggle-btn__left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.hints-toggle-pill {
+  width: 34px;
+  height: 19px;
+  border-radius: 10px;
+  background: #e2e8f0;
+  position: relative;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.hints-toggle-pill.on {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.hints-toggle-pill::after {
+  content: '';
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: white;
+  top: 3px;
+  left: 3px;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+.hints-toggle-pill.on::after {
+  transform: translateX(15px);
+}
+
+.hints-toggle-btn--active {
+  border-color: #667eea;
+  background: rgba(102, 126, 234, 0.06);
+  color: #667eea;
+  animation: tut-btn-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes tut-btn-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
+  50%       { box-shadow: 0 0 0 5px rgba(102, 126, 234, 0.2); }
+}
+
+@media (max-width: 480px) {
+  .sidebar-hints-toggle { display: none; }
+}

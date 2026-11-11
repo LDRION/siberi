@@ -1,0 +1,365 @@
+.app {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100svh;
+  overflow: hidden;
+}
+
+/* Симметричное неон-свечение по центру сверху (за роботом) */
+.app__aurora {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(75% 32% at 50% -4%, rgb(var(--accent-rgb) / 0.22), transparent 68%),
+    var(--bg);
+}
+
+/* Область разделов — окно, внутри которого слои кроссфейдятся */
+.app__viewport {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Один скролл-слой раздела поверх окна */
+.screen-fade {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  /* iOS: без явного overflow-x:hidden горизонталь становится auto (спека), и
+     широкие фоновые слои (свечение героя 150%) дают паразитный скролл вбок.
+     Жёстко запираем горизонталь и разрешаем только вертикальный жест. */
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+  overscroll-behavior-y: contain;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+  /* full-bleed шапка; снизу место под плавающее меню */
+  padding: 0 0 calc(104px + env(safe-area-inset-bottom));
+  opacity: 0;
+  /* затухание чуть быстрее проявления — переход ощущается отзывчивее */
+  transition: opacity 0.12s ease;
+}
+.screen-fade.is-visible {
+  opacity: 1;
+  transition: opacity 0.18s ease;
+}
+
+/* Во время перехода отключаем backdrop-filter у стеклянных элементов:
+   иначе они composit-ятся отдельно и слой проявляется «частями».
+   Блюр на тёмном фоне почти незаметен, возврат после перехода не бросается. */
+.screen-fade.is-anim .ui-card,
+.screen-fade.is-anim .ui-pill,
+.screen-fade.is-anim .account-handle,
+.screen-fade.is-anim .partner-btn,
+.screen-fade.is-anim .set-group,
+.screen-fade.is-anim .btn--ghost {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.screen-body {
+  padding: 0 18px;
+}
+
+/* Анимация входа (используется приветственным экраном) */
+@keyframes screen-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Утилиты */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 9px;
+}
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 9px;
+}
+
+/* Кнопки */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.12s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.btn:active {
+  transform: scale(0.975);
+}
+.btn--primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-bright));
+  box-shadow: 0 12px 30px -12px var(--accent-glow), 0 1px 0 0 rgba(255, 255, 255, 0.18) inset;
+}
+/* Лёгкий блик сверху у основной кнопки */
+.btn--primary::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent);
+  pointer-events: none;
+}
+.btn--ghost {
+  background: var(--glass);
+  border: 1px solid var(--hairline);
+  color: var(--text);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+}
+.btn--danger {
+  background: rgba(248, 113, 113, 0.12);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  color: var(--danger);
+}
+.btn--danger-solid {
+  background: linear-gradient(135deg, #ef4444, #f87171);
+  box-shadow: 0 12px 30px -12px rgba(248, 113, 113, 0.5), 0 1px 0 0 rgba(255, 255, 255, 0.18) inset;
+}
+.btn--success {
+  background: rgba(52, 211, 153, 0.14);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  color: var(--success);
+}
+
+/* ── Служебные состояния (загрузка, тосты, ошибки сессии) ─────────── */
+.spinner {
+  width: 28px;
+  height: 28px;
+  margin: 44px auto;
+  border: 3px solid rgb(var(--accent-rgb) / 0.18);
+  border-top-color: var(--accent-bright);
+  border-radius: 50%;
+  animation: spinner-rotate 0.8s linear infinite;
+}
+.spinner--sm {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  border-width: 2.5px;
+}
+@keyframes spinner-rotate {
+  to { transform: rotate(360deg); }
+}
+
+.toast {
+  position: fixed;
+  top: calc(14px + env(safe-area-inset-top));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 300;
+  max-width: min(92vw, 420px);
+  padding: 11px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  color: var(--text);
+  background: var(--glass-strong), rgba(2, 6, 23, 0.92);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-card);
+  animation: screen-in 0.18s ease;
+}
+.toast--error {
+  border-color: rgba(248, 113, 113, 0.35);
+}
+
+.app-status {
+  position: relative;
+  z-index: 1;
+  margin: auto;
+  padding: 32px 26px;
+  text-align: center;
+}
+.app-status h2 {
+  margin: 0 0 10px;
+  font-size: 20px;
+}
+.app-status p {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+
+/* Список сохранённых макетов (снапшотов) бота */
+.snap-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.snap-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 11px 13px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.snap-item__main {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.snap-item__name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.snap-item__auto {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-mute);
+  background: var(--surface-2);
+  border-radius: 6px;
+  padding: 1px 6px;
+}
+.snap-item__meta {
+  font-size: 12px;
+  color: var(--text-mute);
+}
+.snap-item__actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* Карточка макета в магазине */
+.tpl-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  background: var(--glass);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+}
+.tpl-card__title {
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--text);
+}
+.tpl-card__desc {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.45;
+}
+.tpl-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--text-mute);
+}
+
+/* Примечание под кнопкой оплаты */
+.acc-paynote {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-mute);
+  text-align: center;
+}
+
+/* ── Дополнения экрана «База» под реальные данные ─────────────────── */
+.db-card__emoji {
+  font-size: 19px;
+  line-height: 1;
+}
+.db-field-img {
+  display: block;
+  max-width: 100%;
+  max-height: 140px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.db-field-link {
+  color: var(--accent-bright);
+  text-decoration: none;
+  word-break: break-all;
+}
+.db-ai-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 4px;
+  color: var(--text-dim);
+  font-size: 14px;
+  min-height: 44px;
+}
+.db-sync-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.db-sync-row__name {
+  font-size: 13.5px;
+  color: var(--text-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.db-sync-row__actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+/* Карточки листов Google-таблицы стали кнопками выбора вкладки */
+button.db-preview__sheet {
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+  font-family: inherit;
+  color: inherit;
+}
+.db-preview__sheet.is-active {
+  border-color: rgb(var(--accent-rgb) / 0.55);
+  background: rgb(var(--accent-rgb) / 0.08);
+}

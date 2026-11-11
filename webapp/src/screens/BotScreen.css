@@ -1,0 +1,241 @@
+/* Единая панель: статистика + управление, разделены горизонтальной линией */
+.ui-card.bot-panel {
+  padding: 0;
+  overflow: hidden;
+}
+.bot-panel__divider {
+  height: 1px;
+  margin: 0 16px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Статистика — верхняя секция */
+.stat-row {
+  display: flex;
+  align-items: stretch;
+  padding: 16px 4px;
+}
+.stat-row__item {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 0 8px;
+  text-align: center;
+}
+.stat-row__item:not(:first-child)::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 64%;
+  background: rgba(255, 255, 255, 0.08);
+}
+.stat-row__icon {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  color: var(--accent-bright);
+  background: rgb(var(--accent-rgb) / 0.12);
+  margin-bottom: 7px;
+}
+.stat-row__value {
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.stat-row__label {
+  font-size: 11.5px;
+  line-height: 1.3;
+  color: var(--text-dim);
+}
+
+/* Управление — нижняя секция */
+.ctrl-row {
+  display: flex;
+  align-items: stretch;
+}
+.ctrl-row__btn {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  padding: 16px 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text);
+  font-size: 12.5px;
+  font-weight: 600;
+  transition: background 0.15s ease, transform 0.12s ease;
+}
+.ctrl-row__btn:not(:first-child)::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 52%;
+  background: rgba(255, 255, 255, 0.08);
+}
+.ctrl-row__btn:active {
+  background: rgba(255, 255, 255, 0.03);
+  transform: scale(0.97);
+}
+
+/* КД: кнопка заблокирована, подпись — обратный отсчёт, снизу убывающая полоска */
+.ctrl-row__btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.ctrl-row__btn:disabled:active {
+  background: none;
+  transform: none;
+}
+.ctrl-row__btn:disabled span {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-dim);
+}
+.ctrl-row__cd {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  transform-origin: left center;
+  background: linear-gradient(90deg, var(--accent), var(--accent-bright));
+  animation: ctrl-cd-drain linear forwards;
+}
+@keyframes ctrl-cd-drain {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+.ctrl-row__btn svg {
+  color: var(--text-dim);
+}
+.ctrl-row__btn--danger {
+  color: var(--danger);
+}
+.ctrl-row__btn--danger svg {
+  color: var(--danger);
+}
+.ctrl-row__btn--success {
+  color: var(--success);
+}
+.ctrl-row__btn--success svg {
+  color: var(--success);
+}
+.ctrl-row__btn--accent {
+  color: var(--accent-bright);
+}
+.ctrl-row__btn--accent svg {
+  color: var(--accent-bright);
+}
+
+/* Действия с ботом (отмена / удаление) — одна карточка */
+.ui-card.bot-actions {
+  margin-top: 13px;
+  padding: 0;
+  overflow: hidden;
+}
+.bot-action {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  padding: 14px 15px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease;
+}
+.bot-action:last-child {
+  border-bottom: none;
+}
+.bot-action:active {
+  background: rgba(255, 255, 255, 0.03);
+}
+.bot-action__icon {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  color: var(--accent-bright);
+  background: rgb(var(--accent-rgb) / 0.1);
+}
+.bot-action__text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.bot-action__label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+.bot-action__sub {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.bot-action__chevron {
+  flex-shrink: 0;
+  color: var(--text-mute);
+}
+.bot-action--danger .bot-action__icon {
+  color: var(--danger);
+  background: rgba(248, 113, 113, 0.1);
+}
+.bot-action--danger .bot-action__label {
+  color: var(--danger);
+}
+
+/* Подтверждение действия */
+.confirm__text {
+  margin: 0 0 18px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--text-dim);
+}
+.confirm__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* Пусто */
+.bot-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  padding: 26px 20px;
+}
+.bot-empty__icon {
+  color: var(--accent-bright);
+}
+.bot-empty__text {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--text-dim);
+}

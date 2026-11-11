@@ -1,0 +1,58 @@
+# Auth state (содержит куки сессии!)
+mistral-auth-state.json
+
+# Профиль браузера (локальный кэш)
+edge-profile-master/
+
+# Дебаг-скриншоты
+debug/
+
+# Логи
+*.log
+
+# Зависимости (все три уровня!)
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Переменные окружения
+.env
+.env.local
+.env.production
+
+# Системное
+.DS_Store
+Thumbs.db
+
+# Режим тех. работ (runtime-флаг, не нужен в репо)
+server/.maintenance
+
+# Claude Code
+.claude/settings.local.json
+
+# T-Bank Минцифры CA certs (public, infra — installed on server, not in repo)
+server/certs/
+# Шаблон со звёздочкой: реальные бэкапы называются .env.bak-20260815-0412,
+# и под голый "server/.env.bak" они НЕ попадали — один такой уехал в репозиторий
+# вместе со всеми ключами (платежи, OAuth, SMTP).
+server/.env.bak*
+.env.bak*
+*.env.bak*
+client/.env.production.local
+client/scope-design.cjs
+client/_rebuild
+client/_build-log.txt
+client/dist.new
+client/dist.prev
+webapp/_rebuild
+webapp/_build-log.txt
+webapp/dist.new
+webapp/dist.prev
+
+# Бэкапы данных (PII: email/telegramId) — в git не место
+server/*-backup*.json
+server/test-payments-*.json
+
+# Профили браузеров с сессиями аккаунтов — никогда в git
+edge-profile*/
+**/edge-profile*/

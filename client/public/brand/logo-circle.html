@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#1a1a2e;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:24px;font-family:system-ui,sans-serif}
+canvas{border-radius:50%;box-shadow:0 0 40px rgba(139,92,246,.5)}
+button{padding:13px 40px;background:rgba(100,40,210,.6);color:#e5d0ff;border:1.5px solid rgba(200,170,255,.3);border-radius:999px;font:600 14px/1 system-ui,sans-serif;cursor:pointer;transition:background .2s}
+button:hover{background:rgba(130,60,240,.8)}
+p{color:rgba(196,181,253,.4);font-size:11px;text-align:center;line-height:1.7}
+</style>
+</head>
+<body>
+<canvas id="c" width="300" height="300"></canvas>
+<button onclick="dl()">⬇ Скачать логотип PNG (300×300)</button>
+<p>Прозрачный фон за пределами круга<br>Подходит для логотипа канала YouTube (150×150 рекомендовано)</p>
+
+<script>
+const cv=document.getElementById('c'),g=cv.getContext('2d'),S=300,R=S/2;
+
+function draw(){
+  g.clearRect(0,0,S,S);
+
+  // Вырезаем круг — всё вне него прозрачно
+  g.save();
+  g.beginPath();g.arc(R,R,R,0,Math.PI*2);g.clip();
+
+  // BG
+  const bg=g.createRadialGradient(R,R,0,R,R,R);
+  bg.addColorStop(0,'#1c0848');bg.addColorStop(.5,'#0e0428');bg.addColorStop(1,'#040010');
+  g.fillStyle=bg;g.fillRect(0,0,S,S);
+
+  // Glow
+  const gl=g.createRadialGradient(R,R*.9,0,R,R*.9,R*.75);
+  gl.addColorStop(0,'rgba(105,25,215,.45)');gl.addColorStop(1,'rgba(0,0,0,0)');
+  g.fillStyle=gl;g.fillRect(0,0,S,S);
+
+  // Иконка бота — большая, центрированная
+  const IC=168,sc=IC/24;
+  g.save();g.translate(R,R+4);
+  g.shadowBlur=30;g.shadowColor='rgba(180,145,255,.9)';
+  g.strokeStyle='#c4b5fd';g.lineWidth=2/sc;g.lineCap='round';g.lineJoin='round';
+  g.scale(sc,sc);g.translate(-12,-12);
+
+  g.beginPath();g.moveTo(12,8);g.lineTo(12,4);g.lineTo(8,4);g.stroke();
+  g.beginPath();
+  g.moveTo(6,8);g.lineTo(18,8);g.arcTo(20,8,20,10,2);g.lineTo(20,18);
+  g.arcTo(20,20,18,20,2);g.lineTo(6,20);g.arcTo(4,20,4,18,2);
+  g.lineTo(4,10);g.arcTo(4,8,6,8,2);g.closePath();
+  g.stroke();
+  g.beginPath();g.moveTo(2,14);g.lineTo(4,14);g.stroke();
+  g.beginPath();g.moveTo(20,14);g.lineTo(22,14);g.stroke();
+  g.beginPath();g.moveTo(15,13);g.lineTo(15,15);g.stroke();
+  g.beginPath();g.moveTo(9,13);g.lineTo(9,15);g.stroke();
+  g.restore();
+
+  g.restore(); // конец clip
+}
+
+draw();
+
+function dl(){
+  const a=document.createElement('a');
+  a.download='siberi-logo-circle.png';
+  a.href=cv.toDataURL('image/png');
+  a.click();
+}
+</script>
+</body>
+</html>

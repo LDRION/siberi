@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+
+# Закрываем авторизованные разделы
+Disallow: /dashboard
+Disallow: /settings
+Disallow: /chat
+Disallow: /data
+Disallow: /billing
+Disallow: /integrations
+Disallow: /panel
+Disallow: /studio
+
+# Технические страницы
+Disallow: /api/
+Disallow: /chat-page
+Disallow: /tg-data
+Disallow: /verify-email
+Disallow: /reset-password
+
+Sitemap: https://siberi.online/sitemap.xml

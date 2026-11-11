@@ -1,0 +1,68 @@
+/* Премиум-фон. Слои фиксированы за контентом (z-0), центр спокойный. */
+.bd {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  /* глубокая тёплая база — не плоский чёрный */
+  background:
+    radial-gradient(150% 130% at 50% -25%, #14110f 0%, #0b0a0b 42%, #060506 100%);
+}
+
+/* Градиент-меш: несколько мягких цветовых пятен, медленно «дышат» */
+.bd-aurora {
+  position: absolute;
+  inset: -30%;
+  background:
+    radial-gradient(34% 30% at 84% -6%,  rgba(236, 128, 58, 0.34), transparent 64%),
+    radial-gradient(30% 30% at 10% 2%,   rgba(150, 66, 116, 0.20), transparent 66%),
+    radial-gradient(28% 26% at 96% 44%,  rgba(120, 70, 150, 0.12), transparent 68%),
+    radial-gradient(55% 45% at 50% 120%, rgba(228, 130, 72, 0.22), transparent 70%);
+  filter: blur(34px);
+  animation: bd-breathe 30s ease-in-out infinite;
+}
+@keyframes bd-breathe {
+  0%   { transform: translate3d(-1.2%, -1%, 0) scale(1);    opacity: 0.9; }
+  50%  { transform: translate3d(1.6%, 1.1%, 0) scale(1.07); opacity: 1; }
+  100% { transform: translate3d(-0.4%, 1.6%, 0) scale(1.03); opacity: 0.92; }
+}
+
+/* Созвездия — точки, соединённые тонкими линиями (тёплый кирпичный цвет).
+   Верхнеуровневый fixed-canvas: рисуется поверх меша, но под контентом (z-1). */
+.bd-web {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Виньетка — фотографическая глубина, фокус на центр */
+.bd-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(125% 100% at 50% 40%, transparent 52%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+/* Тонкое плёночное зерно — «дорогая» текстура, убирает бандинг */
+.bd-grain {
+  position: absolute;
+  inset: -50%;
+  width: 200%; height: 200%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  animation: bd-grain 6s steps(3) infinite;
+}
+@keyframes bd-grain {
+  0%   { transform: translate(0, 0); }
+  33%  { transform: translate(-1.5%, 1%); }
+  66%  { transform: translate(1%, -1.5%); }
+  100% { transform: translate(0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bd-aurora, .bd-grain { animation: none; }
+}

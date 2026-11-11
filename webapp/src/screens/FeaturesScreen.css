@@ -1,0 +1,332 @@
+.feat-body { padding-bottom: 40px; }
+
+/* Верхние под-вкладки (сегмент-контрол) */
+.feat-tabs {
+  display: flex;
+  gap: 6px;
+  padding: 5px;
+  margin-bottom: 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+.feat-tab {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 11px 8px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.feat-tab.is-active {
+  background: rgb(var(--accent-rgb) / 0.16);
+  color: var(--text);
+  box-shadow: 0 0 16px -6px var(--accent-glow);
+}
+.feat-tab svg { flex-shrink: 0; }
+
+.feat-loading { display: flex; justify-content: center; padding: 60px 0; color: var(--text-dim); }
+.spin { animation: spinner-rotate 0.9s linear infinite; }
+
+/* Заглушка: нет бота / ошибка загрузки */
+.feat-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 48px 22px;
+  gap: 10px;
+}
+.feat-empty__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 62px;
+  height: 62px;
+  border-radius: 20px;
+  margin-bottom: 4px;
+  color: var(--accent-bright);
+  background: rgb(var(--accent-rgb) / 0.14);
+}
+.feat-empty__title { margin: 0; font-size: 18px; font-weight: 700; color: var(--text); }
+.feat-empty__text { margin: 0; max-width: 300px; font-size: 14px; line-height: 1.5; color: var(--text-dim); }
+.feat-empty__btn {
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 24px;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--accent-bright);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 24px -8px var(--accent-glow);
+}
+
+/* Заглушка «нет бота» — это НЕ ошибка, а подсказка. Приятный зелёный, без красного. */
+.feat-empty--ok .feat-empty__icon {
+  color: var(--success);
+  background: rgba(52, 211, 153, 0.14);
+}
+.feat-empty--ok .feat-empty__btn {
+  background: var(--success);
+  color: #04231a;
+  box-shadow: 0 8px 24px -8px rgba(52, 211, 153, 0.45);
+}
+
+.feat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 6px 16px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.feat-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; }
+.feat-row--toggle { border-bottom: 1px solid var(--border); }
+.feat-row--toggle:last-child { border-bottom: none; }
+.feat-row__lead { display: inline-flex; align-items: center; gap: 9px; font-weight: 600; color: var(--text); font-size: 15px; }
+.feat-row__lead svg { color: var(--accent-bright); }
+
+.feat-field { display: flex; flex-direction: column; gap: 6px; padding: 12px 0 4px; }
+.feat-field__label { font-size: 13px; font-weight: 600; color: var(--text-dim); }
+.feat-field__hint { font-size: 12px; color: var(--text-dim); opacity: 0.8; }
+
+.feat-input {
+  width: 100%;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 11px 13px;
+  color: var(--text);
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+.feat-input:focus { border-color: var(--hairline); }
+.feat-textarea { resize: vertical; min-height: 46px; font-family: inherit; line-height: 1.4; }
+
+.feat-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* Дни — единая стеклянная карточка на семь сегментов (лекало .set-group):
+   раньше был flex-wrap + min-width 40px, из-за чего «Вс» не влезал в строку,
+   переносился и растягивался на всю ширину. */
+.feat-days {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: var(--glass);
+  border-radius: var(--radius);
+  overflow: hidden;
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  box-shadow: var(--shadow-card);
+}
+/* Волосяная кромка — та же, что у карточек в Настройках */
+.feat-days::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(180deg, var(--hairline), rgba(255, 255, 255, 0) 30%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.feat-day {
+  position: relative;
+  min-width: 0;
+  padding: 11px 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-dim);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+/* Разделители между сегментами — вертикальный аналог .acc-div */
+.feat-day + .feat-day::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  bottom: 7px;
+  width: 1px;
+  background: var(--hairline);
+  transition: opacity 0.15s ease;
+}
+.feat-day.is-on {
+  background: rgb(var(--accent-rgb) / 0.18);
+  color: var(--text);
+}
+/* Рядом с активным сегментом линия лишняя — она спорит с заливкой */
+.feat-day.is-on::before,
+.feat-day.is-on + .feat-day::before {
+  opacity: 0;
+}
+.feat-day.is-on {
+  background: rgb(var(--accent-rgb) / 0.18);
+  border-color: rgb(var(--accent-rgb) / 0.5);
+  color: var(--text);
+}
+
+.feat-save {
+  margin: 16px 0 8px;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--accent-bright);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 24px -8px var(--accent-glow);
+}
+.feat-save:disabled { opacity: 0.6; }
+
+.feat-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--text-dim);
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 8px 0;
+}
+.feat-note svg { flex-shrink: 0; margin-top: 2px; color: var(--accent-bright); }
+
+.feat-url {
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 13px;
+  cursor: pointer;
+}
+.feat-url__text {
+  flex: 1;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: var(--text);
+  word-break: break-all;
+  line-height: 1.4;
+}
+.feat-url__copy { flex-shrink: 0; color: var(--accent-bright); }
+
+.feat-warn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--danger);
+}
+.feat-warn svg { flex-shrink: 0; }
+
+/* ── Админы ──────────────────────────────────────────────────────────────── */
+.feat-card--flush { padding: 4px 0; }
+
+.adm-add { display: flex; gap: 8px; align-items: stretch; }
+.adm-add__input {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+.adm-add__at {
+  position: absolute;
+  left: 12px;
+  color: var(--text-dim);
+  font-size: 15px;
+  pointer-events: none;
+}
+.adm-add__field { padding-left: 26px; width: 100%; }
+.adm-add__btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--accent-bright);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.adm-add__btn:disabled { opacity: .5; }
+
+.adm-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 13px;
+  border-bottom: 1px solid var(--border);
+}
+.adm-item:last-child { border-bottom: none; }
+.adm-item__main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.adm-item__name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.adm-item__uname { font-size: 12px; color: var(--text-dim); }
+.adm-item__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  align-self: flex-start;
+  margin-top: 1px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--surface-2);
+  color: var(--text-dim);
+}
+.adm-item__badge.is-full { background: rgba(52, 199, 89, .15); color: #34c759; }
+.adm-item__actions { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.adm-item__del {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: none;
+  background: transparent;
+  color: var(--danger);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+.adm-item__del:active { background: var(--surface-2); }

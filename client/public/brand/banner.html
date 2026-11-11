@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#08001c;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:20px;font-family:Inter,sans-serif}
+#wrap{position:relative;width:1024px;height:576px;overflow:hidden;box-shadow:0 0 80px rgba(100,30,200,.4)}
+canvas{width:1024px;height:576px}
+.info{color:rgba(196,181,253,.38);font-size:11px;text-align:center;line-height:1.9}
+.info b{color:rgba(196,181,253,.65)}
+button{padding:12px 36px;background:rgba(100,40,210,.6);color:#e5d0ff;border:1.5px solid rgba(200,170,255,.3);border-radius:999px;font:600 13px/1 Inter,sans-serif;cursor:pointer;transition:background .2s}
+button:hover{background:rgba(130,60,240,.8)}
+</style>
+</head>
+<body>
+<div id="wrap"><canvas id="c" width="2048" height="1152"></canvas></div>
+<button onclick="dl()">⬇ Скачать PNG (2048×1152)</button>
+<div class="info">
+  Рекомендованный размер YouTube · до 6 МБ<br>
+  Безопасная зона (видна на всех устройствах): центральные <b>1235×338px</b>
+</div>
+<script>
+if(!CanvasRenderingContext2D.prototype.roundRect){
+  CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){
+    this.moveTo(x+r,y);this.lineTo(x+w-r,y);this.arcTo(x+w,y,x+w,y+r,r);
+    this.lineTo(x+w,y+h-r);this.arcTo(x+w,y+h,x+w-r,y+h,r);
+    this.lineTo(x+r,y+h);this.arcTo(x,y+h,x,y+h-r,r);
+    this.lineTo(x,y+r);this.arcTo(x,y,x+r,y,r);this.closePath();
+  };
+}
+const cv=document.getElementById('c'),g=cv.getContext('2d');
+const W=2048,H=1152,cx=W/2,cy=H/2;
+
+const STARS=Array.from({length:80},(_,i)=>({
+  x:(i/80)*W*1.1-W*.05+Math.random()*100,
+  y:30+Math.random()*H*.55,
+  sz:.5+Math.random()*1.8,alpha:.15+Math.random()*.38,hue:258+Math.random()*55,
+}));
+
+const COLS=68,ROWS=38,FOV=700,CAM_Z=420,GRID_W=4200,GRID_D=2100,HORIZON=H*.64;
+function waveH(c,r){
+  const nx=c/(COLS-1),ny=r/(ROWS-1),p=.55*Math.PI*2;
+  return Math.sin(nx*Math.PI*4+p*2)*65+Math.sin(ny*Math.PI*3+p*4)*48
+        +Math.sin(nx*Math.PI*6+ny*Math.PI*4+p*2)*28+Math.sin(nx*Math.PI*2-ny*Math.PI*5+p*6)*14;
+}
+function proj(x3,y3,z3){
+  const dz=y3+CAM_Z;if(dz<=1)return null;
+  const s=FOV/dz;return{sx:x3*s+cx,sy:HORIZON-z3*s};
+}
+
+async function draw(){
+  await Promise.all([
+    document.fonts.load('800 118px "Plus Jakarta Sans"'),
+    document.fonts.load('500 30px Inter'),
+    document.fonts.load('600 24px Inter'),
+  ]);
+
+  // ── BG ──
+  const bg=g.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#07001e');bg.addColorStop(.55,'#0b0030');bg.addColorStop(1,'#05000f');
+  g.fillStyle=bg;g.fillRect(0,0,W,H);
+
+  [[W*.28,H*.22,'rgba(110,30,210,.14)',W*.42],[W*.72,H*.3,'rgba(70,20,180,.11)',W*.36],
+   [W*.5,H*.15,'rgba(150,60,255,.09)',W*.28],[W*.15,H*.62,'rgba(80,15,190,.1)',W*.26],[W*.85,H*.55,'rgba(90,20,200,.1)',W*.26]]
+  .forEach(([bx,by,col,r])=>{const gl=g.createRadialGradient(bx,by,0,bx,by,r);gl.addColorStop(0,col);gl.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=gl;g.fillRect(0,0,W,H);});
+
+  STARS.forEach(pt=>{
+    g.beginPath();g.arc(pt.x,pt.y,pt.sz,0,Math.PI*2);g.fillStyle=`hsl(${pt.hue},75%,80%)`;g.globalAlpha=pt.alpha*.75;g.fill();
+    g.beginPath();g.arc(pt.x,pt.y,pt.sz*2.8,0,Math.PI*2);g.fillStyle=`hsl(${pt.hue},80%,78%)`;g.globalAlpha=pt.alpha*.18;g.fill();
+    g.globalAlpha=1;
+  });
+
+  // ── WAVE GRID — клипируем ниже контента (y > 730) ──
+  g.save();
+  g.beginPath();g.rect(0,680,W,H-680);g.clip();
+  const grid=[];
+  for(let r=0;r<ROWS;r++){grid[r]=[];const y3=(r/(ROWS-1))*GRID_D;for(let c=0;c<COLS;c++)grid[r][c]=proj((c/(COLS-1)-.5)*GRID_W,y3,waveH(c,r));}
+  const MID=Math.floor(ROWS*.55);g.lineCap='round';
+  function dR(r0,r1,col,aMin,aMax,wMin,wMax){
+    for(let r=r0;r<=r1;r++){const d=(r-r0)/Math.max(r1-r0,1);g.globalAlpha=aMin+d*(aMax-aMin);g.lineWidth=wMin+d*(wMax-wMin);g.strokeStyle=col;g.beginPath();let f=true;
+      for(let c=0;c<COLS;c++){const p=grid[r][c];if(!p)continue;f?g.moveTo(p.sx,p.sy):g.lineTo(p.sx,p.sy);f=false;}g.stroke();}}
+  function dC(r0,r1,col,a,lw){g.globalAlpha=a;g.strokeStyle=col;g.lineWidth=lw;
+    for(let c=0;c<COLS;c+=2){g.beginPath();let f=true;for(let r=r0;r<=r1;r++){const p=grid[r][c];if(!p)continue;f?g.moveTo(p.sx,p.sy):g.lineTo(p.sx,p.sy);f=false;}g.stroke();}}
+  dC(0,MID,'#5a2d99',.08,.5);dR(0,MID,'#6d3daa',.04,.18,.4,.8);
+  dC(MID,ROWS-1,'#8855cc',.14,.7);dR(MID,ROWS-1,'#a066dd',.18,.55,.8,2);
+  g.filter='blur(10px)';dR(MID,ROWS-1,'#bb88ff',.07,.26,1.6,3.6);g.filter='none';
+  const last=grid[ROWS-1];
+  g.globalAlpha=.55;g.strokeStyle='#e5d0ff';g.lineWidth=1.8;
+  g.beginPath();let fst=true;for(let c=0;c<COLS;c++){const pp=last[c];if(!pp)continue;fst?g.moveTo(pp.sx,pp.sy):g.lineTo(pp.sx,pp.sy);fst=false;}g.stroke();
+  g.filter='blur(14px)';g.globalAlpha=.28;g.strokeStyle='#d8b4fe';g.lineWidth=4;
+  g.beginPath();fst=true;for(let c=0;c<COLS;c++){const pp=last[c];if(!pp)continue;fst?g.moveTo(pp.sx,pp.sy):g.lineTo(pp.sx,pp.sy);fst=false;}g.stroke();g.filter='none';
+  g.restore(); // конец clip волн
+
+  const vig=g.createLinearGradient(0,0,0,H);
+  vig.addColorStop(0,'rgba(5,0,20,.42)');vig.addColorStop(.12,'rgba(5,0,20,0)');vig.addColorStop(.78,'rgba(5,0,20,0)');vig.addColorStop(1,'rgba(4,0,12,.52)');
+  g.globalAlpha=1;g.fillStyle=vig;g.fillRect(0,0,W,H);
+
+  // ── ЦЕНТРАЛЬНЫЙ КОНТЕНТ ──
+  // Safe zone для 2048×1152: y = 407..745 (338px), center = 576
+  // Используем cy±159 как рабочие границы (с отступом 10px)
+  // Раскладка: icon(88px) → Siberi AI(100px) → tagline(25px) → chips(42px) → url(24px)
+
+  // Иконка бота — center cy-115=461, top≈437 (safe zone 407 ✓)
+  const IC=72,sc=IC/24;
+  g.save();g.translate(cx,cy-115);
+  g.shadowBlur=45;g.shadowColor='rgba(180,140,255,.85)';
+  g.strokeStyle='#c4b5fd';g.lineWidth=2/sc;g.lineCap='round';g.lineJoin='round';
+  g.scale(sc,sc);g.translate(-12,-12);
+  g.beginPath();g.moveTo(12,8);g.lineTo(12,4);g.lineTo(8,4);g.stroke();
+  g.beginPath();g.roundRect(4,8,16,12,2);g.stroke();
+  g.beginPath();g.moveTo(2,14);g.lineTo(4,14);g.stroke();
+  g.beginPath();g.moveTo(20,14);g.lineTo(22,14);g.stroke();
+  g.beginPath();g.moveTo(15,13);g.lineTo(15,15);g.stroke();
+  g.beginPath();g.moveTo(9,13);g.lineTo(9,15);g.stroke();
+  g.restore();
+
+  // "Siberi AI" — center cy-55=521
+  g.textAlign='center';g.textBaseline='middle';
+  const tg=g.createLinearGradient(cx-320,0,cx+320,0);
+  tg.addColorStop(0,'#b8a0f8');tg.addColorStop(.22,'#c4b5fd');tg.addColorStop(.42,'#ddd4ff');
+  tg.addColorStop(.5,'#f0ecff');tg.addColorStop(.58,'#ddd4ff');tg.addColorStop(.78,'#c4b5fd');tg.addColorStop(1,'#b8a0f8');
+  g.shadowBlur=28;g.shadowColor='rgba(167,139,250,.5)';
+  g.font='800 88px "Plus Jakarta Sans"';g.fillStyle=tg;
+  g.fillText('Siberi AI',cx,cy-55);
+
+  // Тэглайн — cy+6=582
+  g.shadowBlur=0;g.font='500 23px Inter';g.fillStyle='rgba(196,181,253,.6)';
+  g.fillText('ИИ-платформа для вашего бизнеса',cx,cy+6);
+
+  // Chips — center cy+50=626, bottom=646
+  const tags=[
+    {dot:'#34d399', text:'48 ч бесплатно'},
+    {dot:'#a78bfa', text:'Запуск за 5 минут'},
+    {dot:'#a78bfa', text:'24 / 7 без выходных'},
+    {dot:'#a78bfa', text:'Без кода'},
+    {dot:'#a78bfa', text:'Без хостинга'},
+  ];
+  g.font='600 20px Inter';
+  const pads=22,dotR=5,dotGap=9,chipH=40,chipGap=11;
+  const widths=tags.map(t=>g.measureText(t.text).width+pads*2+dotR*2+dotGap);
+  const totalW=widths.reduce((s,w)=>s+w,0)+(tags.length-1)*chipGap;
+  let cx2=cx-totalW/2;
+  const chipY=cy+50;
+  tags.forEach((t,i)=>{
+    const w=widths[i];
+    g.beginPath();g.roundRect(cx2,chipY-chipH/2,w,chipH,999);
+    g.fillStyle='rgba(139,92,246,.1)';g.fill();
+    g.strokeStyle=t.dot==='#34d399'?'rgba(52,211,153,.35)':'rgba(139,92,246,.3)';
+    g.lineWidth=1.5;g.stroke();
+    g.beginPath();g.arc(cx2+pads,chipY,dotR,0,Math.PI*2);
+    g.fillStyle=t.dot;g.shadowBlur=t.dot==='#34d399'?10:0;g.shadowColor='rgba(52,211,153,.7)';
+    g.fill();g.shadowBlur=0;
+    g.textAlign='left';g.textBaseline='middle';
+    g.fillStyle=t.dot==='#34d399'?'rgba(52,211,153,.9)':'rgba(196,181,253,.8)';
+    g.font='600 20px Inter';
+    g.fillText(t.text,cx2+pads+dotR*2+dotGap,chipY);
+    cx2+=w+chipGap;
+  });
+
+  // URL — cy+90=666, bottom≈677. Волны от y=700. Всё в зоне ✓
+  g.textAlign='center';
+  g.beginPath();g.arc(cx-76,cy+90,4,0,Math.PI*2);
+  g.fillStyle='#34d399';g.shadowBlur=12;g.shadowColor='rgba(52,211,153,.7)';g.fill();g.shadowBlur=0;
+  g.font='600 22px Inter';g.fillStyle='rgba(255,255,255,.72)';
+  g.fillText('siberi.online',cx+12,cy+90);
+}
+
+draw();
+function dl(){const a=document.createElement('a');a.download='siberi-banner-2048x1152.png';a.href=cv.toDataURL('image/png');a.click();}
+</script>
+</body>
+</html>

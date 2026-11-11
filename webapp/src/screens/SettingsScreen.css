@@ -1,0 +1,379 @@
+.set-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--glass);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 14px;
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  box-shadow: var(--shadow-card);
+}
+
+/* Компактные зазоры на экране настроек — всё помещается без прокрутки */
+.settings-body .ui-section-title {
+  margin-bottom: 6px;
+}
+.settings-body .set-group {
+  margin-bottom: 7px;
+}
+.settings-body .set-row {
+  padding: 10px 15px;
+}
+.set-group::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(180deg, var(--hairline), rgba(255, 255, 255, 0) 30%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.set-row {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  padding: 13px 15px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease;
+}
+.set-row:last-child {
+  border-bottom: none;
+}
+.set-row:active {
+  background: var(--surface-2);
+}
+
+.set-row__icon {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  color: var(--accent-bright);
+  background: rgb(var(--accent-rgb) / 0.1);
+}
+.set-row__text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.set-row__label {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+}
+.set-row__sub {
+  font-size: 12.5px;
+  color: var(--text-dim);
+}
+.set-row__right {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+.set-row__value {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 14px;
+  color: var(--text-dim);
+}
+.set-chevron {
+  color: var(--text-mute);
+}
+
+.set-row--danger .set-row__icon {
+  color: var(--danger);
+  background: rgba(248, 113, 113, 0.1);
+}
+.set-row--danger .set-row__label {
+  color: var(--danger);
+}
+.set-row--muted .set-row__label {
+  color: var(--text-dim);
+}
+/* Выбор акцентного цвета (попап) */
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px 12px;
+  padding: 4px 0;
+}
+.theme-opt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.theme-opt__name {
+  font-size: 12.5px;
+  color: var(--text-dim);
+}
+.theme-opt.is-active .theme-opt__name {
+  font-weight: 600;
+  color: var(--text);
+}
+.set-swatch {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--sw);
+  box-shadow: 0 6px 16px -6px var(--sw);
+  transition: transform 0.12s ease;
+}
+.theme-opt:active .set-swatch {
+  transform: scale(0.9);
+}
+/* Активный — кольцо в цвет акцента с отступом от фона */
+.theme-opt.is-active .set-swatch {
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--sw);
+}
+
+/* Плашка «Скоро» — для ещё не готовых пунктов */
+.set-soon {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--warning);
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.25);
+  border-radius: 999px;
+}
+
+/* Нижний контрол: «Сменить тему» | «Выйти» — единый бар с разделителем */
+.set-bottombar {
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+  margin: 12px 0 10px;
+  background: var(--glass);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+}
+.set-bottombar__btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 14px 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.set-bottombar__btn:active {
+  background: var(--surface-2);
+}
+.set-bottombar__btn--danger {
+  color: var(--danger);
+}
+.set-bottombar__div {
+  width: 1px;
+  background: var(--hairline);
+}
+
+/* Помощь и FAQ (попап-аккордеон) */
+.faq {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.faq__item {
+  background: var(--glass);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  transition: border-color 0.18s ease;
+}
+.faq__item.is-open {
+  border-color: rgb(var(--accent-rgb) / 0.32);
+}
+.faq__q {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 14px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+}
+.faq__q-text {
+  flex: 1;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text);
+}
+.faq__chevron {
+  flex-shrink: 0;
+  color: var(--text-mute);
+  transition: transform 0.22s ease, color 0.18s ease;
+}
+.faq__item.is-open .faq__chevron {
+  transform: rotate(180deg);
+  color: var(--accent-bright);
+}
+/* Плавное раскрытие через grid-template-rows 0fr→1fr */
+.faq__a-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.25s ease;
+}
+.faq__item.is-open .faq__a-wrap {
+  grid-template-rows: 1fr;
+}
+.faq__a-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+.faq__a {
+  margin: 0;
+  padding: 0 14px 14px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-dim);
+  white-space: pre-line; /* переносы \n в ответах отображаются как новые строки */
+}
+.faq__link {
+  /* работает и для <a>, и для <button> — сбрасываем стили кнопки */
+  display: inline;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: var(--accent-bright);
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.faq__link:active {
+  opacity: 0.7;
+}
+
+/* История платежей (попап) */
+.pay-empty {
+  margin: 0;
+  padding: 24px 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-mute);
+}
+.pay-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pay-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--glass);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  /* тон задаётся модификатором статуса ниже */
+  --pay-tone: var(--success);
+  --pay-soft: rgba(52, 211, 153, 0.12);
+}
+.pay-item--pending {
+  --pay-tone: var(--warning, #f59e0b);
+  --pay-soft: rgba(245, 158, 11, 0.12);
+}
+.pay-item--refund {
+  --pay-tone: var(--accent-bright);
+  --pay-soft: rgb(var(--accent-rgb) / 0.12);
+}
+.pay-item--payout {
+  --pay-tone: var(--success);
+  --pay-soft: rgba(52, 211, 153, 0.12);
+}
+.pay-item__icon {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  color: var(--pay-tone);
+  background: var(--pay-soft);
+}
+.pay-item__main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.pay-item__title {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+.pay-item__date {
+  font-size: 12.5px;
+  color: var(--text-mute);
+}
+.pay-item__right {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+.pay-item__amount {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.pay-item--refund .pay-item__amount {
+  color: var(--accent-bright);
+}
+.pay-item--payout .pay-item__amount {
+  color: var(--success);
+}
+.pay-item__status {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--pay-tone);
+}
+

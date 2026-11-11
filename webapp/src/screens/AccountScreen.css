@@ -1,0 +1,819 @@
+/* @username — аккуратный чип под именем */
+.account-handle {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 3px;
+  padding: 5px 14px;
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--text-dim);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Единая карточка аккаунта */
+.acc-card {
+  padding: 0;
+  overflow: hidden;
+}
+.acc-div {
+  height: 1px;
+  margin: 0 16px;
+  background: var(--hairline);
+}
+
+/* Шапка карточки — единый блок подписки */
+.acc-sub {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 16px 16px 17px;
+  /* акцентный тон тира (через --tier-*) задаётся модификаторами ниже */
+  --tier-color: var(--accent-bright);
+  --tier-soft: rgb(var(--accent-rgb) / 0.14);
+}
+.acc-sub--soon {
+  --tier-color: #d2a64a;
+  --tier-soft: rgba(210, 166, 74, 0.14);
+}
+.acc-sub--urgent {
+  --tier-color: #fb7185;
+  --tier-soft: rgba(251, 113, 133, 0.14);
+}
+
+.acc-sub__eyebrow {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+/* Стеклянная панелька: план │ статус, ниже — «Действует до» */
+.acc-sub__panel {
+  display: inline-flex;
+  flex-direction: column;
+  margin-top: 9px;
+  border-radius: 14px;
+  background: var(--glass);
+  border: 1px solid var(--hairline);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+.acc-sub__panel-top {
+  display: flex;
+  align-items: stretch;
+}
+.acc-sub__panel-until {
+  padding: 8px 14px;
+  font-size: 13px;
+  text-align: center;
+  color: var(--text-dim);
+  border-top: 1px solid var(--hairline);
+}
+.acc-sub__panel-until b {
+  font-weight: 600;
+  color: var(--text);
+}
+.acc-sub__seg {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+}
+.acc-sub__seg--plan {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+.acc-sub__crown {
+  color: var(--accent-bright);
+  flex-shrink: 0;
+}
+.acc-sub__crown--off {
+  color: var(--text-mute);
+}
+/* Панель без подписки — приглушённая, один сегмент */
+.acc-sub__panel--none .acc-sub__seg--plan {
+  color: var(--text-dim);
+}
+.acc-sub__cta {
+  width: 100%;
+  margin-top: 14px;
+}
+.acc-sub__seg--state {
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--success);
+  border-left: 1px solid var(--hairline);
+  background: rgba(52, 211, 153, 0.06);
+}
+.acc-sub__state-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 7px currentColor;
+}
+/* Полоска: «+6 🔒» под замком до подписки */
+.acc-sub__locked {
+  color: var(--success);
+  font-weight: 700;
+}
+
+/* Карточка бонуса за подписку на @aicupdates — приятная зелёная, не ошибка */
+.acc-bonus {
+  margin: 12px 0 4px;
+  padding: 13px 14px;
+  border-radius: var(--radius-sm);
+  background: rgba(52, 211, 153, 0.10);
+  border: 1px solid rgba(52, 211, 153, 0.28);
+}
+.acc-bonus__head { margin: 0; font-size: 15px; color: var(--text); }
+.acc-bonus__head b { color: var(--success); }
+.acc-bonus__text { margin: 5px 0 11px; font-size: 13px; line-height: 1.45; color: var(--text-dim); }
+.acc-bonus__btns { display: flex; gap: 8px; }
+.acc-bonus__btn {
+  flex: 1;
+  padding: 11px;
+  border: none;
+  border-radius: 12px;
+  background: var(--success);
+  color: #04231a;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.acc-bonus__btn:disabled { opacity: 0.6; }
+.acc-bonus__btn--ghost {
+  background: rgba(52, 211, 153, 0.14);
+  color: var(--success);
+}
+
+.acc-sub__until {
+  margin: 9px 0 14px;
+  font-size: 13.5px;
+  color: var(--text-dim);
+}
+.acc-sub__until b {
+  font-weight: 600;
+  color: var(--text);
+}
+.acc-sub__bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-top: 14px;
+}
+.acc-sub__bar .ui-progress {
+  flex: 1;
+}
+.acc-sub__days {
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--tier-color);
+}
+.acc-sub__warn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--tier-color);
+  background: var(--tier-soft);
+  border-radius: 12px;
+}
+
+/* Строки внутри карточки */
+.acc-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  background: none;
+  border: none;
+  text-align: left;
+}
+.acc-row--btn {
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.acc-row--btn:active {
+  background: var(--surface-2);
+}
+.acc-row__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+}
+.acc-row__icon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  color: var(--accent-bright);
+  background: rgb(var(--accent-rgb) / 0.1);
+}
+.acc-row__right {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.acc-row__value {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-dim);
+}
+.acc-row__chevron {
+  color: var(--text-mute);
+}
+
+/* Тарифный план (попап) — карточка-контейнер выбора плана */
+.tariff-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  background: var(--glass);
+  border-radius: var(--radius);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  box-shadow: var(--shadow-card);
+}
+.tariff-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(180deg, var(--hairline), rgba(255, 255, 255, 0) 38%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Строка плана — отдельная скруглённая зона, чистое выделение */
+.tplan {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 13px 14px;
+  border: 1.5px solid transparent;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background 0.16s ease, border-color 0.16s ease, transform 0.12s ease;
+}
+.tplan:active {
+  transform: scale(0.99);
+}
+.tplan--selected {
+  background: rgb(var(--accent-rgb) / 0.1);
+  border-color: var(--accent-bright);
+}
+.tplan__radio {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 2px solid var(--border-strong);
+  color: #fff;
+  transition: background 0.16s ease, border-color 0.16s ease;
+}
+.tplan--selected .tplan__radio {
+  background: var(--accent-bright);
+  border-color: var(--accent-bright);
+}
+.tplan__main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tplan__name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text);
+}
+.tplan__price {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+.plan__badge {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  top: -1px;
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgb(var(--accent-rgb) / 0.14);
+}
+.plan__badge--popular {
+  color: var(--success);
+  background: rgba(52, 211, 153, 0.14);
+}
+.plan__price-per {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-mute);
+}
+/* Акцентная «i» — подробности о тарифе, справа */
+.tplan__info {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  color: var(--accent-bright);
+  background: rgb(var(--accent-rgb) / 0.14);
+  border: 1px solid rgb(var(--accent-rgb) / 0.32);
+  cursor: pointer;
+  transition: background 0.16s ease, transform 0.12s ease;
+}
+.tplan__info:active {
+  transform: scale(0.9);
+}
+.tplan__info:hover {
+  background: rgb(var(--accent-rgb) / 0.24);
+}
+.btn:disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* Срок подписки — ячейки в строку, скидка подписью под ячейкой */
+.tperiod {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 9px;
+  padding-top: 9px;
+}
+.tperiod__cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 14px 6px 13px;
+  background: var(--bg-2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color 0.16s ease, background 0.16s ease, transform 0.12s ease;
+}
+.tperiod__cell:active {
+  transform: scale(0.97);
+}
+.tperiod__cell.is-active {
+  border-color: var(--accent-bright);
+  background: rgb(var(--accent-rgb) / 0.1);
+  box-shadow: 0 0 0 3px rgb(var(--accent-rgb) / 0.12);
+}
+.tperiod__badge {
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 3px 9px;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: #04140d;
+  background: linear-gradient(135deg, #34d399, #10b981);
+  border-radius: 999px;
+  white-space: nowrap;
+  box-shadow: 0 5px 14px -5px rgba(52, 211, 153, 0.55);
+}
+.tperiod__label {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+}
+.tperiod__price {
+  font-size: 11.5px;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.tperiod__per {
+  color: var(--text-mute);
+}
+
+/* Шапка продления — текущий тариф (только чтение) */
+.renew-plan {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 15px 16px;
+  background: var(--glass-strong);
+  border: 1px solid rgb(var(--accent-rgb) / 0.25);
+  border-radius: var(--radius-sm);
+}
+.renew-plan__left {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+.renew-plan__name {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+.renew-plan__price {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Промокод */
+.promo {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.promo__hint {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+.promo__field {
+  display: flex;
+  gap: 8px;
+}
+.promo__input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 14px;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg-2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color 0.16s ease;
+}
+.promo__input::placeholder {
+  color: var(--text-mute);
+}
+.promo__input:focus {
+  border-color: var(--accent-bright);
+}
+.promo__apply {
+  flex-shrink: 0;
+  padding: 0 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent-bright);
+  background: rgb(var(--accent-rgb) / 0.12);
+  border: 1px solid rgb(var(--accent-rgb) / 0.28);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: transform 0.12s ease, opacity 0.16s ease;
+}
+.promo__apply:active {
+  transform: scale(0.96);
+}
+.promo__apply:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Подробности тарифа */
+.plan-info__price {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.plan-info__price-val {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.plan-info__price-per {
+  font-size: 14px;
+  color: var(--text-dim);
+}
+.plan-info__list {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.plan-info__item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 14.5px;
+  color: var(--text);
+}
+.plan-info__check {
+  flex-shrink: 0;
+  color: var(--success);
+}
+
+/* Итоговая цена */
+.plan-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 2px 2px;
+}
+.plan-total__label {
+  font-size: 14px;
+  color: var(--text-dim);
+}
+.plan-total__sums {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.15;
+}
+.plan-total__value {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.plan-total__old {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-mute);
+  text-decoration: line-through;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Реферальный блок — шапка в одну строку с призывом к росту */
+.ref-head {
+  margin: 0;
+  text-align: center;
+  /* переносим на 2 строки — раньше был nowrap, и «…их оплаты» вылезал вбок,
+     давая обрезку текста и горизонтальный скролл в модалке */
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-dim);
+}
+.ref-head__gift {
+  display: inline;
+  vertical-align: -2px;
+  margin-right: 5px;
+  color: var(--accent-bright);
+}
+.ref-head b {
+  font-weight: 700;
+  color: var(--accent-bright);
+}
+.ref-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 6px 6px 14px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.ref-link__code {
+  flex: 1;
+  font-size: 13px;
+  color: var(--text-dim);
+  font-family: 'SF Mono', ui-monospace, monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ref-link__btn {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 10px;
+  color: var(--accent-bright);
+  background: rgb(var(--accent-rgb) / 0.14);
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+.ref-link__btn:active {
+  transform: scale(0.9);
+}
+.ref-link__btn.is-copied {
+  color: var(--success);
+  background: rgba(52, 211, 153, 0.14);
+}
+
+/* Реф-статистика — единая компактная карточка 2×2 с разделениями */
+.ref-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--glass);
+  border-radius: var(--radius);
+  overflow: hidden;
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  box-shadow: var(--shadow-card);
+}
+.ref-grid::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(180deg, var(--hairline), rgba(255, 255, 255, 0) 40%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.ref-grid__cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 9px 8px;
+  text-align: center;
+}
+.ref-grid__cell:nth-child(odd) {
+  border-right: 1px solid var(--hairline);
+}
+.ref-grid__cell:nth-child(1),
+.ref-grid__cell:nth-child(2) {
+  border-bottom: 1px solid var(--hairline);
+}
+/* Иконка + заголовок — в одну строку; резервируем 2 строки для ровных ячеек */
+.ref-grid__head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 2.2em; /* под 2 строки заголовка, компактнее */
+}
+.ref-grid__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--accent-bright);
+}
+.ref-grid__label {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+  color: var(--text-mute);
+  text-align: center;
+}
+.ref-grid__value {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Доступно к выводу */
+.ref-payout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--glass-strong);
+  border: 1px solid rgb(var(--accent-rgb) / 0.25);
+  border-radius: var(--radius);
+}
+.ref-payout__label {
+  font-size: 14px;
+  color: var(--text-dim);
+}
+.ref-payout__value {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  /* Неон в стиле проекта — синий градиент по тексту */
+  background: linear-gradient(135deg, var(--accent-bright), var(--accent-bright));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--accent-bright);
+}
+
+/* Условия партнёрской программы (попап) */
+.ref-terms {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ref-terms__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 13px 14px;
+  background: var(--glass);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+}
+.ref-terms__icon {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  color: var(--accent-bright);
+  background: rgb(var(--accent-rgb) / 0.12);
+}
+.ref-terms__text {
+  margin: 0;
+  padding-top: 2px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--text-dim);
+}
+.ref-terms__text b {
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* ── Автопродление ─────────────────────────────────────────────────── */
+/* Строка тумблера на экране оплаты */
+.acc-arpay {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface-2, rgb(var(--accent-rgb) / 0.05));
+}
+.acc-arpay__main { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.acc-arpay__title { font-size: 14.5px; font-weight: 600; color: var(--text); }
+.acc-arpay__sub { font-size: 12px; line-height: 1.4; color: var(--text-mute); }
+/* Модалка согласия */
+.acc-arlist { margin: 0; padding: 0 0 0 18px; display: grid; gap: 7px; }
+.acc-arlist li { font-size: 14px; line-height: 1.5; color: var(--text-dim); }
+.acc-arconsent {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-mute);
+}
+.acc-arconsent a { color: var(--accent-bright); text-decoration: underline; }

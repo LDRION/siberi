@@ -1,0 +1,49 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "AI Gateway API with Playwright + Gemini",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "node --test tests/payment.test.js tests/integrations.test.js tests/aiAccessRole.test.js tests/screenTextEdit.test.js tests/tbank.test.js tests/refund.test.js",
+    "grant-access": "node scripts/grant-access.js"
+  },
+  "keywords": [
+    "ai",
+    "api",
+    "gemini",
+    "playwright"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "axios": "^1.13.4",
+    "clipboardy": "^5.3.1",
+    "cors": "^2.8.6",
+    "docx": "^9.7.1",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "express-rate-limit": "^7.5.0",
+    "googleapis": "^171.4.0",
+    "groq-sdk": "^1.2.1",
+    "helmet": "^8.0.0",
+    "jszip": "^3.10.1",
+    "mammoth": "^1.12.0",
+    "mongodb": "^7.2.0",
+    "mongoose": "^9.1.5",
+    "multer": "^2.1.1",
+    "nodemailer": "^10.0.10",
+    "pdf-parse": "^1.1.1",
+    "pdfkit": "^0.18.0",
+    "pg": "^8.21.0",
+    "playwright": "^1.58.1",
+    "telegraf": "^4.16.3",
+    "uuid": "^13.0.0",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
