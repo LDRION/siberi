@@ -16,6 +16,10 @@ require('dns').setDefaultResultOrder('ipv4first');
 // него всю систему до ручного рестарта. Код резерва цел — вернуть одной строкой
 // `QWEN_FALLBACK=on` в server/.env.
 const QWEN_FALLBACK_ENABLED = process.env.QWEN_FALLBACK === 'on';
+// BROWSER_FALLBACKS=off — работают только режим ИИ Google и Groq по API: вкладки UltraGPT,
+// Mistral и Qwen не открываются, их ярусы пропускаются. Код провайдеров остаётся на месте.
+const BROWSER_FALLBACKS_OFF = process.env.BROWSER_FALLBACKS === 'off';
+const fallbacksOff = () => new Error('браузерные провайдеры выключены (BROWSER_FALLBACKS=off)');
 
 // Заглушка Cloudflare вместо чата. И Mistral, и Qwen стоят за Cloudflare, так что
 // при частых запросах вкладку уводит на страницу 1015 «You are being rate limited».
@@ -519,7 +523,9 @@ class AiService {
           this._prepareSparePage();
           this._ensureMistralPool();
         } else {
-          console.log('🟣 AI_PROVIDER=ultragpt — прогрев вкладок Mistral пропущен');
+          console.log(BROWSER_FALLBACKS_OFF
+            ? '🟢 BROWSER_FALLBACKS=off — только режим ИИ Google и Groq, вкладки UltraGPT и Mistral не открываются'
+            : '🟣 AI_PROVIDER=ultragpt — прогрев вкладок Mistral пропущен');
         }
 
         this.qwen = new QwenService(this.masterBrowser);
@@ -610,6 +616,7 @@ class AiService {
   }
 
   async _initDemoContext() {
+    if (BROWSER_FALLBACKS_OFF) return;
     if (!this.profileContext) throw new Error('profileContext не готов — браузер ещё не подключён');
     console.log('🎭 Инициализация демо-контекста...');
     this.demoContext = this.profileContext;
@@ -684,6 +691,7 @@ class AiService {
   // the underlying browser/tabs persist, and the per-user pool starts empty
   // every time). Cheap to keep one spare around; refilled after every handoff.
   async _prepareSparePage() {
+    if (BROWSER_FALLBACKS_OFF) return;
     if (this.sparePage || this._sparePagePreparing) return;
     if (!this.profileContext || this.forceQwen) return;
     this._sparePagePreparing = true;
@@ -755,6 +763,7 @@ class AiService {
 
   // Догоняет пул до POOL_WARM прогретых вкладок. Fire-and-forget, без гонок.
   async _ensureMistralPool() {
+    if (BROWSER_FALLBACKS_OFF) return;
     if (this._poolFilling || this.forceQwen || !this.profileContext) return;
     this._poolFilling = true;
     try {
@@ -779,6 +788,7 @@ class AiService {
   // пул меньше макс — прогреваем ещё одну; иначе ждём освобождения (очередь).
   // На время реконнекта браузера может вернуть null (обрабатывается вызывающим).
   async _acquireMistralPage() {
+    if (BROWSER_FALLBACKS_OFF) throw fallbacksOff();
     // 1) свободная живая вкладка
     while (this.poolFree.length) {
       const page = this.poolFree.shift();
@@ -925,6 +935,7 @@ class AiService {
 
   // 🔥 ИЗМЕНЕНО: getDemoPage теперь использует единый контекст
   async getDemoPage() {
+    if (BROWSER_FALLBACKS_OFF) throw fallbacksOff();
     // Если демо-контекст еще не создан (например, при первом запросе до полной инициализации)
     if (!this.demoPage || !this.demoContext) {
       console.warn('⚠️ Демо-контекст не инициализирован, создаю...');
@@ -1068,6 +1079,7 @@ class AiService {
   }
 
   async getPageForUser(userId, email) {
+    if (BROWSER_FALLBACKS_OFF) throw fallbacksOff();
     userId = userId.toString(); // 🔥
     console.log(
       `🔍 getPageForUser: userId="${userId}", contextExists=${this.userContexts.has(userId)}`
@@ -3450,7 +3462,7 @@ ${historyLines ? `\nИстория диалога:\n${historyLines}` : ''}
           }
         }
 
-        if (process.env.AI_PROVIDER === 'ultragpt' && (source === 'app_chat' || source === 'external_api')) {
+        if (process.env.AI_PROVIDER === 'ultragpt' && !BROWSER_FALLBACKS_OFF && (source === 'app_chat' || source === 'external_api')) {
           try {
             const ultragpt = require('./services/ultragpt');
             const onUgPartial = async (t) => {
@@ -3503,6 +3515,13 @@ ${historyLines ? `\nИстория диалога:\n${historyLines}` : ''}
         }
 
         // ── Tier 2 / 3: существующая цепочка Mistral → Qwen (без изменений) ───
+        if (BROWSER_FALLBACKS_OFF) {
+          task.status = 'error';
+          task.error = 'Google AI и Groq недоступны (браузерные провайдеры выключены)';
+          task.completedAt = new Date();
+          await task.save();
+          return null;
+        }
         let usedQwen = false;
 
         if (!this.forceQwen) {
@@ -4056,7 +4075,7 @@ schemaName: "" = все схемы.`;
       // _finalizeAgentResponse (провайдер-агностично). При любой ошибке — фолбэк на
       // Groq/Mistral ниже. Покрывает кабинетный /chat, Telegram/VK-боты, ConstructorBot,
       // Studio — всё, что идёт через processTask.
-      if (process.env.AI_PROVIDER === 'ultragpt') {
+      if (process.env.AI_PROVIDER === 'ultragpt' && !BROWSER_FALLBACKS_OFF) {
         try {
           const ultragpt = require('./services/ultragpt');
           const onUgPartial = async (textPart) => {
