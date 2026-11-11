@@ -3450,7 +3450,7 @@ ${historyLines ? `\nИстория диалога:\n${historyLines}` : ''}
             const gaiRaw = await googleai.generate(task.prompt, activeSystemPrompt, onGaiPartial, { images: imageList });
             const { userResponse } = this.parseAIResponse(String(gaiRaw).replace(/\[END_TEXT\]/g, ''));
             const finalGai = (userResponse && userResponse.length >= 2) ? userResponse : String(gaiRaw).trim();
-            if (!finalGai || finalGai.length < 2) throw new Error('пустой ответ Google AI');
+            if (!finalGai || !finalGai.trim()) throw new Error('пустой ответ Google AI');   // «1» — законный ответ на выбор варианта
             task.status = 'completed'; task.error = undefined;
             task.result = finalGai; task.completedAt = new Date();
             task.processingTime = Date.now() - startTime;
@@ -3473,7 +3473,7 @@ ${historyLines ? `\nИстория диалога:\n${historyLines}` : ''}
             const ugRaw = await ultragpt.generate(task.prompt, activeSystemPrompt, onUgPartial);
             const { userResponse } = this.parseAIResponse(String(ugRaw).replace(/\[END_TEXT\]/g, ''));
             const finalUg = (userResponse && userResponse.length >= 2) ? userResponse : String(ugRaw).trim();
-            if (!finalUg || finalUg.length < 2) throw new Error('пустой ответ UltraGPT');
+            if (!finalUg || !finalUg.trim()) throw new Error('пустой ответ UltraGPT');
             task.status = 'completed'; task.error = undefined;
             task.result = finalUg; task.completedAt = new Date();
             task.processingTime = Date.now() - startTime;
@@ -3497,8 +3497,10 @@ ${historyLines ? `\nИстория диалога:\n${historyLines}` : ''}
             // Mistral/Qwen strip this marker before storing the result (AiService.js:1579,
             // QwenService.js:318) — Groq's raw completion needs the same treatment, it's a
             // streaming signal for the model, not content the user should ever see.
-            const { userResponse } = this.parseAIResponse(groqRaw.replace(/\[END_TEXT\]/g, ''));
-            if (!userResponse || userResponse.length < 5) throw new Error('Пустой ответ Groq');
+            const { userResponse: groqParsed } = this.parseAIResponse(groqRaw.replace(/\[END_TEXT\]/g, ''));
+            // Короткий ответ («1» на выбор варианта) законен: раньше всё короче 5 символов считалось пустым.
+            const userResponse = (groqParsed && groqParsed.trim()) ? groqParsed : String(groqRaw).replace(/\[END_TEXT\]/g, '').trim();
+            if (!userResponse) throw new Error('Пустой ответ Groq');
 
             task.status = 'completed';
             task.error = undefined;
